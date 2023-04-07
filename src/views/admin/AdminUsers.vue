@@ -1,16 +1,16 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="page-wrapper">
+    <h1>Users</h1>
     <UsersList v-if="users.length > 0" :users="users" />
   </div>
 </template>
 
 <script>
-import UsersList from './UsersList.vue'
-import { getAllUsers, createUser } from '../services/UserService'
+import UsersList from '../../components/UsersList.vue'
+import { getAllUsers, createUser } from '../../services/UserService'
 
 export default {
-  name: 'HelloWorld',
+  name: 'AdminUsers',
   components: {
     UsersList
   },
