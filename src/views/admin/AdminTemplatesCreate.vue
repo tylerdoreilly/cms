@@ -74,7 +74,7 @@
     <aside class="column--right">
         <AdminToolbar 
           title="Toolbar" 
-          :toolbarItems="templateItems"
+          :toolbarItems="availableTemplateItems"
           @dragTemplateItem="dragTemplateItem">
         </AdminToolbar>
     </aside>
@@ -127,7 +127,10 @@
             { id: 3, name: "Text Area", position: 3, field: 'TemplateItemTextBlock', content:'place paragraph here'},
             { id: 4, name: "List", position: 4, field: 'TemplateItemList', content:'place list here'}
           ],
-          items: [],
+          items: [
+          { id: 1, name: "Heading", position: 1, field:'TemplateHeading', content:'place heading here'},
+
+          ],
           dragedElem: null,
           overElem: null,
           preview: false,

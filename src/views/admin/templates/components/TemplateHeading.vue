@@ -1,20 +1,19 @@
 <template>
   <div v-if="activated == true">
     <TemplateObject :editMode="editMode" :activated="activated">
-      <template #title><font-awesome-icon icon="fa-solid fa-header" /> {{ title }}</template>
+      <template #icon><font-awesome-icon icon="fa-solid fa-header" /> </template>
+      <template #title>{{ title }}</template>
       <template #controls>
-          <button class="" @click="toggleEditMode()"><font-awesome-icon icon="fa-solid fa-gear" /></button>
-          <button class="" @click="removeItem(content)" v-if="allowRemoveItem">Remove</button>
-          <button class="" @click="showJson = !showJson">JSON</button>
-          <button class="" ><font-awesome-icon icon="fa-solid fa-grip-lines" /></button>
+        <exai-button variation="primary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
+        <exai-button variation="primary" icon="fa-grip-lines" @click="removeItem(content)"></exai-button>
+        <exai-button variation="primary" icon="fa-ellipsis" @click.native="toggleEditMode()"></exai-button>
       </template>
        
       <div v-if="editMode == true && content">
         <div v-if="!showJson">
-          <!-- <vue-editor v-model="content.content" class="vue_edeitor_height" @input="val => $emit('update:content', val)"></vue-editor> -->
           <vue-editor v-model="content.content" :editorToolbar="customToolbar" class="vue_edeitor_height"></vue-editor>
-          <br>
-          {{ content }}
+        
+          <!-- {{ content }} -->
         </div>
         <div v-else>
           <JsonViewer :data="content"></JsonViewer>
@@ -37,13 +36,14 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import TemplateObject from './templateObject/TemplateObject.vue'
+import ExaiButton from '../../../../components/ExaiButton.vue'
 import JsonViewer from './JsonViewer.vue'
 
 export default {
   
   name: 'TemplateHeading',
   components: {
-    VueEditor, TemplateObject, JsonViewer
+    VueEditor, TemplateObject, JsonViewer, ExaiButton
   },
   props: {
     title: String,

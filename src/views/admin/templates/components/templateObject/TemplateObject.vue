@@ -1,7 +1,8 @@
 <template>
   <div :class="[$style['template-object'], classObject]">
-    <div :class="[$style['template-item__header']]">
+    <div :class="[$style['template-item__header'], headerModifiers]">
       <div :class="[$style['template-item__title']]" v-if="this.$slots['title']">
+        <slot name="icon"></slot>
         <slot name="title"></slot>
       </div>
       <div :class="[$style['template-item__controls']]" v-if="this.$slots['controls']">
@@ -48,6 +49,11 @@
       classObject(){
        const obj = {}
         obj[this.$style['template-object--edit-mode']] = this.editMode && this.activated;
+        return obj
+      },
+      headerModifiers(){
+       const obj = {}
+        obj[this.$style['template-item__header--list']] = this.activated == false;
         return obj
       }
     },
