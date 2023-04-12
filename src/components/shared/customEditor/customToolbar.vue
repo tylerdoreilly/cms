@@ -96,9 +96,12 @@
         </span>
 
         <span class="ql-formats">
-            <button type="button" class="ql-CustomBlot">Rule</button>
+            <button type="button" class="ql-CustomBlot"><font-awesome-icon icon="fa-solid fa-pencil" /></button>
         </span>
 
+        <span class="ql-formats">
+            <button type="button" class="ql-ModalButton"><font-awesome-icon icon="fa-solid fa-pencil" /></button>
+        </span>
     </div>
 </template>
 
@@ -131,5 +134,17 @@
         color:red;
     }
 
-   
+    .ql-snow .ql-CustomBlot{
+
+       margin-top:2px;
+
+    }
+
+    .ql-snow .ql-CustomBlot .fa-pencil{
+       width:18px !important;
+       height:18px!important;
+       color:$keppel;
+
+
+    }
 </style>

@@ -76,6 +76,7 @@
       classObject(){
        const obj = {}
         obj[this.$style['exai-button--icon-only']] = this.editMode && this.activated;
+        obj[this.$style['exai-button--secondary']] = this.variation == 'secondary';
         return obj
       },
       setIcon(){
@@ -127,6 +128,11 @@
     & --icon-only{
       border:0px;
       background:transparent;
+    }
+
+    &--secondary{
+      background: $white-smoke;
+      color:#2c3e50;
     }
   }
 </style>

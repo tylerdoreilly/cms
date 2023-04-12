@@ -1,19 +1,19 @@
 <template>
   <div v-if="activated == true">
     <TemplateObject :editMode="editMode" :activated="activated">
-      <template #title><font-awesome-icon icon="fa-solid fa-paragraph" /> {{ title }}</template>
+      <template #title><font-awesome-icon icon="fa-solid fa-layer-group" /> {{ title }}</template>
       <template #controls>
-        <exai-button variation="primary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
-          <exai-button variation="primary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
-          <exai-button variation="primary" icon="fa-ellipsis" v-popover:foo></exai-button>
-          <popover name="foo">
-            <exai-list>
-              <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
-              <exai-list-item title="Remove Item" @click.native="removeItem(content)"></exai-list-item>
-              <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
-              <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item>
-            </exai-list>
-          </popover>
+        <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
+        <exai-button variation="secondary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
+        <exai-button variation="secondary" icon="fa-ellipsis" v-popover:foo></exai-button>
+        <popover name="foo">
+          <exai-list>
+            <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
+            <exai-list-item title="Remove Item" @click.native="removeItem(content)"></exai-list-item>
+            <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
+            <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item>
+          </exai-list>
+        </popover>
       </template>
        
       <div v-if="editMode == true">
@@ -32,7 +32,7 @@
   </div>
   <div v-else>
     <TemplateObject :editMode="editMode" :activated="activated">
-      <template #title><font-awesome-icon icon="fa-solid fa-paragraph" /> {{ title }}</template>
+      <template #title><font-awesome-icon icon="fa-solid fa-layer-group" /> {{ title }}</template>
     </TemplateObject>
   </div> 
 </template>

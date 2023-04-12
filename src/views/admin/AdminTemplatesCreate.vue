@@ -4,14 +4,14 @@
       <PageHeader title="Edit Template"></PageHeader>
       <PageDetails :title="template.title" :type="template.type" :date="template.date_created">
         <div v-if="!lockedItems">
-          <exai-button text="Lock Items" variation="primary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
+          <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
         </div>
         <div v-else>
-          <exai-button text="Unlock Items" variation="primary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
+          <exai-button text="Unlock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
         </div>
-        
+             
+        <exai-button text="Preview" variation="secondary" @click.native="preview = !preview">Preview</exai-button>
         <exai-button text="Save" variation="primary" @click.native="saveTemplate()">Save</exai-button>
-        <exai-button text="Preview" variation="primary" @click.native="preview = !preview">Preview</exai-button>
       </PageDetails>
       
       <div class="list" v-if="preview == false && items">

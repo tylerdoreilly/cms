@@ -3,8 +3,8 @@
     <div class="template-details__content">
       <h1 class="template-title">{{title}}</h1>
       <div class="template-details-info">
-        <div>{{ type }}</div>
-        <div><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
+        <div><span class="detail-label">Type: </span>{{ type }}</div>
+        <div><span class="detail-label">Created: </span><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
       </div>
      
     </div>
@@ -74,5 +74,9 @@
     display:flex;
     flex-direction: row;
     gap:10px;
+  }
+
+  .detail-label{
+    color:lighten( $gunmetal, 20% );
   }
 </style>

@@ -3,9 +3,9 @@
     <TemplateObject :editMode="editMode" :activated="activated">
       <template #title><font-awesome-icon icon="fa-solid fa-list" /> {{ title }}</template>
       <template #controls>
-        <exai-button variation="primary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
-          <exai-button variation="primary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
-          <exai-button variation="primary" icon="fa-ellipsis" v-popover:foo></exai-button>
+        <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
+          <exai-button variation="secondary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
+          <exai-button variation="secondary" icon="fa-ellipsis" v-popover:foo></exai-button>
           <popover name="foo">
             <exai-list>
               <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
@@ -70,15 +70,15 @@ export default {
         content:this.data,
         editMode:true,
         customToolbarButtons:{
-          headers:true,
+          headers:false,
           size:true,
           styling:false,
           alignment:true,
-          blockInsert:true,
+          blockInsert:false,
           lists:true,
           indents:true,
           colors:true,
-          inserts:true,
+          inserts:false,
           clean:true
         },
         editorOptions:{

@@ -3,9 +3,9 @@
     <TemplateObject :editMode="editMode" :activated="activated">
       <template #title><font-awesome-icon icon="fa-solid fa-paragraph" /> {{ title }}</template>
       <template #controls>
-          <exai-button variation="primary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
-          <exai-button variation="primary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
-          <exai-button variation="primary" icon="fa-ellipsis" v-popover:foo></exai-button>
+          <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
+          <exai-button variation="secondary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
+          <exai-button variation="secondary" icon="fa-ellipsis" v-popover:foo></exai-button>
           <popover name="foo">
             <exai-list>
               <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
@@ -29,6 +29,7 @@
        <div v-html="content.content"></div>
       </div>  
     </TemplateObject>  
+    <insert-modal v-show="showModal" @close-modal="showModal = false" @submit-control="insertControl($event)"></insert-modal>
   </div>
   <div v-else>
     <TemplateObject :editMode="editMode" :activated="activated">
@@ -46,6 +47,7 @@ import TemplateObject from './templateObject/TemplateObject.vue'
 import ExaiButton from '../../../../components/ExaiButton.vue'
 import ExaiList from '../../../../components/shared/list/ExaiList.vue'
 import ExaiListItem from '../../../../components/shared/list/ExaiListItem.vue'
+import InsertModal from './InsertModal.vue'
 
 Quill.register(CustomBlot);
 
@@ -58,7 +60,8 @@ export default {
     TemplateObject,
     ExaiButton,
     ExaiList,
-    ExaiListItem
+    ExaiListItem,
+    InsertModal
   },
   props: {
     title: String,
@@ -69,16 +72,17 @@ export default {
       return {
         content: this.data,
         editMode:true,
+        showModal: false,
         customToolbarButtons:{
-            headers:true,
+            headers:false,
             size:true,
             styling:false,
             alignment:true,
             blockInsert:true,
-            lists:true,
+            lists:false,
             indents:true,
             colors:true,
-            inserts:true,
+            inserts:false,
             clean:true
         },
         editorOptions:{
@@ -103,7 +107,9 @@ export default {
                         this.$refs.quillEditor.quill.insertText(
                         this.$refs.quillEditor.quill.getSelection( true ).index, "[Insert If Statement]\n",'customTagName', 'test-class', 'val1' ,'val2');
                       },
-               
+                    ModalButton: () => {
+                      this.openModal();
+                    },
                   }
              }
           },
@@ -124,7 +130,16 @@ export default {
     },
     testTy(item){
       this.$emit('lock-item', { item })
-   
+    },
+    openModal(){
+      this.showModal = true;
+    },
+    insertControl(control){
+      console.log('test',control)
+      this.$refs.quillEditor.quill.insertText(
+        this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}`, {
+        'color': 'rgb(230,0,0)'
+      });
     }
   },
   mounted () {
