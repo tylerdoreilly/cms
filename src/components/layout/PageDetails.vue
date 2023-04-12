@@ -2,7 +2,11 @@
   <div class="template-details">
     <div class="template-details__content">
       <h1 class="template-title">{{title}}</h1>
-      <div>{{ type }}</div>
+      <div class="template-details-info">
+        <div>{{ type }}</div>
+        <div><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
+      </div>
+     
     </div>
     <div class="template-details__controls">
       <slot></slot>
@@ -11,28 +15,36 @@
 </template>
 
 <script>
-
-export default {
-  name: 'PageDetails',
-  components: {
-  },
-  props:{
-    title:{
-      type: String,
-      docs:{
-        validation:'_',
-        description:'Page header text'
+  import dateFormat from '../shared/dateFormat.vue'
+  export default {
+    name: 'PageDetails',
+    components: {
+      dateFormat
+    },
+    props:{
+      title:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Page header text'
+        }
+      },
+      type:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Page header text'
+        }
+      },
+      date:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Page header text'
+        }
       }
     },
-    type:{
-      type: String,
-      docs:{
-        validation:'_',
-        description:'Page header text'
-      }
-    }
-  },
-}
+  }
 </script>
 
 <style lang="scss">
@@ -56,5 +68,11 @@ export default {
   .template-title{
     font-size:18px;
     margin-bottom:5px;
+  }
+
+  .template-details-info{
+    display:flex;
+    flex-direction: row;
+    gap:10px;
   }
 </style>

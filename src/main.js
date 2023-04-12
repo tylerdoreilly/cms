@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import Popover from 'vue-js-popover'
 import Toast from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
@@ -18,15 +19,15 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUserSecret, faGear, faGripLines, faHeader, faHeading, faParagraph, faList, faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faGear, faGripLines, faHeader, faHeading, faParagraph, faList, faEllipsis, faLock, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faUserSecret, faGear, faGripLines, faHeader, faHeading, faParagraph, faList, faEllipsis)
+library.add(faUserSecret, faGear, faGripLines, faHeader, faHeading, faParagraph, faList, faEllipsis,faLock,faXmark)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(Toast, options);
-
+Vue.use(Popover);
 Vue.config.productionTip = false
 
 new Vue({

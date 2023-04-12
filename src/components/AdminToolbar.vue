@@ -1,16 +1,33 @@
 <template>
   <div>
     <h3>{{title}}</h3>
-  <div v-for="(item, index) in toolbarItems" :key="item.id" :class="handleDropClasses(item)"
-      draggable
-      @dragstart.self=" pickupElem($event, item, index);"
-      @dragend.prevent="dragEndClear();">
+    <exai-tabs>
+      <exai-tab title="Default">
+        <div v-for="(item, index) in toolbarItems" :key="item.id" :class="handleDropClasses(item)"
+          draggable
+          @dragstart.self=" pickupElem($event, item, index);"
+          @dragend.prevent="dragEndClear();">
 
-      <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-        <component :is="item['field']" v-bind:activated="false" :title="item['name']" ></component>
-      </div>
-          
-    </div>
+          <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
+            <component v-if="item" :is="item['field']" v-bind:activated="false" :title="item['name']" :data="item"></component>
+          </div>
+              
+        </div>
+      </exai-tab>
+      <exai-tab title="Library">
+        <div v-for="(item, index) in libraryItems" :key="item.id" :class="handleDropClasses(item)"
+          draggable
+          @dragstart.self=" pickupElem($event, item, index);"
+          @dragend.prevent="dragEndClear();">
+
+          <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
+            <component v-if="item" :is="item['field']" v-bind:activated="false" :title="item['name']" :data="item" ></component>
+          </div>
+              
+        </div>
+      </exai-tab>
+    </exai-tabs>
+   
   </div>
 
 </template>
@@ -21,6 +38,8 @@
   import TemplateItemTextField from '../views/admin/templates/components/TemplateItemTextField.vue'
   import TemplateItemList from '../views/admin/templates/components/TemplateItemList.vue'
   import TemplateLayoutSingle from '../views/admin/templates/components/TemplateLayoutSingle.vue'
+  import ExaiTabs from './exaiTabs/ExaiTabs.vue'
+  import ExaiTab from './exaiTabs/ExaiTab.vue'
 
   export default {
     name: 'AdminToolbar',
@@ -29,7 +48,9 @@
       TemplateHeading,
       TemplateItemTextField,
       TemplateItemList,
-      TemplateLayoutSingle
+      TemplateLayoutSingle,
+      ExaiTabs,
+      ExaiTab
     },
     data() {
         return {
@@ -43,14 +64,21 @@
         type: String,
         docs:{
           validation:'_',
-          description:'Button text'
+          description:'Toolbar Title'
         }
       },
       toolbarItems:{
         type: Array,
         docs:{
           validation:'_',
-          description:'Button text'
+          description:'Default toolbar items'
+        }
+      },
+      libraryItems:{
+        type: Array,
+        docs:{
+          validation:'_',
+          description:'Custom library items'
         }
       }
     },

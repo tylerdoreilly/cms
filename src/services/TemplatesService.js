@@ -10,6 +10,11 @@ export async function getTemplateItems() {
     return response.data;
 }
 
+export async function getCustomTemplateItems() {
+    const response = await axios.get('/api/templateItemsCustom');
+    return response.data;
+}
+
 export async function getTemplate(id) {
     const response = await axios.get(`/api/templates/${id}`);
     return response.data[0];

@@ -2,16 +2,21 @@
   <div class="inner-container">
     <div class="inner-content">
       <PageHeader title="Edit Template"></PageHeader>
-      <PageDetails :title="template.title" :type="template.type">
-        <IeraButton text="Save" @click.native="saveTemplate()"></IeraButton>
-        <IeraButton text="Preview" @click.native="preview = !preview"></IeraButton>
-        <!-- <button @click="addCard('TemplateItemTextBlock')">Add Text Block</button>
-        <button @click.native="addLayout('TemplateLayoutSingle')">Add Single Col</button> -->
+      <PageDetails :title="template.title" :type="template.type" :date="template.date_created">
+        <div v-if="!lockedItems">
+          <exai-button text="Lock Items" variation="primary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
+        </div>
+        <div v-else>
+          <exai-button text="Unlock Items" variation="primary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
+        </div>
+        
+        <exai-button text="Save" variation="primary" @click.native="saveTemplate()">Save</exai-button>
+        <exai-button text="Preview" variation="primary" @click.native="preview = !preview">Preview</exai-button>
       </PageDetails>
       
-      <div class="list" v-if="preview == false">
+      <div class="list" v-if="preview == false && items">
         
-        <div v-for="(item, index) in items" :key="item.id" :class="handleDropClasses(item)"
+        <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)"       
           draggable
           @dragstart.self="pickupElem($event, item, index);"
           @dragover.prevent="showDropPlace($event, item, index);"
@@ -21,12 +26,15 @@
 
           <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
             <component 
+              v-if="item"
               :is="item['field']" 
               :data="item" 
               :title="item['name']"
               :listCount="items.length"
               v-bind:activated="true" 
-              @remove-item="removeItem(item)">
+              @remove-item="removeItem(item)"
+              @lock-item="lockItem(item)"
+             >
             </component>
           </div>
           <!-- {{ item }} -->
@@ -73,8 +81,10 @@
     </div>
     <aside class="column--right">
         <AdminToolbar 
-          title="Toolbar" 
-          :toolbarItems="availableTemplateItems"
+          v-if="templateItems && customTemplateItems"
+          title="Toolbar"
+          :toolbarItems="templateItems"
+          :libraryItems="customTemplateItems"
           @dragTemplateItem="dragTemplateItem">
         </AdminToolbar>
     </aside>
@@ -87,12 +97,13 @@
   import PageDetails from '../../components/layout/PageDetails.vue'
   import AdminToolbar from '../../components/AdminToolbar.vue'
   import IeraButton from '../../components/IeraButton.vue'
+  import ExaiButton from '../../components/ExaiButton.vue'
   import TemplateItemTextBlock from './templates/components/TemplateItemTextBlock.vue'
   import TemplateHeading from './templates/components/TemplateHeading.vue'
   import TemplateItemTextField from './templates/components/TemplateItemTextField.vue'
   import TemplateItemList from './templates/components/TemplateItemList.vue'
   import TemplateLayoutSingle from './templates/components/TemplateLayoutSingle.vue'
-  import { updateTemplate, getTemplate, getTemplateItems } from '../../services/TemplatesService'
+  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems } from '../../services/TemplatesService'
 
   const axios = require('axios');
   export default {
@@ -107,9 +118,11 @@
       TemplateItemList,
       AdminToolbar,     
       IeraButton,
+      ExaiButton,
       updateTemplate,
       getTemplate,
-      getTemplateItems
+      getTemplateItems,
+      getCustomTemplateItems
     },
     props: {
       msg: String
@@ -118,7 +131,8 @@
         return {
           testTy:[],
           templateItems:[],
-          id: this.$route.params.id ,
+          customTemplateItems:[],
+          id: this.$route.params.id,
           template: [],
           layouts:[],
           availableTemplateItems: [
@@ -128,13 +142,14 @@
             { id: 4, name: "List", position: 4, field: 'TemplateItemList', content:'place list here'}
           ],
           items: [
-          { id: 1, name: "Heading", position: 1, field:'TemplateHeading', content:'place heading here'},
+          // { id: 1, name: "Heading", position: 1, field:'TemplateHeading', content:'place heading here'},
 
           ],
           dragedElem: null,
           overElem: null,
           preview: false,
           newInstance:false,
+          lockedItems:false,
       }
     },
     computed: {
@@ -174,24 +189,6 @@
               return "drop-place drop-place--after";
             }
           }
-         
-
-
-
-          // if (!this.overElem || !this.overElem.id) {
-          //   return "";
-          // }
-          // if ( this.overElem.id === item.id && item.position < this.dragedElem.position) {
-          //   console.log("before");
-          //   return "drop-place drop-place--before";
-          // }
-          // if (
-          //   this.overElem.id === item.id &&
-          //   item.position > this.dragedElem.position
-          // ) {
-          //   console.log("after");
-          //   return "drop-place drop-place--after";
-          // }
         };
       },
 
@@ -317,6 +314,30 @@
         }
       },
 
+      lockItem(elem){
+        console.log(elem)
+        console.log(this.$refs)
+        // let items = this.$refs
+        this.$refs.item.forEach(item =>{
+          item.draggable = false;
+        })
+      //  this.$ref.templateList.draggable = false
+      },
+
+      lockItems(){
+        console.log(this.$refs)
+        this.$refs.item.forEach(item =>{
+          if(item.draggable == true){
+            item.draggable = false;
+            this.lockedItems = true;
+          }else{
+            item.draggable = true;
+            this.lockedItems = false;
+          }
+          
+        })
+      },
+
       // Get and Save
       async saveTemplate(){
         var myJsonString = JSON.stringify(this.items);
@@ -363,9 +384,18 @@
           this.templateItems = response;
           console.log('template items', this.templateItems)
         })
+      },
+
+      getCustomTemplateItems(){
+        getCustomTemplateItems().then(response => {
+          console.log(response)
+          this.customTemplateItems = response;
+          console.log('template items', this.customTemplateItems)
+        })
       }
     },
     mounted () {
+      this.getCustomTemplateItems();
       this.getTemplateItems();
       this.getTemplate();
     }
