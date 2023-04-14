@@ -17,11 +17,12 @@
       </template>
        
       <div v-if="editMode == true">
-        <custom-editor>
-          <custom-toolbar :buttonList="customToolbarButtons" :id="getTemplateId"></custom-toolbar>
-          <vue-editor id="editor2" v-model="content.content" :editorOptions="editorOptions" ref="quillEditor"></vue-editor>
-        </custom-editor>
-        <!-- <vue-editor v-model="content.content" class="vue_edeitor_height" @input="val => $emit('update:content', val)"></vue-editor> -->
+        <custom-editor-new  
+          v-model="content.content"
+          :data="content"
+          :buttonList="customToolbarButtons"
+          :editorId="getTemplateId">
+        </custom-editor-new>
         <!-- <br>
         {{ content }} -->
       </div>  
@@ -29,7 +30,6 @@
        <div v-html="content.content"></div>
       </div>  
     </TemplateObject>  
-    <insert-modal v-show="showModal" @close-modal="showModal = false" @submit-control="insertControl($event)"></insert-modal>
   </div>
   <div v-else>
     <TemplateObject :editMode="editMode" :activated="activated">
@@ -39,29 +39,20 @@
 </template>
 
 <script>
-import { VueEditor, Quill } from "vue2-editor";
-import customEditor from '../../../../components/shared/customEditor/customEditor.vue'
-import customToolbar from '../../../../components/shared/customEditor/customToolbar.vue'
-import { CustomBlot } from './customRuleInsert.js'
+import customEditorNew from '../../../../components/shared/customEditor/customEditorNew.vue'
 import TemplateObject from './templateObject/TemplateObject.vue'
 import ExaiButton from '../../../../components/ExaiButton.vue'
 import ExaiList from '../../../../components/shared/list/ExaiList.vue'
 import ExaiListItem from '../../../../components/shared/list/ExaiListItem.vue'
-import InsertModal from './InsertModal.vue'
-
-Quill.register(CustomBlot);
 
 export default {
   name: 'TemplateItemTextField',
   components: {
-    VueEditor, 
-    customEditor,
-    customToolbar, 
+    customEditorNew,
     TemplateObject,
     ExaiButton,
     ExaiList,
     ExaiListItem,
-    InsertModal
   },
   props: {
     title: String,
@@ -72,7 +63,6 @@ export default {
       return {
         content: this.data,
         editMode:true,
-        showModal: false,
         customToolbarButtons:{
             headers:false,
             size:true,
@@ -85,40 +75,11 @@ export default {
             inserts:false,
             clean:true
         },
-        editorOptions:{
-            modules: {
-              history: { 
-                delay: 2000,
-                maxStack: 500,
-                userOnly: true,
-              },
-              toolbar: {
-                  container: `#toolbarTextField-${this.data.id}`,
-                  handlers: {
-                    customBtn: () => { 
-                      console.log('test',this.$refs.quillEditor)
-                      this.$refs.quillEditor.quill.insertText(
-                        this.$refs.quillEditor.quill.getSelection( true ).index, '[ Insert IF Statement ]', {
-                        'color': 'rgb(230,0,0)'
-                      });
-                     
-                    },
-                    CustomBlot: () => {
-                        this.$refs.quillEditor.quill.insertText(
-                        this.$refs.quillEditor.quill.getSelection( true ).index, "[Insert If Statement]\n",'customTagName', 'test-class', 'val1' ,'val2');
-                      },
-                    ModalButton: () => {
-                      this.openModal();
-                    },
-                  }
-             }
-          },
-        },
       }
   },
   computed:{
     getTemplateId(){
-      return `toolbarTextField-${this.data.id}`
+      return `toolbar-${this.data.id}`
     },
   },
   methods: {
@@ -131,20 +92,7 @@ export default {
     testTy(item){
       this.$emit('lock-item', { item })
     },
-    openModal(){
-      this.showModal = true;
-    },
-    insertControl(control){
-      console.log('test',control)
-      this.$refs.quillEditor.quill.insertText(
-        this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}`, {
-        'color': 'rgb(230,0,0)'
-      });
-    }
   },
-  mounted () {
-  
-  }
 }
 </script>
 

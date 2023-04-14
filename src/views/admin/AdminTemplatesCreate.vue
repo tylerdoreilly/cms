@@ -340,13 +340,16 @@
 
       // Get and Save
       async saveTemplate(){
+        this.template.data = [];
         var myJsonString = JSON.stringify(this.items);
           if (this.id) {
-            const putData = {
-              type:"Press Release",
-              title:"EU SF NEW",
-              data:myJsonString
-            };
+            this.template.data = myJsonString;
+            const putData = this.template;
+            // const putData = {
+            //   type:"Press Release",
+            //   title:"EU SF NEW",
+            //   data:myJsonString
+            // };
 
             try {
               const res = await axios.put(`/api/templates/${this.id}`, putData, {
@@ -411,7 +414,7 @@
 
   .inner-content {
     flex: 1;
-    padding-right:20px;
+    padding-right:40px;
   }
 
   .column--right {

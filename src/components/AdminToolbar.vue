@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="admin-toolbar">
     <h3>{{title}}</h3>
     <exai-tabs>
       <exai-tab title="Default">
@@ -176,5 +176,8 @@
 
 
 <style lang="scss">
-  
+  .admin-toolbar{
+    position:sticky;
+    top:25px;
+  }
 </style>

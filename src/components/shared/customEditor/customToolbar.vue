@@ -14,6 +14,7 @@
         <span class="ql-formats" v-if="buttonList.size">
             <select class="ql-size">
                 <option value="small">Small</option>
+                <option value="mid">Mid</option>
                 <option selected>Normal</option>
                 <option value="large">Large</option>
                 <option value="huge">Huge</option>
@@ -95,12 +96,16 @@
             <button type="button" class="ql-clean"></button>
         </span>
 
-        <span class="ql-formats">
+        <!-- <span class="ql-formats">
             <button type="button" class="ql-CustomBlot"><font-awesome-icon icon="fa-solid fa-pencil" /></button>
-        </span>
-
+            <button type="button" class="ql-DynamicControl"><font-awesome-icon icon="fa-solid fa-arrow-down" /></button>
+            <button type="button" class="ql-DynamicControlInline"><font-awesome-icon icon="fa-solid fa-layer-group" /></button>
+        </span> -->
         <span class="ql-formats">
-            <button type="button" class="ql-ModalButton"><font-awesome-icon icon="fa-solid fa-pencil" /></button>
+            <select class="ql-testSelect">
+                <option value="inline"></option>
+                <option value="block"></option>
+            </select>
         </span>
     </div>
 </template>
@@ -125,26 +130,33 @@
         border-bottom:0px;
     }
 
-    .ql-snow .ql-customBtn{
-        display:inline-flex !important;
-        width:auto !important;
+
+    .dynamic-control{
+        color:red !important;
     }
 
-    .test-class{
-        color:red;
+    .dynamic-control.block{
+        margin-block-start: 1em;
+        margin-block-end: 1em;
     }
 
-    .ql-snow .ql-CustomBlot{
-
-       margin-top:2px;
-
+    .ql-snow .ql-picker.ql-testSelect {
+        width: 150px;
     }
 
-    .ql-snow .ql-CustomBlot .fa-pencil{
-       width:18px !important;
-       height:18px!important;
-       color:$keppel;
-
-
+    .ql-snow .ql-picker.ql-testSelect .ql-picker-label::before {
+        // padding-right:15px;
+        content: 'Dynamic Control';
     }
+    .ql-snow .ql-picker.ql-testSelect .ql-picker-item[data-value="inline"]::before {
+        content: 'inline';
+    }
+    .ql-snow .ql-picker.ql-testSelect .ql-picker-item[data-value="block"]::before {
+        content: 'block';
+    }
+
+    .ql-size-small{
+        font-size:10px;
+    }
+
 </style>

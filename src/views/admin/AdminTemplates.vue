@@ -5,8 +5,8 @@
     </PageHeader>
     <TemplatesList v-if="templates.length > 0" :templates="templates" />
     <AppModal v-show="showModal" @close-modal="showModal = false" />
-    <ExaiTextField label="Text Input" placeholder="This is a text field" v-model="searchText"></ExaiTextField>
-    <ExaiTextArea label="Text Area" placeholder="This is a text area" v-model="searchText"></ExaiTextArea>
+    <!-- <ExaiTextField label="Text Input" placeholder="This is a text field" v-model="searchText"></ExaiTextField>
+    <ExaiTextArea label="Text Area" placeholder="This is a text area" v-model="searchText"></ExaiTextArea> -->
   </div>
 </template>
 
@@ -16,14 +16,15 @@ import TemplatesList from '../../components/TemplatesList.vue'
 import IeraButton from '../../components/IeraButton.vue'
 import AppModal from '../../components/modal.vue'
 import { getAllTemplates } from '../../services/TemplatesService'
-import ExaiTextField from '../../components/forms/ExaiTextField.vue'
-import ExaiTextArea from '../../components/forms/ExaiTextArea.vue'
+// import ExaiTextField from '../../components/forms/ExaiTextField.vue'
+// import ExaiTextArea from '../../components/forms/ExaiTextArea.vue'
 
 export default {
   name: 'AdminTemplates',
   components: {
     TemplatesList,
-    AppModal,IeraButton,PageHeader,ExaiTextField,ExaiTextArea
+    AppModal,IeraButton,PageHeader,
+    // ExaiTextField,ExaiTextArea
   },
   props: {
     msg: String
