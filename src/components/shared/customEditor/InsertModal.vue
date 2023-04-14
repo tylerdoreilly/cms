@@ -1,5 +1,7 @@
 <template>
-    <transition name="modal-fade">
+    <!-- <transition name="modal-fade">
+        <exai-modal title="Add Dynamic Control">
+        </exai-modal>
       <div class="modal-overlay" @click="$emit('close-modal')">
         <div class="modal" @click.stop>
             <div class="modal-header">
@@ -20,16 +22,43 @@
             <exai-button text="Add Control" variation="primary" @click.native.prevent="submitted"></exai-button>
         </div>
       </div>
-    </transition>
-  </template>
+    </transition> -->
+    <div>
+    <exai-modal title="Add Dynamic Control">
+        <template #exai-modal-body>
+            <exai-form>
+                <exai-form-group>
+                    <exai-form-label text="Control Text" for="controlText"></exai-form-label>
+                    <input type="text" id="controlText" class="form-control" v-model="controlData.text">
+                </exai-form-group>
+                <exai-form-group>
+                    <exai-form-label text="Control Id" for="controlId"></exai-form-label>
+                    <input type="text" id="controlId" class="form-control" v-model="controlData.id">
+                </exai-form-group>
+            </exai-form>
+        </template>
+        <template #exai-modal-actions>
+            <exai-button text="Add Control" variation="primary" @click.native.prevent="submitted"></exai-button>
+        </template>
+      
+    </exai-modal>
+    </div>
+</template>
   
-  <script>
-  import ExaiButton from '../../ExaiButton.vue'
-
+<script>
+  import ExaiButton from '../ExaiButton.vue';
+  import ExaiModal from '../ExaiModal.vue';
+  import ExaiForm from '../../forms/ExaiForm.vue';
+  import ExaiFormGroup from '../../forms/ExaiFormGroup.vue';
+  import ExaiFormLabel from '../../forms/ExaiFormLabel.vue';
   export default {
     name: 'insert-modal',
     components:{
-        ExaiButton
+        ExaiModal,
+        ExaiButton,
+        ExaiForm,
+        ExaiFormGroup,
+        ExaiFormLabel
     },
     props:{
         sectionId:{
@@ -61,54 +90,6 @@
   </script>
   
   <style lang="scss">
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        background-color: #000000da;
-        z-index:1000;
-    }
-    .modal {
-        background-color: white;
-        text-align: left;
-        height: 400px;
-        width: 600px;
-        margin-top: 10%;
-        padding: 60px 0;
-        border-radius: 10px;
-        padding:20px;
-    }
-
-    .modal-header{
-        display:flex;
-        flex-direction: row;
-        border-bottom:1px solid $border;
-        margin-bottom:15px;
-        padding-bottom:15px;
-        align-items: center;
-    }
-    .modal-header__title{
-       font-size:18px;
-    }
-
-    .modal-header__actions{
-        margin-left: auto;
-        display:flex;
-        flex-direction: row;
-        gap:10px;
-    }
-   
-    .modal-fade-enter,
-    .modal-fade-leave-to {
-        opacity: 0;
-    }
-    .modal-fade-enter-active,
-    .modal-fade-leave-active {
-        transition: opacity 0.5s ease;
-    }
 
     .form-group{
         display:flex;

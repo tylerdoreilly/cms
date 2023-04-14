@@ -17,12 +17,12 @@
       </template>
        
       <div v-if="editMode == true && data">
-        <custom-editor-new  
+        <custom-editor 
           v-model="content.content"
           :data="content"
           :buttonList="customToolbarButtons"
           :editorId="getTemplateId">
-        </custom-editor-new>
+        </custom-editor>
         <!-- <br>
         {{ content }} -->
       </div>  
@@ -39,16 +39,16 @@
 </template>
 
 <script>
-import customEditorNew from '../../../../components/shared/customEditor/customEditorNew.vue'
-import TemplateObject from './templateObject/TemplateObject.vue'
-import ExaiButton from '../../../../components/ExaiButton.vue'
-import ExaiList from '../../../../components/shared/list/ExaiList.vue'
-import ExaiListItem from '../../../../components/shared/list/ExaiListItem.vue'
+import customEditor from '../../shared/customEditor/customEditor.vue'
+import TemplateObject from '../templateObject/TemplateObject.vue'
+import ExaiButton from '../../shared/ExaiButton.vue'
+import ExaiList from '../../shared/exaiList/ExaiList.vue'
+import ExaiListItem from '../../shared/exaiList/ExaiListItem.vue'
 
 export default {
     name: 'TemplateItemList',
     components: {
-      customEditorNew,
+      customEditor,
       TemplateObject, 
       ExaiButton,
       ExaiList,

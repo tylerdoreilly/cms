@@ -93,17 +93,16 @@
 </template>
 
 <script>
-  import PageHeader from '../../components/layout/PageHeader.vue'
-  import PageDetails from '../../components/layout/PageDetails.vue'
-  import AdminToolbar from '../../components/AdminToolbar.vue'
-  import IeraButton from '../../components/IeraButton.vue'
-  import ExaiButton from '../../components/ExaiButton.vue'
-  import TemplateItemTextBlock from './templates/components/TemplateItemTextBlock.vue'
-  import TemplateHeading from './templates/components/TemplateHeading.vue'
-  import TemplateItemTextField from './templates/components/TemplateItemTextField.vue'
-  import TemplateItemList from './templates/components/TemplateItemList.vue'
-  import TemplateLayoutSingle from './templates/components/TemplateLayoutSingle.vue'
-  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems } from '../../services/TemplatesService'
+  import PageHeader from '../../../components/layout/PageHeader.vue'
+  import PageDetails from '../../../components/layout/PageDetails.vue'
+  import AdminToolbar from '../../../components/AdminToolbar.vue'
+  import ExaiButton from '../../../components/shared/ExaiButton.vue'
+  import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
+  import TemplateHeading from '../../../components/templates/templateItems/TemplateHeading.vue'
+  import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
+  import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
+  import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
+  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems } from '../../../services/TemplatesService'
 
   const axios = require('axios');
   export default {
@@ -117,7 +116,6 @@
       TemplateLayoutSingle,
       TemplateItemList,
       AdminToolbar,     
-      IeraButton,
       ExaiButton,
       updateTemplate,
       getTemplate,

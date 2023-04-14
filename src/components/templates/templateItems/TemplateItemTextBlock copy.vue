@@ -46,16 +46,16 @@
 
 <script>
   import { VueEditor, Quill } from "vue2-editor";
-  import customEditor from '../../../../components/shared/customEditor/customEditor.vue'
+  import customEditor from '../../shared/customEditor/customEditor.vue'
   import customEditorNew from '../../../../components/shared/customEditor/customEditorNew.vue'
-  import customToolbar from '../../../../components/shared/customEditor/customToolbar.vue'
+  import customToolbar from '../../shared/customEditor/customToolbar.vue'
   import { CustomBlot } from './customRuleInsert.js'
   import { DynamicControl } from './dynamicControl.js'
   import { DynamicControlInline } from './dynamicControlInline.js'
-  import TemplateObject from './templateObject/TemplateObject.vue'
-  import ExaiButton from '../../../../components/ExaiButton.vue'
-  import ExaiList from '../../../../components/shared/list/ExaiList.vue'
-  import ExaiListItem from '../../../../components/shared/list/ExaiListItem.vue'
+  import TemplateObject from '../../views/admin/templates/components/templateObject/TemplateObject.vue'
+  import ExaiButton from '../../shared/ExaiButton.vue'
+  import ExaiList from '../../shared/list/ExaiList.vue'
+  import ExaiListItem from '../../shared/list/ExaiListItem.vue'
   import InsertModal from './InsertModal.vue'
 
   Quill.register(CustomBlot);

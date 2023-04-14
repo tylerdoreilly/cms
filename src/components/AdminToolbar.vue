@@ -33,13 +33,13 @@
 </template>
 
 <script>
-  import TemplateItemTextBlock from '../views/admin/templates/components/TemplateItemTextBlock.vue'
-  import TemplateHeading from '../views/admin/templates/components/TemplateHeading.vue'
-  import TemplateItemTextField from '../views/admin/templates/components/TemplateItemTextField.vue'
-  import TemplateItemList from '../views/admin/templates/components/TemplateItemList.vue'
-  import TemplateLayoutSingle from '../views/admin/templates/components/TemplateLayoutSingle.vue'
-  import ExaiTabs from './exaiTabs/ExaiTabs.vue'
-  import ExaiTab from './exaiTabs/ExaiTab.vue'
+  import TemplateItemTextBlock from './templates/templateItems/TemplateItemTextBlock.vue'
+  import TemplateHeading from './templates/templateItems/TemplateHeading.vue'
+  import TemplateItemTextField from './templates/templateItems/TemplateItemTextField.vue'
+  import TemplateItemList from './templates/templateItems/TemplateItemList.vue'
+  import TemplateLayoutSingle from './templates/templateItems/TemplateLayoutSingle.vue'
+  import ExaiTabs from './shared/exaiTabs/ExaiTabs.vue'
+  import ExaiTab from './shared/exaiTabs/ExaiTab.vue'
 
   export default {
     name: 'AdminToolbar',

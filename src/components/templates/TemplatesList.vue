@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import dateFormat from './shared/dateFormat.vue'
+    import dateFormat from '../shared/dateFormat.vue'
     export default {
         name: 'TemplatesList',
         components:{
@@ -35,5 +35,5 @@
 </script>
 
 <style lang="scss">
-    @import '../styles/table.scss';
+    @import '../../styles/table.scss';
 </style>
