@@ -1,7 +1,10 @@
 <template>
-    <div class="quillWrapper custom">
-        <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
-        <vue-editor v-model="content.content" :editorOptions="editorOptions" ref="quillEditor"></vue-editor>
+    <div class="custom-editor-wrapper">
+        <div class="quillWrapper custom">
+            <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
+            <vue-editor v-model="content.content" :editorOptions="editorOptions" ref="quillEditor"></vue-editor>
+        </div>  
+        <raw-data-viewer v-if="showRawData" :data="content"></raw-data-viewer>
         <insert-modal 
             v-if="controlType"
             v-show="showModal"
@@ -10,15 +13,16 @@
             @close-modal="showModal = false" 
             @submit-control=" getDynamicControl($event)">
         </insert-modal>
-    </div>  
+    </div>
 </template>
 
 <script>
     import { VueEditor, Quill } from "vue2-editor";
-    import customToolbar from './customToolbar.vue'
     import { DynamicControl } from './modules/dynamicControl.js'
     import { DynamicControlInline } from './modules/dynamicControlInline.js'
+    import customToolbar from './customToolbar.vue'
     import InsertModal from './InsertModal.vue'
+    import RawDataViewer from '../RawDataViewer.vue'
 
     Quill.register(DynamicControl);
     Quill.register(DynamicControlInline);
@@ -28,11 +32,13 @@
         components: {
             VueEditor,
             customToolbar, 
-            InsertModal
+            InsertModal,
+            RawDataViewer
         },
         props:{
             buttonList:Object,
             data:Object,
+            showRawData:Boolean,
             editorId:{
                 type:String,
                 default:"id"
@@ -113,3 +119,12 @@
         },
      }
 </script>
+
+<style lang="scss">
+  .custom-editor-wrapper{
+    display:flex;
+    flex-direction: column;
+    gap:15px;
+  }
+ 
+</style>

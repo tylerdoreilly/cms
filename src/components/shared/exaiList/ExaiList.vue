@@ -9,7 +9,7 @@
     name: 'exai-list',
     data () {
       return {
-        items: [],        // all of the tabs
+        items: [],
       }
     },
     created () {
@@ -24,15 +24,8 @@
     margin:0px;
     padding:0px;
     display:flex;
+    flex-grow: 1;
     flex-direction: column;
     gap:8px;
   }
-
-  // .exai-tabs__item{
-  //   padding:4px;
-  //   cursor:pointer;
-  //   &--selected{
-  //     border-bottom:2px solid $keppel
-  //   }
-  // }
 </style>

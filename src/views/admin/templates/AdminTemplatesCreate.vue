@@ -3,6 +3,7 @@
     <div class="inner-content">
       <PageHeader title="Edit Template"></PageHeader>
       <PageDetails :title="template.title" :type="template.type" :date="template.date_created">
+        <exai-button text="Raw Data" variation="secondary" @click.native="showRawData = !showRawData">Preview</exai-button>
         <div v-if="!lockedItems">
           <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
         </div>
@@ -31,8 +32,9 @@
               :data="item" 
               :title="item['name']"
               :listCount="items.length"
+              v-bind:showRawData="showRawData"
               v-bind:activated="true" 
-              @remove-item="removeItem(item)"
+              @remove-item="checkBeforeRemove($event)"
               @lock-item="lockItem(item)"
              >
             </component>
@@ -88,7 +90,15 @@
           @dragTemplateItem="dragTemplateItem">
         </AdminToolbar>
     </aside>
-   
+    <exai-prompt 
+      v-if="itemToRemove"
+      v-show="showPrompt"
+      title="Remove Template Item" 
+      message="Are you sure you want to remove this item?" 
+      :data="itemToRemove"
+      @close-modal="showPrompt = false" 
+      @close-and-submit="removeItem($event)">
+    </exai-prompt>
   </div>
 </template>
 
@@ -97,6 +107,7 @@
   import PageDetails from '../../../components/layout/PageDetails.vue'
   import AdminToolbar from '../../../components/AdminToolbar.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
+  import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
   import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
   import TemplateHeading from '../../../components/templates/templateItems/TemplateHeading.vue'
   import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
@@ -117,6 +128,7 @@
       TemplateItemList,
       AdminToolbar,     
       ExaiButton,
+      ExaiPrompt,
       updateTemplate,
       getTemplate,
       getTemplateItems,
@@ -127,6 +139,8 @@
     },
     data() {
         return {
+          showPrompt:false,
+          showRawData:false,
           testTy:[],
           templateItems:[],
           customTemplateItems:[],
@@ -148,6 +162,7 @@
           preview: false,
           newInstance:false,
           lockedItems:false,
+          itemToRemove:''
       }
     },
     computed: {
@@ -305,11 +320,19 @@
         this.items.push(defaultItem)
       },
 
-      removeItem(elem){
-        const index = this.items.indexOf(elem);
+      checkBeforeRemove(event){
+        const elem = this.items.find(item => item.id == event)
+        this.itemToRemove = elem;
+        this.showPrompt = true;
+      },
+
+      removeItem(event){
+        console.log('parent remove',event)
+        const index = this.items.indexOf(event);
         if (index > -1) {
           this.items.splice(index, 1);
         }
+        this.showPrompt = false;
       },
 
       lockItem(elem){

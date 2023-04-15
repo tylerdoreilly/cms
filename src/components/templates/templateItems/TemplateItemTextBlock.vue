@@ -1,20 +1,11 @@
 <template>
   <div v-if="activated == true">
-    <TemplateObject :editMode="editMode" :activated="activated">
-      <template #title><font-awesome-icon icon="fa-solid fa-layer-group" /> {{ title }}</template>
-      <template #controls>
-        <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
-        <exai-button variation="secondary" icon="fa-lock" @click.native="testTy(content)"></exai-button>
-        <exai-button variation="secondary" icon="fa-ellipsis" v-popover:foo></exai-button>
-        <popover name="foo">
-          <exai-list>
-            <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
-            <exai-list-item title="Remove Item" @click.native="removeItem(content)"></exai-list-item>
-            <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
-            <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item>
-          </exai-list>
-        </popover>
-      </template>
+    <TemplateObject 
+      :title="title" 
+      icon="fa-layer-group" 
+      :editMode="editMode" 
+      :activated="activated"
+      @edit-mode="toggleEditMode($event)">
        
       <div v-if="editMode == true">
         <custom-editor  
@@ -33,8 +24,7 @@
     </TemplateObject>  
   </div>
   <div v-else>
-    <TemplateObject :editMode="editMode" :activated="activated">
-      <template #title><font-awesome-icon icon="fa-solid fa-layer-group" /> {{ title }}</template>
+    <TemplateObject :title="title" icon="fa-layer-group" :editMode="editMode" :activated="activated">
     </TemplateObject>
   </div> 
 </template>
@@ -42,18 +32,12 @@
 <script>
   import customEditor from '../../shared/customEditor/customEditor.vue'
   import TemplateObject from '../templateObject/TemplateObject.vue'
-  import ExaiButton from '../../shared/ExaiButton.vue'
-  import ExaiList from '../../shared/exaiList/ExaiList.vue'
-  import ExaiListItem from '../../shared/exaiList/ExaiListItem.vue'
 
   export default {
     name: 'TemplateItemTextBlock',
     components: {   
       customEditor,     
       TemplateObject, 
-      ExaiButton,
-      ExaiList,
-      ExaiListItem,
     },
     props: {
       title: String,
@@ -87,10 +71,6 @@
       toggleEditMode(){
         this.editMode = !this.editMode
       },
-      removeItem(item){
-        this.$emit('remove-item', { item })
-      },
-     
     },
   }
 </script>

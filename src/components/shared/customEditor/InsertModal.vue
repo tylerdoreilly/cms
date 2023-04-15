@@ -48,9 +48,9 @@
 <script>
   import ExaiButton from '../ExaiButton.vue';
   import ExaiModal from '../ExaiModal.vue';
-  import ExaiForm from '../../forms/ExaiForm.vue';
-  import ExaiFormGroup from '../../forms/ExaiFormGroup.vue';
-  import ExaiFormLabel from '../../forms/ExaiFormLabel.vue';
+  import ExaiForm from '../forms/ExaiForm.vue';
+  import ExaiFormGroup from '../forms/ExaiFormGroup.vue';
+  import ExaiFormLabel from '../forms/ExaiFormLabel.vue';
   export default {
     name: 'insert-modal',
     components:{
