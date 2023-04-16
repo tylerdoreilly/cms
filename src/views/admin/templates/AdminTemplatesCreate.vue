@@ -15,8 +15,7 @@
         <exai-button text="Save" variation="primary" @click.native="saveTemplate()">Save</exai-button>
       </PageDetails>
       
-      <div class="list" v-if="preview == false && items">
-        
+      <div class="template-list" v-if="preview == false && items">        
         <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)"       
           draggable
           @dragstart.self="pickupElem($event, item, index);"
@@ -25,9 +24,10 @@
           @drop="moveElem($event, item, index);"
           @dragend.prevent="dragEndClear();">
 
-          <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-            <component 
+          <component 
               v-if="item"
+              class="template-list__item"
+              :class="{'template-list__item--is-dragged': dragedElem && item.id === dragedElem.id}"
               :is="item['field']" 
               :data="item" 
               :title="item['name']"
@@ -35,44 +35,10 @@
               v-bind:showDetails="showDetails"
               v-bind:activated="true" 
               @remove-item="checkBeforeRemove($event)"
-              @lock-item="lockItem(item)"
-             >
-            </component>
-          </div>
-          <!-- {{ item }} -->
+              @lock-item="lockItem(item)">
+          </component>
+         
         </div>
-
-        <!-- <div
-          v-for="(item, index) in layouts"
-          :key="item.id"
-          :class="handleDropClasses(item)"
-          draggable
-          @dragstart.self="pickupElem($event, item, index);"
-          @dragover.prevent="showDropPlace($event, item, index);"
-          @dragenter.prevent
-          @drop="moveElem($event, item, index);"
-          @dragend.prevent="dragEndClear();">
-
-          <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-            <component :is="item['layoutType']" title="test">
-              <div
-                v-for="(item, index) in items"
-                :key="item.id"
-                :class="handleDropClasses(item)"
-                draggable
-                @dragstart.self="pickupElem($event, item, index);"
-                @dragover.prevent="showDropPlace($event, item, index);"
-                @dragenter.prevent
-                @drop="moveElem($event, item, index);"
-                @dragend.prevent="dragEndClear();">
-
-                <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-                  <component :is="item['cardType']" :title="item['name']"></component>
-                </div>
-              </div>
-            </component>
-          </div>
-        </div> -->
       </div>
       <document-preview :data="items" v-if="preview == true"></document-preview>
     </div>
@@ -85,6 +51,7 @@
           @dragTemplateItem="dragTemplateItem">
         </template-toolbar>
     </aside>
+
     <exai-prompt 
       v-if="itemToRemove"
       v-show="showPrompt"
@@ -136,9 +103,7 @@
     },
     data() {
         return {
-          showPrompt:false,
-          showDetails:false,
-          testTy:[],
+          items: [],
           templateItems:[],
           customTemplateItems:[],
           id: this.$route.params.id,
@@ -150,10 +115,8 @@
             { id: 3, name: "Text Area", position: 3, field: 'TemplateItemTextBlock', content:'place paragraph here'},
             { id: 4, name: "List", position: 4, field: 'TemplateItemList', content:'place list here'}
           ],
-          items: [
-          // { id: 1, name: "Heading", position: 1, field:'TemplateHeading', content:'place heading here'},
-
-          ],
+          showPrompt:false,
+          showDetails:false,
           dragedElem: null,
           overElem: null,
           preview: false,
@@ -366,14 +329,13 @@
             const putData = this.template;
 
             try {
-              const res = await axios.put(`/api/templates/${this.id}`, putData, {
+             await axios.put(`/api/templates/${this.id}`, putData, {
                 headers: {
                   "x-access-token": "token-value",
                 },
               });
 
-              const result = res;
-              this.testTy = result;
+              // const result = res;
               this.$toast("Template Saved Successfully");
             } 
             catch (err) {
@@ -444,80 +406,60 @@
     padding:0px 20px;
   }
 
-.drop-zone {
-  background-color: #eee;
-  margin-bottom: 10px;
-  padding: 10px;
-}
-.drag-el {
-  background-color: #fff;
-  margin-bottom: 10px;
-  padding: 5px;
-}
+  .template-list {
+    @include flex(flex, column, $gap: 15px);
+    padding: 15px 0px;
+    text-align: initial;
+    min-height:400px;
+  }
 
-.list {
-  padding: 15px 0px;
-  text-align: initial;
-  display:flex;
-  flex-direction: column;
-   gap:15px;
-   min-height:400px;
-  // background:$template-background;
-}
-.list__elem {
-  // cursor: row-resize;
-  // border: 1px solid $gunmetal;
-  // padding: 5px;
-  // margin-bottom: 10px;
-  // transition: all 0.3s ease;
-  // background:#fff;
-}
-.list__elem--is-dragged {
-  opacity: 0.7;
-  border: 1px dashed skyblue;
-}
-.drop-place {
-  position: relative;
-  transition: all 0.3s ease;
-}
-.drop-place--before {
-  padding-top: 80px;
-}
-.drop-place--after {
-  padding-bottom: 80px;
-}
-.drop-place--before:before {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  text-align: center;
-  content: "Drop here";
-  width: 100%;
-  padding: 20px 0;
-  opacity: 0.7;
-  border: 1px dashed skyblue;
-  background:$white-smoke;
-}
-.drop-place--after:after {
-  position: absolute;
-  bottom: 5px;
-  left: 0;
-  text-align: center;
-  content: "Drop here";
-  width: 100%;
-  padding: 20px 0;
-  opacity: 0.7;
-  border: 1px dashed skyblue;
-  background:$white-smoke;
-}
-.btn-drag {
-  float: right;
-  background: none;
-  border: none;
-}
+  .template-list__item {
+    // cursor: row-resize;
+    // border: 1px solid $gunmetal;
+    // padding: 5px;
+    // margin-bottom: 10px;
+    // transition: all 0.3s ease;
+    // background:#fff;
+  }
 
-.document-preview{
-  padding:20px 40px 40px 40px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
+  .template-list__item--is-dragged {
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+  }
+
+  .drop-place {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .drop-place--before {
+    padding-top: 80px;
+  }
+  .drop-place--after {
+    padding-bottom: 80px;
+  }
+  .drop-place--before:before {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    text-align: center;
+    content: "Drop here";
+    width: 100%;
+    padding: 20px 0;
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+    background:$white-smoke;
+  }
+  .drop-place--after:after {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    text-align: center;
+    content: "Drop here";
+    width: 100%;
+    padding: 20px 0;
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+    background:$white-smoke;
+  }
+
 </style>
