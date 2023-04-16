@@ -16,7 +16,7 @@
           :buttonList="customToolbarButtons"
           :editorId="getTemplateId">
         </custom-editor>
-        
+       
     </TemplateObject>  
   </div>
   <div v-else>

@@ -1,7 +1,7 @@
 <template>
   <div class="template-details">
     <div class="template-details__content">
-      <h1 class="template-title">{{title}}</h1>
+      <h1 class="template-title">{{title}} (<date-format :date="asof" dateFormat="MM/DD/YYYY"></date-format>)</h1>
       <div class="template-details-info">
         <div><span class="detail-label">Type: </span>{{ type }}</div>
         <div><span class="detail-label">Created: </span><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
@@ -41,6 +41,13 @@
         docs:{
           validation:'_',
           description:'Page header text'
+        }
+      },
+      asof:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Template as of date'
         }
       }
     },

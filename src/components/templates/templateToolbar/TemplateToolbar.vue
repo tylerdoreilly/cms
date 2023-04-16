@@ -3,25 +3,29 @@
     <h3>{{title}}</h3>
     <exai-tabs>
       <exai-tab title="Default">
-        <div v-for="(item, index) in toolbarItems" :key="item.id" :class="handleDropClasses(item)"
+        <div 
+          v-for="(item, index) in toolbarItems" 
+          :key="item.id" 
           draggable
           @dragstart.self=" pickupElem($event, item, index);"
           @dragend.prevent="dragEndClear();">
 
           <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-            <component v-if="item" :is="item['field']" v-bind:activated="false" :title="item['name']" :data="item"></component>
+            <template-toolbar-item :title="item.name" :icon="getIcons(item.field)"></template-toolbar-item>
           </div>
               
         </div>
       </exai-tab>
       <exai-tab title="Library">
-        <div v-for="(item, index) in libraryItems" :key="item.id" :class="handleDropClasses(item)"
+        <div 
+          v-for="(item, index) in libraryItems" 
+          :key="item.id"
           draggable
           @dragstart.self=" pickupElem($event, item, index);"
           @dragend.prevent="dragEndClear();">
 
           <div class="list__elem" :class="{'list__elem--is-dragged': dragedElem && item.id === dragedElem.id}">
-            <component v-if="item" :is="item['field']" v-bind:activated="false" :title="item['name']" :data="item" ></component>
+            <template-toolbar-item :title="item.name" :icon="getIcons(item.field)"></template-toolbar-item>
           </div>
               
         </div>
@@ -33,30 +37,21 @@
 </template>
 
 <script>
-  import TemplateItemTextBlock from './templates/templateItems/TemplateItemTextBlock.vue'
-  import TemplateHeading from './templates/templateItems/TemplateHeading.vue'
-  import TemplateItemTextField from './templates/templateItems/TemplateItemTextField.vue'
-  import TemplateItemList from './templates/templateItems/TemplateItemList.vue'
-  import TemplateLayoutSingle from './templates/templateItems/TemplateLayoutSingle.vue'
-  import ExaiTabs from './shared/exaiTabs/ExaiTabs.vue'
-  import ExaiTab from './shared/exaiTabs/ExaiTab.vue'
+  import ExaiTabs from '../../shared/exaiTabs/ExaiTabs.vue'
+  import ExaiTab from '../../shared/exaiTabs/ExaiTab.vue'
+  import TemplateToolbarItem from './TemplateToolbarItem'
 
   export default {
-    name: 'AdminToolbar',
+    name: 'template-toolbar',
     components: {
-      TemplateItemTextBlock,
-      TemplateHeading,
-      TemplateItemTextField,
-      TemplateItemList,
-      TemplateLayoutSingle,
       ExaiTabs,
-      ExaiTab
+      ExaiTab,
+      TemplateToolbarItem
     },
     data() {
         return {
           dragedElem: null,
           overElem: null
-    
       }
     },
     props:{
@@ -108,7 +103,7 @@
       randomId(){
         let randomId = Math.random() * Math.floor(1000);
         return Math.round(randomId)
-      }
+      },
     },
     methods: {
       dragEndClear() {
@@ -169,6 +164,23 @@
         selectedTemplate['id'] = randomId;
         
         this.layouts.push({id: randomId, name: "Single Col Layout", position: 1, layoutType: layout})
+      },
+
+      getIcons(value){
+        let listIcon
+        if(value == "TemplateHeading"){
+          listIcon = 'fa-header'
+        }
+        if(value == "TemplateItemList"){
+          listIcon = 'fa-list'
+        }
+        if(value == "TemplateItemTextField"){
+          listIcon = 'fa-paragraph'
+        }
+        if(value == "TemplateItemTextBlock"){
+          listIcon = 'fa-layer-group'
+        }
+        return listIcon
       }
     },
   }
@@ -180,4 +192,8 @@
     position:sticky;
     top:25px;
   }
+  .list__elem{
+   margin-bottom:10px;
+  }
+
 </style>

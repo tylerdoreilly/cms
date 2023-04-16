@@ -2,7 +2,7 @@
   <div class="inner-container">
     <div class="inner-content">
       <PageHeader title="Edit Template"></PageHeader>
-      <PageDetails :title="template.title" :type="template.type" :date="template.date_created">
+      <PageDetails :title="template.title" :type="template.type" :date="template.date_created" :asof="template.date_asof">
         <exai-button text="Details" variation="secondary" @click.native="showDetails = !showDetails">Preview</exai-button>
         <div v-if="!lockedItems">
           <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
@@ -82,13 +82,13 @@
       </div>
     </div>
     <aside class="column--right">
-        <AdminToolbar 
+        <template-toolbar 
           v-if="templateItems && customTemplateItems"
           title="Toolbar"
           :toolbarItems="templateItems"
           :libraryItems="customTemplateItems"
           @dragTemplateItem="dragTemplateItem">
-        </AdminToolbar>
+        </template-toolbar>
     </aside>
     <exai-prompt 
       v-if="itemToRemove"
@@ -105,7 +105,7 @@
 <script>
   import PageHeader from '../../../components/layout/PageHeader.vue'
   import PageDetails from '../../../components/layout/PageDetails.vue'
-  import AdminToolbar from '../../../components/AdminToolbar.vue'
+  import TemplateToolbar from '../../../components/templates/templateToolbar/TemplateToolbar.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
   import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
   import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
@@ -126,7 +126,7 @@
       PageDetails,
       TemplateLayoutSingle,
       TemplateItemList,
-      AdminToolbar,     
+      TemplateToolbar,     
       ExaiButton,
       ExaiPrompt,
       updateTemplate,
