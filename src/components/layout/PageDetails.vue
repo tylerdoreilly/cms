@@ -5,6 +5,7 @@
       <div class="template-details-info">
         <div><span class="detail-label">Type: </span>{{ type }}</div>
         <div><span class="detail-label">Created: </span><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
+        <div><span class="detail-label">Updated: </span><date-format :date="updated" dateFormat="MM/DD/YYYY"></date-format></div>
       </div>
      
     </div>
@@ -26,21 +27,21 @@
         type: String,
         docs:{
           validation:'_',
-          description:'Page header text'
+          description:'Template Title'
         }
       },
       type:{
         type: String,
         docs:{
           validation:'_',
-          description:'Page header text'
+          description:'Template Type'
         }
       },
       date:{
         type: String,
         docs:{
           validation:'_',
-          description:'Page header text'
+          description:'Template date created'
         }
       },
       asof:{
@@ -48,6 +49,13 @@
         docs:{
           validation:'_',
           description:'Template as of date'
+        }
+      },
+      updated:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Template updated date'
         }
       }
     },

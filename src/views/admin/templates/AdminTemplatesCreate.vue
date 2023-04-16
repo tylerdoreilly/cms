@@ -2,7 +2,7 @@
   <div class="inner-container">
     <div class="inner-content">
       <PageHeader title="Edit Template"></PageHeader>
-      <PageDetails :title="template.title" :type="template.type" :date="template.date_created" :asof="template.date_asof">
+      <PageDetails :title="template.title" :type="template.type" :date="template.date_created" :asof="template.date_asof" :updated="template.date_updated">
         <exai-button text="Details" variation="secondary" @click.native="showDetails = !showDetails">Preview</exai-button>
         <div v-if="!lockedItems">
           <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
@@ -359,15 +359,11 @@
       // Get and Save
       async saveTemplate(){
         this.template.data = [];
-        var myJsonString = JSON.stringify(this.items);
+        let templateData = JSON.stringify(this.items);
           if (this.id) {
-            this.template.data = myJsonString;
+            this.template.date_updated = this.getDate();
+            this.template.data = templateData;
             const putData = this.template;
-            // const putData = {
-            //   type:"Press Release",
-            //   title:"EU SF NEW",
-            //   data:myJsonString
-            // };
 
             try {
               const res = await axios.put(`/api/templates/${this.id}`, putData, {
@@ -413,6 +409,12 @@
           this.customTemplateItems = response;
           console.log('template items', this.customTemplateItems)
         })
+      },
+
+      getDate(){
+        let currentDate = new Date(Date.now()).toISOString();
+        console.log(currentDate);
+        return currentDate
       }
     },
     mounted () {
