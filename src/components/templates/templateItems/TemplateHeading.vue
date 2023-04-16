@@ -19,10 +19,6 @@
        
     </TemplateObject>  
   </div>
-  <div v-else>
-    <TemplateObject :title="title" icon="fa-header" :editMode="editMode" :activated="activated">
-    </TemplateObject>
-  </div> 
 </template>
 
 <script>

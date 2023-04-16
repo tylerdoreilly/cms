@@ -74,12 +74,7 @@
           </div>
         </div> -->
       </div>
-
-      <div class="document-preview" v-if="preview == true">
-        <div v-for="(item) in items" :key="item.id">
-          <div v-html="item.content"></div>
-        </div>
-      </div>
+      <document-preview :data="items" v-if="preview == true"></document-preview>
     </div>
     <aside class="column--right">
         <template-toolbar 
@@ -106,6 +101,7 @@
   import PageHeader from '../../../components/layout/PageHeader.vue'
   import PageDetails from '../../../components/layout/PageDetails.vue'
   import TemplateToolbar from '../../../components/templates/templateToolbar/TemplateToolbar.vue'
+  import DocumentPreview from '../../../components/templates/DocumentPreview.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
   import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
   import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
@@ -129,6 +125,7 @@
       TemplateToolbar,     
       ExaiButton,
       ExaiPrompt,
+      DocumentPreview,
       updateTemplate,
       getTemplate,
       getTemplateItems,
