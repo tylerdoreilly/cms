@@ -109,23 +109,24 @@
 
 
 <style lang="scss" module>
-  .exai-button {
-    background-color: $keppel;
-    color: white;
-    font-size: 14px;
-    border-radius: 4px;
-    display:inline-flex;
-    flex-direction:row;
-    gap:5px;
+  @mixin base-btn {
+    @include flex(inline-flex, row, $gap: 5px);
     align-content:center;
     align-items:center;
     text-align: center;
     border:0px;
+    border-radius: 4px;
     margin:0px;
-    padding:6px 8px;
     cursor:pointer;
+  }
+  .exai-button {
+    @include base-btn;
+    background-color: $keppel;
+    color: white;
+    font-size: 14px;
+    padding:6px 8px;
 
-    & --icon-only{
+    &--icon-only{
       border:0px;
       background:transparent;
     }

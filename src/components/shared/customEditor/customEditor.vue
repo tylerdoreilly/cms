@@ -1,10 +1,17 @@
 <template>
     <div class="custom-editor-wrapper">
-        <div class="quillWrapper custom">
+
+        <div class="quillWrapper custom" v-if="edit == true">
             <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
             <vue-editor v-model="content.content" :editorOptions="editorOptions" ref="quillEditor"></vue-editor>
-        </div>  
-        <raw-data-viewer v-if="showRawData" :data="content"></raw-data-viewer>
+        </div> 
+
+        <div v-html="content.content" v-else></div>
+
+        <content-block title="Details" v-if="showDetails">
+            <template-item-details :data="content"></template-item-details>
+        </content-block>
+       
         <insert-modal 
             v-if="controlType"
             v-show="showModal"
@@ -22,7 +29,8 @@
     import { DynamicControlInline } from './modules/dynamicControlInline.js'
     import customToolbar from './customToolbar.vue'
     import InsertModal from './InsertModal.vue'
-    import RawDataViewer from '../RawDataViewer.vue'
+    import contentBlock from '../contentBlock.vue'
+    import templateItemDetails from '../../templates/templateItemDetails.vue'
 
     Quill.register(DynamicControl);
     Quill.register(DynamicControlInline);
@@ -33,12 +41,17 @@
             VueEditor,
             customToolbar, 
             InsertModal,
-            RawDataViewer
+            templateItemDetails,
+            contentBlock
         },
         props:{
             buttonList:Object,
             data:Object,
-            showRawData:Boolean,
+            editMode:{
+                type:Boolean,
+               
+            },
+            showDetails:Boolean,
             editorId:{
                 type:String,
                 default:"id"
@@ -47,9 +60,8 @@
         data() {
             return {
                 content: this.data,
-                editMode:true,
                 showModal: false,
-                showModalTwo:false,
+                edit:true,
                 controlType:'',
                 editorOptions:{
                     modules: {
@@ -89,13 +101,15 @@
                 },
             }
         },
+        watch: {
+            async editMode(newValue) {
+                await this.toggleEditMode(newValue);
+            },
+        },
         methods: {
             openModal(value){
                 this.controlType = value;
                 this.showModal = true;
-            },
-            openModalTwo(){
-                this.showModalTwo = true;
             },
             getDynamicControl(value){
                 console.log('modal value',value)
@@ -116,6 +130,10 @@
                     this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}\n`,'dynamicControl', control
                 );
             },
+            async toggleEditMode(newValue){
+                this.edit = newValue
+                console.log('edit',this.edit)
+            },
         },
      }
 </script>
@@ -126,5 +144,4 @@
     flex-direction: column;
     gap:15px;
   }
- 
 </style>

@@ -1,39 +1,31 @@
 .template-object{  
+  @include flex(flex, column, $gap: 15px);
   margin-bottom: 10px;
   transition: all 0.3s ease;
   background:#fff;
-  display:flex;
-  flex-direction: column;
-  gap:15px;
   border:1px solid $border;
   border-radius:2px;
 }
 
 .template-item__header{
-  cursor: row-resize;
-  display:flex;
-  flex-direction: row;
+  @include flex(flex, row, $gap: 10px);
+  cursor: row-resize;  
   align-items:center;
   padding:12px;
-  gap:10px;
   background:$white-smoke;
   border-bottom:1px solid $border;
 }
 
 .template-item__title{
+  @include flex(flex, row, $gap: 10px);
   font-size:16px;
   font-weight:bold;
-  display:flex;
-  flex-direction: row;
-  gap:10px;
   align-items:center;
 }
 
 .template-item__controls{
-    margin-left: auto;
-    display:flex;
-    flex-direction: row;
-    gap:10px;
+  @include flex(flex, row, $gap: 10px);
+  margin-left: auto;
 }
 
 .template-item__body{

@@ -3,7 +3,7 @@
     <div class="inner-content">
       <PageHeader title="Edit Template"></PageHeader>
       <PageDetails :title="template.title" :type="template.type" :date="template.date_created">
-        <exai-button text="Raw Data" variation="secondary" @click.native="showRawData = !showRawData">Preview</exai-button>
+        <exai-button text="Details" variation="secondary" @click.native="showDetails = !showDetails">Preview</exai-button>
         <div v-if="!lockedItems">
           <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
         </div>
@@ -32,7 +32,7 @@
               :data="item" 
               :title="item['name']"
               :listCount="items.length"
-              v-bind:showRawData="showRawData"
+              v-bind:showDetails="showDetails"
               v-bind:activated="true" 
               @remove-item="checkBeforeRemove($event)"
               @lock-item="lockItem(item)"
@@ -140,7 +140,7 @@
     data() {
         return {
           showPrompt:false,
-          showRawData:false,
+          showDetails:false,
           testTy:[],
           templateItems:[],
           customTemplateItems:[],

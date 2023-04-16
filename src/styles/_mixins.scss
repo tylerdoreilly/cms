@@ -1,0 +1,77 @@
+/* MIXINS 
+******************************************/
+
+/* List Mixins ***/
+@mixin reset-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Flex Mixins **************************/
+@mixin flex($display, $fd, $gap: 0) {
+    display:$display;
+    flex-direction: $fd;
+    @if $gap != 0 {
+        gap: $gap;
+      }
+}
+
+/* Variation Mixins ***/
+
+@mixin primary($bg:true, $fd, $gap: 0) {
+    @if $gap != 0 {
+        gap: $gap;
+      }
+    background:$keppel;
+    color:$base-white;
+}
+
+@mixin background($variation) {
+    @if $variation == primary {
+        background:$primary-background;
+    }
+    @if $variation == secondary {
+        background:$secondary-background;
+    }
+    @if $variation == dark {
+        background:$dark-background;
+    }
+}
+
+@mixin border($variation, $style, $width:0, $radius:0) {
+    @if $variation == primary {
+        border-color:$primary-border;
+    }
+    @if $variation == secondary {
+        border-color:$secondary-border;
+    }
+    @if $variation == dark {
+        border-color:$dark-border;
+    }
+    @if $width != 0 {
+        border-width: $width;
+    }
+    @if $radius != 0 {
+        border-radius: $radius;
+    }
+    border-style: $style;
+}
+
+@mixin color($variation) {
+    @if $variation == primary {
+        color:$base-text;
+    }
+    @if $variation == onPrimary {
+        color:$base-white;
+    }
+    @if $variation == onSecondary {
+        color:$base-text;
+    }
+    @if $variation == onDark {
+        color:$base-text;
+    }
+    @if $variation == link {
+        color:$keppel;
+    }
+}

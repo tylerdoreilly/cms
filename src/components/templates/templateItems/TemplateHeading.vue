@@ -3,25 +3,20 @@
     <TemplateObject 
       :title="title" 
       :sectionId="content.id"
-      icon="fa-header" 
       :editMode="editMode" 
       :activated="activated"
+      icon="fa-header" 
       @edit-mode="toggleEditMode($event)">
-     
-        <div v-if="editMode == true && content">
-          <custom-editor  
-            v-model="content.content"
-            :data="content"
-            :showRawData="showRawData"
-            :buttonList="customToolbarButtons"
-            :editorId="getTemplateId">
-          </custom-editor>
-          <!-- <br>
-          {{ content }} -->
-        </div>  
-        <div v-else>
-        <div v-html="content.content"></div>
-        </div>  
+
+        <custom-editor  
+          v-model="content.content"
+          :data="content"
+          :editMode="editMode"
+          :showDetails="showDetails"
+          :buttonList="customToolbarButtons"
+          :editorId="getTemplateId">
+        </custom-editor>
+        
     </TemplateObject>  
   </div>
   <div v-else>
@@ -44,7 +39,7 @@ export default {
     title: String,
     data: Object,
     activated: Boolean,
-    showRawData:Boolean,
+    showDetails:Boolean,
   },
   data() {
       return {
@@ -75,6 +70,7 @@ export default {
   methods: {
     toggleEditMode(){
         this.editMode = !this.editMode
+        console.log('edit',this.editMode)
     },
     lockItem(item){
       console.log(item)

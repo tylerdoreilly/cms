@@ -10,11 +10,28 @@ $base-white:#fff;
 
 
 
-$template-background:lighten( $white-smoke, 1% );
-$border: #ccc;
-$sidebar-bg:$white-smoke;
+
 $overlay: #000000da;
 
+/* Text ***************************************/
+$base-text:#2c3e50;
+
+
+/* Backgrounds ***************************************/
+$default-background: $white-smoke;
+$primary-background: $keppel;
+$secondary-background: $white-smoke;
+$dark-background: $gunmetal;
+
+$template-background: lighten( $white-smoke, 1% );
+$sidebar-bg:$white-smoke;
+
+/* Borders ***************************************/
+$border: #ccc;
+$default-border: #ccc;
+$primary-border: $keppel;
+$secondary-border: $white-smoke;
+$dark-border: $gunmetal;
 
 
 /* SCSS Gradient */

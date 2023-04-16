@@ -2,24 +2,20 @@
   <div v-if="activated == true">
     <TemplateObject 
       :title="title" 
-      icon="fa-layer-group" 
+      :sectionId="content.id"
       :editMode="editMode" 
       :activated="activated"
+      icon="fa-layer-group"
       @edit-mode="toggleEditMode($event)">
        
-      <div v-if="editMode == true">
         <custom-editor  
           v-model="content.content"
           :data="content"
+          :editMode="editMode"
+          :showDetails="showDetails"
           :buttonList="customToolbarButtons"
           :editorId="getTemplateId">
         </custom-editor>
-          <!-- <br>
-          {{ content }} -->
-      </div>  
-      <div v-else>
-       <div v-html="content.content"></div>
-      </div>  
       
     </TemplateObject>  
   </div>
@@ -42,7 +38,8 @@
     props: {
       title: String,
       data: Object,
-      activated: Boolean
+      activated: Boolean,
+      showDetails:Boolean,
     },
     data() {
       return {

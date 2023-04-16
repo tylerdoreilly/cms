@@ -1,25 +1,22 @@
 <template>
   <div v-if="activated == true">
     <TemplateObject 
-      :title="title" 
-      icon="fa-paragraph" 
+      :title="title"
+      :sectionId="content.id" 
       :editMode="editMode" 
       :activated="activated"
+      icon="fa-paragraph" 
       @edit-mode="toggleEditMode($event)">
        
-      <div v-if="editMode == true">
         <custom-editor  
           v-model="content.content"
           :data="content"
+          :editMode="editMode"
+          :showDetails="showDetails"
           :buttonList="customToolbarButtons"
           :editorId="getTemplateId">
         </custom-editor>
-        <!-- <br>
-        {{ content }} -->
-      </div>  
-      <div v-else>
-       <div v-html="content.content"></div>
-      </div>  
+        
     </TemplateObject>  
   </div>
   <div v-else>
@@ -41,7 +38,8 @@ export default {
   props: {
     title: String,
     data: Object,
-    activated: Boolean
+    activated: Boolean,
+    showDetails: Boolean,
   },
   data() {
       return {
