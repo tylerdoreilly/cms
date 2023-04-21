@@ -1,48 +1,53 @@
 <template>
-  <div class="inner-container">
-    <div class="inner-content">
-      <PageHeader title="Edit Template"></PageHeader>
-      <PageDetails :title="template.title" :type="template.type" :date="template.date_created" :asof="template.date_asof" :updated="template.date_updated">
-        <exai-button text="Details" variation="secondary" @click.native="showDetails = !showDetails">Preview</exai-button>
-        <div v-if="!lockedItems">
-          <exai-button text="Lock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
-        </div>
-        <div v-else>
-          <exai-button text="Unlock Items" variation="secondary" icon-left="fa-lock"  @click.native="lockItems()"></exai-button>
-        </div>
-             
-        <exai-button text="Preview" variation="secondary" @click.native="preview = !preview">Preview</exai-button>
-        <exai-button text="Save" variation="primary" @click.native="saveTemplate()">Save</exai-button>
-      </PageDetails>
-      
-      <div class="template-list" v-if="preview == false && items">        
-        <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)"       
-          draggable
-          @dragstart.self="pickupElem($event, item, index);"
-          @dragover.prevent="showDropPlace($event, item, index);"
-          @dragenter.prevent
-          @drop="moveElem($event, item, index);"
-          @dragend.prevent="dragEndClear();">
+  <div>
+    <page-layout sidebar>
+      <template v-slot:content>
 
-          <component 
-              v-if="item"
-              class="template-list__item"
-              :class="{'template-list__item--is-dragged': dragedElem && item.id === dragedElem.id}"
-              :is="item['field']" 
-              :data="item" 
-              :title="item['name']"
-              :listCount="items.length"
-              v-bind:showDetails="showDetails"
-              v-bind:activated="true" 
-              @remove-item="checkBeforeRemove($event)"
-              @lock-item="lockItem(item)">
-          </component>
-         
-        </div>
-      </div>
-      <document-preview :data="items" v-if="preview == true"></document-preview>
-    </div>
-    <aside class="column--right">
+        <PageHeader title="Edit Template">
+          <exai-button text="Preview" @click.native="preview = !preview"></exai-button>
+          <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
+        </PageHeader>
+        <PageDetails 
+          :title="template.title" 
+          :type="template.type" 
+          :date="template.date_created" 
+          :asof="template.date_asof" 
+          :updated="template.date_updated">
+          <exai-button text="Edit" @click.native="editTemplateDetails = !editTemplateDetails"></exai-button>
+          <exai-button text="Details" @click.native="showDetails = !showDetails"></exai-button>
+          <exai-button text="Lock/Unlock" icon-left="fa-lock" @click.native="lockItems()"></exai-button>   
+        </PageDetails>
+
+        <template-container v-if="preview == false && items">
+          <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)"       
+            draggable
+            @dragstart.self="pickupElem($event, item, index);"
+            @dragover.prevent="showDropPlace($event, item, index);"
+            @dragenter.prevent
+            @drop="moveElem($event, item, index);"
+            @dragend.prevent="dragEndClear();">
+
+            <component 
+                v-if="item"
+                class="template-list__item"
+                :class="{'template-list__item--is-dragged': dragedElem && item.id === dragedElem.id}"
+                :is="item['field']" 
+                :data="item" 
+                :title="item['name']"
+                :listCount="items.length"
+                v-bind:showDetails="showDetails"
+                v-bind:activated="true" 
+                @remove-item="checkBeforeRemove($event)"
+                @lock-item="lockItem(item)">
+            </component>
+          
+          </div>
+        </template-container>
+       
+        <document-preview :data="items" v-if="preview == true"></document-preview>
+
+      </template>
+      <template v-slot:sidebar-right>
         <template-toolbar 
           v-if="templateItems && customTemplateItems"
           title="Toolbar"
@@ -50,7 +55,8 @@
           :libraryItems="customTemplateItems"
           @dragTemplateItem="dragTemplateItem">
         </template-toolbar>
-    </aside>
+      </template>
+    </page-layout>
 
     <exai-prompt 
       v-if="itemToRemove"
@@ -61,13 +67,25 @@
       @close-modal="showPrompt = false" 
       @close-and-submit="removeItem($event)">
     </exai-prompt>
+
+    <template-details-edit 
+      v-if="editTemplateDetails"
+      :data="template"
+      :types="templateTypes"
+      @close-modal="editTemplateDetails = false" 
+      @update-template-details=" updateTemplateDetails($event)">
+
+    </template-details-edit>
   </div>
 </template>
 
 <script>
+  import PageLayout from '../../../components/layout/PageLayout.vue'
   import PageHeader from '../../../components/layout/PageHeader.vue'
   import PageDetails from '../../../components/layout/PageDetails.vue'
+  import TemplateContainer from '../../../components/templates/TemplateContainer.vue'
   import TemplateToolbar from '../../../components/templates/templateToolbar/TemplateToolbar.vue'
+  import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue'
   import DocumentPreview from '../../../components/templates/DocumentPreview.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
   import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
@@ -76,19 +94,23 @@
   import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
   import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
-  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems } from '../../../services/TemplatesService'
+  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems, getTemplateTypes } from '../../../services/TemplatesService'
 
   const axios = require('axios');
   export default {
     name: 'AdminTemplatesCreate',
+
     components: {
-      TemplateItemTextBlock,
-      TemplateHeading,
-      TemplateItemTextField,
+      PageLayout,
       PageHeader,
       PageDetails,
-      TemplateLayoutSingle,
+      TemplateContainer,
+      TemplateDetailsEdit,
+      TemplateHeading,
+      TemplateItemTextField,
+      TemplateItemTextBlock,
       TemplateItemList,
+      TemplateLayoutSingle,
       TemplateToolbar,     
       ExaiButton,
       ExaiPrompt,
@@ -96,15 +118,15 @@
       updateTemplate,
       getTemplate,
       getTemplateItems,
-      getCustomTemplateItems
+      getCustomTemplateItems,
+      getTemplateTypes
     },
-    props: {
-      msg: String
-    },
+
     data() {
         return {
           items: [],
           templateItems:[],
+          templateTypes:[],
           customTemplateItems:[],
           id: this.$route.params.id,
           template: [],
@@ -122,9 +144,11 @@
           preview: false,
           newInstance:false,
           lockedItems:false,
-          itemToRemove:''
+          itemToRemove:'',
+          editTemplateDetails:false,
       }
     },
+
     computed: {
       handleDropClasses() {
         return item => {
@@ -170,10 +194,10 @@
         return Math.round(randomId)
       }
     },
+
     methods: {
 
       // Drag and Drop Methods
-
       dragEndClear() {
         console.log("dragEnd");
         this.dragedElem = null;
@@ -280,6 +304,7 @@
         this.items.push(defaultItem)
       },
 
+      // Other Methods
       checkBeforeRemove(event){
         const elem = this.items.find(item => item.id == event)
         this.itemToRemove = elem;
@@ -319,14 +344,46 @@
         })
       },
 
+      getDate(){
+        let currentDate = new Date(Date.now()).toISOString();
+        console.log(currentDate);
+        return currentDate
+      },
+
+      toggleDetails(){
+        this.showDetails = !this.showDetails;
+      },
+
       // Get and Save
       async saveTemplate(){
         this.template.data = [];
         let templateData = JSON.stringify(this.items);
           if (this.id) {
+            let type = this.template.type_id;
             this.template.date_updated = this.getDate();
+            this.template.type_new = type;
             this.template.data = templateData;
             const putData = this.template;
+
+            try {
+             await axios.put(`/api/templates/${this.id}`, putData, {
+                headers: {
+                  "x-access-token": "token-value",
+                },
+              });
+
+              // const result = res;
+              this.$toast("Template Saved Successfully");
+            } 
+            catch (err) {
+             console.log(err)
+            }
+          }
+      },
+
+      async updateTemplateDetails(data){
+          if (this.id) {
+            const putData = data;
 
             try {
              await axios.put(`/api/templates/${this.id}`, putData, {
@@ -357,6 +414,14 @@
         })
       },
 
+      getTemplateTypes(){
+        getTemplateTypes().then(response => {
+          console.log(response)
+          this.templateTypes = response;
+          console.log('template types', this.templateTypes)
+        })
+      },
+
       getTemplateItems(){
         getTemplateItems().then(response => {
           console.log(response)
@@ -372,47 +437,19 @@
           console.log('template items', this.customTemplateItems)
         })
       },
-
-      getDate(){
-        let currentDate = new Date(Date.now()).toISOString();
-        console.log(currentDate);
-        return currentDate
-      }
     },
+
     mounted () {
       this.getCustomTemplateItems();
       this.getTemplateItems();
+      this.getTemplateTypes();
       this.getTemplate();
     }
   }
 </script>
 
 <style lang="scss">
-  .inner-container{
-    display: flex;
-    min-height: calc(100vh - 60px);
-    flex: 1;
-  }
-
-  .inner-content {
-    flex: 1;
-    padding-right:40px;
-  }
-
-  .column--right {
-    flex: 0 0 15em;
-    border-left:1px solid $border;
-    width:15em;
-    padding:0px 20px;
-  }
-
-  .template-list {
-    @include flex(flex, column, $gap: 15px);
-    padding: 15px 0px;
-    text-align: initial;
-    min-height:400px;
-  }
-
+ 
   .template-list__item {
     // cursor: row-resize;
     // border: 1px solid $gunmetal;

@@ -1,41 +1,36 @@
 <template>
-  <button type="button" :class="[$style['exai-button'], classModifiers]">
-    <div v-if="this.leftIcon">
-      <font-awesome-icon :icon="setLeftIcon" />
-    </div>
-
-    <div v-if="this.text">
-      {{ text }}
-    </div>
-    
-    <div v-if="this.rightIcon">
-      <font-awesome-icon :icon="setRightIcon" />
-    </div>
-
-    <div v-if="this.icon">
-      <font-awesome-icon :icon="setIcon" />
-    </div>
-  </button>
+  <div>
+    <font-awesome-icon :icon="changeIcon(toggleState)" />
+    <exai-button :text="btnText" :icon-left="changeIcon(toggleState)" @click.native="toggleBtn()"></exai-button>
+  </div>
+ 
 </template>
 
 <script>
+  import ExaiButton from './ExaiButton.vue'
 
   export default {
-    name: 'exai-button',
+    name: 'exai-toggle-button',
     components: {
-    
+      ExaiButton
     },
     data() {
-      return {
-        selectedIcon:'',
+      return {    
+        toggleState:false,
+        btnText:this.upText,
         iconBase: 'fa-solid',
-        btnIcon: this.icon,
-        leftIcon: this.iconLeft,
-        rightIcon: this.iconRight
+        btnIcon: this.upIcon,
       }
     },
     props:{
-      text:{
+      upText:{
+        type: String,
+        docs:{
+          validation:'_',
+          description:'Button text'
+        }
+      },
+      downText:{
         type: String,
         docs:{
           validation:'_',
@@ -57,14 +52,14 @@
           description:"icon selection"
         }
       },
-      iconLeft:{
+      upIcon:{
         type: String,
         docs:{
           validation: '_',
           description:"icon selection"
         }
       },
-      iconRight:{
+      downIcon:{
         type: String,
         docs:{
           validation: '_',
@@ -80,31 +75,26 @@
         obj[this.$style['exai-button--icon-only']] = this.editMode && this.activated;
         return obj
       },
-      setIcon(){
+    },
+    methods:{
+      toggleBtn(){
+        console.log('btn', this.toggleState)
+        this.toggleState = !this.toggleState;
+        this.changeIcon(this.toggleState);
+        this.$emit('toggle-action', this.toggleState)
+      },
+
+      changeIcon(value){
         let buildIcon
-        if(this.btnIcon){       
-          buildIcon = `${this.iconBase} + ${this.btnIcon}`  
-          console.log('icon',buildIcon)       
+        if(!value){
+        buildIcon = this.upIcon
+        }
+        if(value){
+          buildIcon = this.downIcon 
         }
         return buildIcon
-      },
-      setLeftIcon(){
-        let buildLeftIcon
-        if(this.leftIcon != null || this.leftIcon != ''){       
-          buildLeftIcon = `${this.iconBase} + ${this.leftIcon}`  
-          console.log('icon',buildLeftIcon)       
-        }
-        return buildLeftIcon
-      },
-      setRightIcon(){
-        let buildRightIcon
-        if(this.rightIcon != null || this.rightIcon != ''){       
-          buildRightIcon = `${this.iconBase} + ${this.rightIcon}`  
-          console.log('icon',buildRightIcon)       
-        }
-        return buildRightIcon
-      }
-    },
+      }      
+    }
   }
 </script>
 

@@ -5,6 +5,11 @@ export async function getAllTemplates() {
     return response.data;
 }
 
+export async function getTemplateTypes() {
+    const response = await axios.get('/api/templateTypes');
+    return response.data;
+}
+
 export async function getTemplateItems() {
     const response = await axios.get('/api/templateItems');
     return response.data;

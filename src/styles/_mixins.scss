@@ -19,14 +19,6 @@
 
 /* Variation Mixins ***/
 
-@mixin primary($bg:true, $fd, $gap: 0) {
-    @if $gap != 0 {
-        gap: $gap;
-      }
-    background:$keppel;
-    color:$base-white;
-}
-
 @mixin background($variation) {
     @if $variation == primary {
         background:$primary-background;
@@ -34,12 +26,37 @@
     @if $variation == secondary {
         background:$secondary-background;
     }
+    @if $variation == default {
+        background:$default-background;
+    }
     @if $variation == dark {
         background:$dark-background;
     }
 }
 
 @mixin border($variation, $style, $width:0, $radius:0) {
+    @if $variation == primary {
+        border-color:$primary-border;
+    }
+    @if $variation == secondary {
+        border-color:$secondary-border;
+    }
+    @if $variation == default {
+        border-color:$secondary-border;
+    }
+    @if $variation == dark {
+        border-color:$dark-border;
+    }
+    @if $width != 0 {
+        border-width: $width;
+    }
+    @if $radius != 0 {
+        border-radius: $radius;
+    }
+    border-style: $style;
+}
+
+@mixin borderNew($variation, $style, $width:0, $radius:0, $position:all) {
     @if $variation == primary {
         border-color:$primary-border;
     }
@@ -54,6 +71,21 @@
     }
     @if $radius != 0 {
         border-radius: $radius;
+    }
+    @if $position == left {
+        border-left: $style;
+    }
+    @if $position == right {
+        border-right: $style;
+    }
+    @if $position == top {
+        border-top: $style;
+    }
+    @if $position == bottom {
+        border-top: $style;
+    }
+    @if $position == all {
+        border-style: $style;
     }
     border-style: $style;
 }
@@ -74,4 +106,38 @@
     @if $variation == link {
         color:$keppel;
     }
+}
+
+/* Button Mixins 
+***********************************************/
+
+/* Button Setup Mixin ***/
+@mixin btn-base {
+    @include flex(inline-flex, row, $gap: 5px);
+    align-content:center;
+    align-items:center;
+    text-align: center;
+    border:0px;
+    border-radius: 4px;
+    margin:0px;
+    cursor:pointer;
+}
+
+/* Button Variations ***/
+@mixin btn-default() {
+    @include background(default);
+    @include border(default, solid, 1px, 4px);
+    @include color(onDefault);
+}
+
+@mixin btn-primary() {
+   @include background(primary);
+   @include border(primary, solid, 1px, 4px);
+   @include color(onPrimary);
+}
+
+@mixin btn-secondary() {
+    @include background(secondary);
+    @include border(secondary, solid, 1px, 4px);
+    @include color(onSecondary);
 }
