@@ -97,6 +97,7 @@
   import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems, getTemplateTypes } from '../../../services/TemplatesService'
 
   const axios = require('axios');
+  
   export default {
     name: 'AdminTemplatesCreate',
 

@@ -48,6 +48,7 @@
         left: 0;
         right: 0;
         display: flex;
+        align-items:flex-start;
         justify-content: center;
         background-color: $overlay;
         z-index:1000;
@@ -56,11 +57,12 @@
     .exai-modal {
         background-color: $base-white;
         text-align: left;
-        height: 400px;
+        height: auto;
         width: 600px;
         margin-top: 10%;
         border-radius: 10px;
-       
+        display:flex;
+        flex-direction: column;    
     }
 
     .exai-modal__header{
@@ -88,9 +90,16 @@
 
     .exai-modal__body{
         padding:20px;
+        height: auto;
+        max-height:600px;
+        overflow-y: auto;
     }
 
     .exai-modal__actions{
+        margin-left: auto;
+        display:flex;
+        flex-direction: row;
+        gap:10px;
         padding:20px;
     }
    

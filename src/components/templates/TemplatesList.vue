@@ -29,6 +29,7 @@
 
 <script>
     import dateFormat from '../shared/dateFormat.vue'
+
     export default {
         name: 'TemplatesList',
         components:{
