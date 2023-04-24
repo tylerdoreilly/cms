@@ -1,15 +1,26 @@
 <template>
-  <div class="page-wrapper">
-    <h1>Dashboard</h1>
-    <p>WIP</p>
+  <div>
+    <page-layout>
+      <template v-slot:content>
+        <PageHeader title="Dashboard">
+        </PageHeader>
+        <p>WIP</p>
+      </template>
+    </page-layout>
   </div>
 </template>
 
 <script>
+  import PageHeader from '../../components/layout/PageHeader.vue';
+  import PageLayout from '../../components/layout/PageLayout.vue';
 
-export default {
-  name: 'AdminDashboard',
-}
+  export default {
+    name: 'AdminDashboard',
+    components: {
+      PageHeader,
+      PageLayout
+    },
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

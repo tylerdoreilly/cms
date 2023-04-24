@@ -1,15 +1,19 @@
 <template>
   <exai-loader v-if="loading"></exai-loader>
-  <div class="page-wrapper" v-else>
-    <PageHeader title="Templates">
-      <exai-button text="Create Template" variation="primary" @click.native="openCreateModal()"></exai-button>
-    </PageHeader>
+  <div v-else>
+    <page-layout>
+      <template v-slot:content>
+        <PageHeader title="Templates">
+          <exai-button text="Create Template" variation="primary" @click.native="openCreateModal()"></exai-button>
+        </PageHeader>
 
-    <TemplatesList 
-      :templates="templates"
-      @open-clone-template="openCloneModal($event)">
-    </TemplatesList>
-      
+        <TemplatesList 
+          :templates="templates"
+          @open-clone-template="openCloneModal($event)">
+        </TemplatesList>
+      </template>
+    </page-layout>
+         
     <template-create
       v-if="createTemplate"
       :types="templateTypes"
@@ -29,6 +33,7 @@
 
 <script>
   import PageHeader from '../../../components/layout/PageHeader.vue'
+  import PageLayout from '../../../components/layout/PageLayout.vue'
   import TemplatesList from '../../../components/templates/TemplatesList.vue'
   import TemplateCreate from '../../../components/templates/TemplateCreate.vue'
   import TemplateClone from '../../../components/templates/TemplateClone.vue'
@@ -46,6 +51,7 @@
       TemplateCreate,
       TemplateClone,
       PageHeader,
+      PageLayout,
       ExaiButton,
       ExaiLoader
     },

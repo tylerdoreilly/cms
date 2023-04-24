@@ -10,7 +10,7 @@
         <exai-button variation="secondary" icon="fa-lock" @click.native="lockItem(content)"></exai-button>
         <exai-popover>
           <exai-list>
-            <exai-list-item title="Save Item" @click.native="saveItem(content)"></exai-list-item>
+            <exai-list-item title="Save Item" @click.native.prevent="saveItem(content)"></exai-list-item>
             <exai-list-item title="Remove Item" @click.native="removeItem(sectionId)"></exai-list-item>
             <!-- <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
             <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item> -->
@@ -68,6 +68,7 @@
           description: 'sets edit mode styles'
         }
       },
+      data:[Array, Object],
       sectionId:Number
     },
     data() {
@@ -76,7 +77,8 @@
         remove:false,
         iconBase: 'fa-solid',
         headerIcon: this.icon,
-        section:this.sectionId
+        section:this.sectionId,
+        content:this.data,
       }
     },
     computed:{
@@ -107,6 +109,9 @@
       removeItem(sectionId){
         console.log('remove clicked',sectionId)
         this.$parent.$emit('remove-item', sectionId)
+      },
+      saveItem(item){
+        this.$parent.$emit('save-custom-item', item)
       },
     },
   }

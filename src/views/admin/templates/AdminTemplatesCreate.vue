@@ -39,6 +39,7 @@
                 v-bind:showDetails="showDetails"
                 v-bind:activated="true" 
                 @remove-item="checkBeforeRemove($event)"
+                @save-custom-item="openCustomItemModal($event)"
                 @lock-item="lockItem(item)">
             </component>
           
@@ -75,8 +76,15 @@
       :types="templateTypes"
       @close-modal="editTemplateDetails = false" 
       @update-template-details=" updateTemplateDetails($event)">
-
     </template-details-edit>
+
+    <template-save-custom-item 
+      v-if="showSaveCustomItem"
+      :data="customTemplateItem"
+      @close-modal="showSaveCustomItem = false" 
+      @save-custom-item=" saveCustomTemplateitem($event)">
+
+    </template-save-custom-item>
   </div>
 </template>
 
@@ -87,6 +95,7 @@
   import TemplateContainer from '../../../components/templates/TemplateContainer.vue'
   import TemplateToolbar from '../../../components/templates/templateToolbar/TemplateToolbar.vue'
   import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue'
+  import TemplateSaveCustomItem from '../../../components/templates/TemplateSaveCustomItem.vue'
   import DocumentPreview from '../../../components/templates/DocumentPreview.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
   import ExaiLoader from '../../../components/shared/ExaiLoader.vue'
@@ -109,6 +118,7 @@
       PageDetails,
       TemplateContainer,
       TemplateDetailsEdit,
+      TemplateSaveCustomItem,
       TemplateHeading,
       TemplateItemTextField,
       TemplateItemTextBlock,
@@ -129,6 +139,7 @@
           customTemplateItems:[],
           id: this.$route.params.id,
           template: [],
+          customTemplateItem:'',
           layouts:[],
           availableTemplateItems: [
             { id: 1, name: "Heading", position: 1, field:'TemplateHeading', content:'place heading here'},
@@ -145,6 +156,7 @@
           lockedItems:false,
           itemToRemove:'',
           editTemplateDetails:false,
+          showSaveCustomItem:false,
           loading:false,
       }
     },
@@ -354,6 +366,12 @@
         this.showDetails = !this.showDetails;
       },
 
+      openCustomItemModal(event) {
+        this.showSaveCustomItem = true;
+        this.customTemplateItem = event;
+        console.log('template to save',event)
+      },
+
       // Get and Save
       async saveTemplate(){
         this.template.data = [];
@@ -379,6 +397,28 @@
              console.log(err)
             }
           }
+      },
+
+      async saveCustomTemplateitem(data){
+        let clonedData = {...data}
+        const customTemplateItemsLength = this.customTemplateItems.length;
+        clonedData.id = customTemplateItemsLength + 1; 
+        const putData = clonedData; 
+
+        try {
+          await axios.post(`/api/templateItemsCustom/`, putData, {
+            headers: {
+              "x-access-token": "token-value",
+            },
+          });
+
+          this.$toast("Custom Template Item Created Successfully");
+
+          this.customTemplateItems.push(clonedData);
+        } 
+        catch (err) {
+          console.log(err)
+        }
       },
 
       async updateTemplateDetails(data){

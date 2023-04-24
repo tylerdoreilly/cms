@@ -5,6 +5,7 @@
       :sectionId="content.id"
       :editMode="editMode" 
       :activated="activated"
+      :data="content"
       icon="fa-header" 
       @edit-mode="toggleEditMode($event)">
 

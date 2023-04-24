@@ -1,10 +1,10 @@
 <template>
-  <div>
-  <details data-popover="down">
+  <div v-on-clickaway="away">
+  <details data-popover="down" ref="detailsRef">
     <summary>
-      <div class="popover-btn popover-btn--secondary"><font-awesome-icon icon="fa-solid fa-ellipsis" /></div>
+      <div  class="popover-btn popover-btn--secondary"><font-awesome-icon icon="fa-solid fa-ellipsis" /></div>
     </summary>
-    <div class="popover-body">
+    <div class="popover-body" >
       <slot></slot>
     </div>
     
@@ -14,9 +14,11 @@
 </template>
 
 <script>
+  import { mixin as clickaway } from 'vue-clickaway';
 
   export default {
     name: 'exai-popover',
+    mixins: [ clickaway ],
     components: {
     
     },
@@ -98,6 +100,15 @@
         }
         return buildRightIcon
       }
+    },
+    methods: {
+      away: function() {
+        console.log('clicked away');
+        if (this.$refs.detailsRef.open) {
+          this.$refs.detailsRef.open = false;
+          console.log('details', this.$refs.detailsRef.open)
+        }
+      },
     },
   }
 </script>

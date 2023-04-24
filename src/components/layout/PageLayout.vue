@@ -19,7 +19,7 @@ export default {
   props: {
     sidebar:{
       type:Boolean,
-      default:true,
+      default:false,
     }
   },
   data() {
