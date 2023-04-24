@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+// Get Template Items
+
 export async function getAllTemplates() {
     const response = await axios.get('/api/templates');
     return response.data;

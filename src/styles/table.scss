@@ -68,3 +68,14 @@
 .table__link{
     color:#000;
 }
+
+.table-actions{
+    display:inline-flex;
+    flex-direction: row;
+    gap:5px;
+}
+
+.table-actions a{
+ cursor:pointer;
+ color:$keppel;
+}

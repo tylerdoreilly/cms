@@ -21,8 +21,11 @@
                   <td class="table-td"><date-format :date="item.date_created" dateFormat="MM/DD/YYYY"></date-format></td>
                   <td class="table-td"><date-format :date="item.date_updated" dateFormat="MM/DD/YYYY"></date-format></td>
                   <td class="table-td">
-                    <router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link>
-                    <a @click="clone(item)">Clone</a>
+                    <div class="table-actions">
+                        <router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link>
+                        <a @click.prevent="openCloneTemplate(item)">Clone</a>
+                    </div>
+                   
                 </td>
               </tr>
             </tbody>
@@ -40,8 +43,9 @@
         },
         props: ['templates'],
         methods:{
-            clone(template){
-                this.$emit('clone-template', template);
+            openCloneTemplate(template){
+                console.log('pass template',template)
+                this.$emit('open-clone-template', template);
             }
         },
     }

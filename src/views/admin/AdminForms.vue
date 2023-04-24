@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <h1>Dashboard</h1>
+    <h1>Forms</h1>
     <p>WIP</p>
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
 
 export default {
-  name: 'AdminDashboard',
+  name: 'AdminForms',
 }
 </script>
 

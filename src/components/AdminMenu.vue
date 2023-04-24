@@ -1,10 +1,9 @@
 <template>
   <div id="nav" class="nav">
     <router-link class="nav-item" to="/admin/dashboard">Dashboard</router-link>
-    <router-link class="nav-item" to="/admin/pages">Pages</router-link>
     <router-link class="nav-item" to="/admin/templates">Templates</router-link>
-    <router-link class="nav-item" to="/admin/create-template">Forms</router-link>
-    <router-link class="nav-item" to="/admin/pages">Content Types</router-link>
+    <router-link class="nav-item" to="/admin/forms">Forms</router-link>
+    <!-- <router-link class="nav-item" to="/admin/pages">Content Types</router-link> -->
     <router-link class="nav-item" to="/admin/users">Users</router-link>
   </div>
 </template>

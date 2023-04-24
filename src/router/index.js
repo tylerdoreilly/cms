@@ -4,6 +4,7 @@ import AdminHome from '../views/admin/AdminHome.vue'
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
 import AdminUsers from '../views/admin/AdminUsers.vue'
 import AdminPages from '../views/admin/AdminPages.vue'
+import AdminForms from '../views/admin/AdminForms.vue'
 import AdminTemplates from '../views/admin/templates/AdminTemplates.vue'
 import AdminTemplatesCreate from '../views/admin/templates/AdminTemplatesCreate.vue'
 import HelloWorld from '../components/HelloWorld.vue'
@@ -33,6 +34,10 @@ const routes = [
         {
           path: '/admin/pages',
           component:AdminPages
+        },
+        {
+          path: '/admin/forms',
+          component:AdminForms
         },
         {
           path: '/admin/templates',
