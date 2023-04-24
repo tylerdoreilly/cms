@@ -20,7 +20,10 @@
                   <td class="table-td"><date-format :date="item.date_asof" dateFormat="MM/DD/YYYY"></date-format></td>
                   <td class="table-td"><date-format :date="item.date_created" dateFormat="MM/DD/YYYY"></date-format></td>
                   <td class="table-td"><date-format :date="item.date_updated" dateFormat="MM/DD/YYYY"></date-format></td>
-                  <td class="table-td"><router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link></td>
+                  <td class="table-td">
+                    <router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link>
+                    <a @click="clone(item)">Clone</a>
+                </td>
               </tr>
             </tbody>
         </table>
@@ -35,7 +38,12 @@
         components:{
             dateFormat
         },
-        props: ['templates']
+        props: ['templates'],
+        methods:{
+            clone(template){
+                this.$emit('clone-template', template);
+            }
+        },
     }
 </script>
 

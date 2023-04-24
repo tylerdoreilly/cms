@@ -3,8 +3,13 @@
     <PageHeader title="Templates">
       <exai-button text="Create Template" variation="primary" @click.native="openModal()"></exai-button>
     </PageHeader>
-    <TemplatesList v-if="templates.length > 0" :templates="templates" />
-    <AppModal v-show="showModal" @close-modal="showModal = false" />
+    <exai-loader v-if="loading"></exai-loader>
+    <TemplatesList 
+      v-else
+      :templates="templates"
+      @clone-template="createNewTemplate($event)">
+    </TemplatesList>
+      
     <template-create
       v-if="createTemplate"
       :types="templateTypes"
@@ -17,9 +22,9 @@
 <script>
   import PageHeader from '../../../components/layout/PageHeader.vue'
   import TemplatesList from '../../../components/templates/TemplatesList.vue'
-  import AppModal from '../../../components/modal.vue'
+  import ExaiLoader from '../../../components/shared/ExaiLoader.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
-  import { getAllTemplates, getTemplateTypes } from '../../../services/TemplatesService'
+  import { getTemplatesList } from '../../../services/TemplatesService'
   import TemplateCreate from '../../../components/templates/TemplateCreate.vue'
 
   const axios = require('axios');
@@ -29,7 +34,9 @@
     components: {
       TemplateCreate,
       TemplatesList,
-      AppModal,PageHeader,ExaiButton
+      PageHeader,
+      ExaiButton,
+      ExaiLoader
     },
     data() {
         return {
@@ -37,28 +44,23 @@
             createTemplate:false,
             templates: [],
             templateTypes: [],
-            numberOfTemplates: 0
+            numberOfTemplates: 0,
+            loading:false
         }
     },
     methods: {
-      getAllTemplates() {
-        getAllTemplates().then(response => {
-          console.log(response)
-          this.templates = response
-          this.numberOfTemplates = this.templates.length
-        })
-      },
-
-      openModal(){
-        this.createTemplate = true;
-      },
-
-      getTemplateTypes(){
-        getTemplateTypes().then(response => {
-          console.log(response)
-          this.templateTypes = response;
-          console.log('template types', this.templateTypes)
-        })
+      async getAllData() {
+        this.loading = true;
+        getTemplatesList().then(
+          axios.spread(({data: templates}, {data:templateTypes}) => {
+            console.log({templates, templateTypes });
+            this.templates = templates;
+            this.numberOfTemplates = this.templates.length;
+            this.templateTypes = templateTypes;
+          })
+        )
+        .catch(error => {console.log(error) })
+        .finally(() => (this.loading = false))
       },
 
       async createNewTemplate(data){  
@@ -80,10 +82,12 @@
         }
       },
 
+      openModal(){
+        this.createTemplate = true;
+      },
     },
     mounted () {
-      this.getAllTemplates();
-      this.getTemplateTypes();
+      this.getAllData();
     }
   }
 </script>

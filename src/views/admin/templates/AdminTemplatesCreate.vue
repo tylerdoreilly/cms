@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <exai-loader v-if="loading === true"></exai-loader>
+  <div v-else>
     <page-layout sidebar>
       <template v-slot:content>
 
@@ -88,16 +89,17 @@
   import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue'
   import DocumentPreview from '../../../components/templates/DocumentPreview.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
+  import ExaiLoader from '../../../components/shared/ExaiLoader.vue'
   import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
   import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
   import TemplateHeading from '../../../components/templates/templateItems/TemplateHeading.vue'
   import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
   import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
-  import { updateTemplate, getTemplate, getTemplateItems, getCustomTemplateItems, getTemplateTypes } from '../../../services/TemplatesService'
+  import { getAllTemplateData } from '../../../services/TemplatesService'
 
   const axios = require('axios');
-  
+
   export default {
     name: 'AdminTemplatesCreate',
 
@@ -114,13 +116,9 @@
       TemplateLayoutSingle,
       TemplateToolbar,     
       ExaiButton,
+      ExaiLoader,
       ExaiPrompt,
       DocumentPreview,
-      updateTemplate,
-      getTemplate,
-      getTemplateItems,
-      getCustomTemplateItems,
-      getTemplateTypes
     },
 
     data() {
@@ -147,6 +145,7 @@
           lockedItems:false,
           itemToRemove:'',
           editTemplateDetails:false,
+          loading:false,
       }
     },
 
@@ -402,49 +401,32 @@
           }
       },
 
-      getTemplate(){
-        getTemplate(this.id).then(response => {
-          console.log(response)
-          this.template = response;
-          if(this.template.data == null){
-            this.setDefaultItem();
-          }
-          else{
-            this.items = this.template.data;
-          }
-        })
-      },
+      getAllData(){
+        this.loading = true;
+        getAllTemplateData(this.id).then(
+          axios.spread(({data: template}, {data:templateItems}, {data:templateItemsCustom}, {data:templateTypes}) => {
+            console.log({template, templateItems, templateItemsCustom, templateTypes });
+            this.template = template.find(item => item);
+            this.templateItems = templateItems;
+            this.customTemplateItems = templateItemsCustom;
+            this.templateTypes = templateTypes;
 
-      getTemplateTypes(){
-        getTemplateTypes().then(response => {
-          console.log(response)
-          this.templateTypes = response;
-          console.log('template types', this.templateTypes)
-        })
-      },
-
-      getTemplateItems(){
-        getTemplateItems().then(response => {
-          console.log(response)
-          this.templateItems = response;
-          console.log('template items', this.templateItems)
-        })
-      },
-
-      getCustomTemplateItems(){
-        getCustomTemplateItems().then(response => {
-          console.log(response)
-          this.customTemplateItems = response;
-          console.log('template items', this.customTemplateItems)
-        })
+            if(this.template.data == null){
+              this.setDefaultItem();
+            }
+            else{
+              this.items = this.template.data;
+            }
+  
+          })
+        )
+        .catch(error => {console.log(error) })
+        .finally(() => (this.loading = false))
       },
     },
 
     mounted () {
-      this.getCustomTemplateItems();
-      this.getTemplateItems();
-      this.getTemplateTypes();
-      this.getTemplate();
+      this.getAllData();
     }
   }
 </script>

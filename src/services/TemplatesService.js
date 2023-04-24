@@ -38,3 +38,24 @@ export async function updateTemplate(id) {
     });
     return response.data;
 }
+
+// Combined Requests
+export async function getTemplatesList() {
+    let templateListEndpoints = [
+        '/api/templates',
+        '/api/templateTypes',
+    ];
+    const response = await axios.all(templateListEndpoints.map((endpoint) => axios.get(endpoint)))
+    return response;
+}
+
+export async function getAllTemplateData(id) {
+    let allTemplateEndpoints = [
+        `/api/templates/${id}`,
+        '/api/templateItems',
+        '/api/templateItemsCustom',
+        '/api/templateTypes',
+    ];
+    const response = await axios.all(allTemplateEndpoints.map((endpoint) => axios.get(endpoint)))
+    return response;
+}
