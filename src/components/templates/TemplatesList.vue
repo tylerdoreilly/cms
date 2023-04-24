@@ -24,6 +24,7 @@
                     <div class="table-actions">
                         <router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link>
                         <a @click.prevent="openCloneTemplate(item)">Clone</a>
+                        <a @click.prevent="openDeleteTemplate(item)">Delete</a>
                     </div>
                    
                 </td>
@@ -46,6 +47,10 @@
             openCloneTemplate(template){
                 console.log('pass template',template)
                 this.$emit('open-clone-template', template);
+            },
+            openDeleteTemplate(template){
+                console.log('pass template',template)
+                this.$emit('open-delete-template', template);
             }
         },
     }

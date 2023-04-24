@@ -9,7 +9,8 @@
 
         <TemplatesList 
           :templates="templates"
-          @open-clone-template="openCloneModal($event)">
+          @open-clone-template="openCloneModal($event)"
+          @open-delete-template="openDeletePrompt($event)">
         </TemplatesList>
       </template>
     </page-layout>
@@ -28,6 +29,15 @@
       @close-modal="cloneTemplate = false"
       @clone-new-template="cloneNewTemplate($event)">
     </template-clone>
+
+    <exai-prompt 
+      v-if="showdeleteTemplate"
+      title="Delete Template" 
+      message="Are you sure you want to delete this Template?" 
+      :data="template"
+      @close-modal="showdeleteTemplate = false" 
+      @close-and-submit="deleteSelectedTemplate($event)">
+    </exai-prompt>
   </div>
 </template>
 
@@ -39,7 +49,8 @@
   import TemplateClone from '../../../components/templates/TemplateClone.vue'
   import ExaiLoader from '../../../components/shared/ExaiLoader.vue'
   import ExaiButton from '../../../components/shared/ExaiButton.vue'
-  import { getTemplatesList } from '../../../services/TemplatesService'
+  import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
+  import { getTemplatesList, deleteTemplate } from '../../../services/TemplatesService'
   
 
   const axios = require('axios');
@@ -53,12 +64,14 @@
       PageHeader,
       PageLayout,
       ExaiButton,
-      ExaiLoader
+      ExaiLoader,
+      ExaiPrompt
     },
     data() {
         return {
             createTemplate:false,
             cloneTemplate:false,
+            showdeleteTemplate:false,
             loading:false,
             templates: [],
             templateTypes: [],
@@ -120,6 +133,16 @@
         }
       },
 
+      async deleteSelectedTemplate(data) {
+        console.log('delete template',data)
+        this.loading = true;
+        deleteTemplate(data.id).then(
+         console.log('deleted')
+        )
+        .catch(error => {console.log(error) })
+        .finally(() => (this.loading = false))
+      },
+
       openCreateModal(){
         this.createTemplate = true;
       },
@@ -127,6 +150,11 @@
       openCloneModal(data){
         this.template = { ...data };
         this.cloneTemplate = true;
+      },
+
+      openDeletePrompt(data){
+        this.template = data;
+        this.showdeleteTemplate = true;
       },
 
       addNewItem(item){

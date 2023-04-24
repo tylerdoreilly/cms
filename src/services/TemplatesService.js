@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+
 // Get Template Items
 
 export async function getAllTemplates() {
@@ -27,21 +28,9 @@ export async function getTemplate(id) {
     return response.data[0];
 }
 
-// export async function createTemplate(data) {
-//     const response = await axios.post(`/api/template`, {user: data});
-//     return response.data;
-// }
-
-export async function updateTemplate(id) {
-    let url = `/api/templates/${id}`; 
-    const response = await axios.post(url, {
-        type: 'Press Release', 
-		title: 'EU SF NEW'
-    });
-    return response.data;
-}
 
 // Combined Requests
+
 export async function getTemplatesList() {
     let templateListEndpoints = [
         '/api/templates',
@@ -60,4 +49,25 @@ export async function getAllTemplateData(id) {
     ];
     const response = await axios.all(allTemplateEndpoints.map((endpoint) => axios.get(endpoint)))
     return response;
+}
+
+
+// Update Template Items
+
+export async function updateTemplate(id) {
+    let url = `/api/templates/${id}`; 
+    const response = await axios.post(url, {
+        type: 'Press Release', 
+		title: 'EU SF NEW'
+    });
+    return response.data;
+}
+
+
+// Delete Templates
+
+export async function deleteTemplate(id) {
+    let url = `/api/templates/${id}`;
+    const response = await axios.delete(url);
+    return response.data;
 }
