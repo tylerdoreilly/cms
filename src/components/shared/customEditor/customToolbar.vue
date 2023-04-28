@@ -102,7 +102,7 @@
             <button type="button" class="ql-DynamicControlInline"><font-awesome-icon icon="fa-solid fa-layer-group" /></button>
         </span> -->
         <span class="ql-formats">
-            <select class="ql-testSelect">
+            <select class="ql-selectDynamicControl">
                 <option value="inline"></option>
                 <option value="block"></option>
             </select>
@@ -140,18 +140,20 @@
         margin-block-end: 1em;
     }
 
-    .ql-snow .ql-picker.ql-testSelect {
+    
+    // Dynamic Control Setup
+
+    .ql-snow .ql-picker.ql-selectDynamicControl {
         width: 150px;
     }
 
-    .ql-snow .ql-picker.ql-testSelect .ql-picker-label::before {
-        // padding-right:15px;
+    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-label::before {
         content: 'Dynamic Control';
     }
-    .ql-snow .ql-picker.ql-testSelect .ql-picker-item[data-value="inline"]::before {
+    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-item[data-value="inline"]::before {
         content: 'inline';
     }
-    .ql-snow .ql-picker.ql-testSelect .ql-picker-item[data-value="block"]::before {
+    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-item[data-value="block"]::before {
         content: 'block';
     }
 

@@ -35,10 +35,35 @@ import {
   faArrowDown, 
   faArrowRight,
   faChevronDown,
-  faChevronRight } from '@fortawesome/free-solid-svg-icons'
+  faChevronRight,
+  faChevronLeft,
+  faCalendar,
+  faComment,
+  faFont,
+  faP } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faUserSecret, faGear, faGripLines, faHeader, faHeading, faParagraph, faList, faEllipsis,faLock,faXmark,faPencil,faLayerGroup, faArrowDown,faArrowRight, faChevronDown,faChevronRight)
+library.add(faUserSecret, 
+  faGear, 
+  faGripLines, 
+  faHeader, 
+  faHeading, 
+  faParagraph, 
+  faList, 
+  faEllipsis,
+  faLock,
+  faXmark,
+  faPencil,
+  faLayerGroup, 
+  faArrowDown,
+  faArrowRight, 
+  faChevronDown,
+  faChevronRight,
+  faChevronLeft,
+  faCalendar,
+  faComment,
+  faFont,
+  faP)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)

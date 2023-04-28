@@ -3,7 +3,7 @@
 
         <div class="quillWrapper custom" v-if="edit == true">
             <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
-            <vue-editor v-model="content.content" :editorOptions="editorOptions" ref="quillEditor"></vue-editor>
+            <vue-editor v-model="content.content" :editorOptions="editorOptions" @focus="onEditorFocus" ref="quillEditor"></vue-editor>
         </div> 
 
         <div v-html="content.content" v-else></div>
@@ -11,15 +11,15 @@
         <content-block title="Details" v-if="showDetails">
             <template-item-details :data="content"></template-item-details>
         </content-block>
-       
-        <insert-modal 
+
+        <insert-dynamic-control-modal 
             v-if="controlType"
-            v-show="showModal"
+            v-show="showDynamicControlModal"
             :sectionId="data.id" 
             :controlType="controlType" 
-            @close-modal="showModal = false" 
-            @submit-control=" getDynamicControl($event)">
-        </insert-modal>
+            @close-modal="showDynamicControlModal = false" 
+            @submit-control="getDynamicControl($event)">
+        </insert-dynamic-control-modal >
     </div>
 </template>
 
@@ -28,7 +28,7 @@
     import { DynamicControl } from './modules/dynamicControl.js'
     import { DynamicControlInline } from './modules/dynamicControlInline.js'
     import customToolbar from './customToolbar.vue'
-    import InsertModal from './InsertModal.vue'
+    import InsertDynamicControlModal from './InsertDynamicControlModal.vue'
     import contentBlock from '../contentBlock.vue'
     import templateItemDetails from '../../templates/templateItemDetails.vue'
 
@@ -40,7 +40,7 @@
         components: {
             VueEditor,
             customToolbar, 
-            InsertModal,
+            InsertDynamicControlModal,
             templateItemDetails,
             contentBlock
         },
@@ -60,7 +60,7 @@
         data() {
             return {
                 content: this.data,
-                showModal: false,
+                showDynamicControlModal:false,
                 edit:true,
                 controlType:'',
                 editorOptions:{
@@ -74,25 +74,14 @@
                             container: `#toolbar-${this.data.id}`,
                             handlers: {
                                 customBtn: () => { 
-                                console.log('test',this.$refs.quillEditor)
-                                this.$refs.quillEditor.quill.insertText(
-                                    this.$refs.quillEditor.quill.getSelection( true ).index, '[ Insert IF Statement ]', {
-                                    'color': 'rgb(230,0,0)'
-                                });
-                                
+                                    console.log('test',this.$refs.quillEditor)
+                                    this.$refs.quillEditor.quill.insertText(
+                                        this.$refs.quillEditor.quill.getSelection( true ).index, '[ Insert IF Statement ]', {
+                                        'color': 'rgb(230,0,0)'
+                                    });
                                 },
-                                // CustomBlot: () => {
-                                //     this.$refs.quillEditor.quill.insertText(
-                                //     this.$refs.quillEditor.quill.getSelection( true ).index, "[Insert If Statement]\n",'customTagName', 'test-class', 'val1' ,'val2');
-                                // },
-                                // DynamicControl: () => {
-                                // this.openModal();
-                                // },
-                                // DynamicControlInline: () => {
-                                // this.openModalTwo();
-                                // },
-                                testSelect: (value) => {
-                                    this.openModal(value);
+                                selectDynamicControl: (value) => {
+                                    this.openDynamicControlModal(value);
                                     console.log('select value',value)
                                 },
                             }
@@ -107,9 +96,14 @@
             },
         },
         methods: {
-            openModal(value){
+            // Editor Methods
+            onEditorFocus(Quill) {
+                // to do: add method to prevent drag on focus
+                console.log("editor focus!", Quill);
+            },
+            openDynamicControlModal(value){
                 this.controlType = value;
-                this.showModal = true;
+                this.showDynamicControlModal = true;
             },
             getDynamicControl(value){
                 console.log('modal value',value)
@@ -135,6 +129,8 @@
                 console.log('edit',this.edit)
             },
         },
+        mounted(){
+        }
      }
 </script>
 
