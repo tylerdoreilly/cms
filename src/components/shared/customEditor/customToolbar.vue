@@ -140,6 +140,35 @@
         margin-block-end: 1em;
     }
 
+    .dynamic-control .control-wrapper{
+        display:inline-flex;
+        flex-direction:row;
+        gap:10px;
+        align-items: center;
+        background: $base-white;
+        transition-property: background;
+        transition-duration: 1s;
+        transition-delay: 2s;
+    }
+
+    .dynamic-control .control-wrapper:hover{
+        border: 1px solid #ccc;
+        border-radius:2px; 
+        background: lighten( $template-background, 1% );
+        padding:6px 6px;
+        margin-top:-6px;
+        margin-bottom:-6px;
+        transition-delay: 0s;
+    }
+
+    .dynamic-control .control-wrapper .edit{
+        border-radius:2px; 
+        background: $keppel;
+        color:$base-white;
+        font-size:13px;
+        padding:0px 6px;
+    }
+
     
     // Dynamic Control Setup
 

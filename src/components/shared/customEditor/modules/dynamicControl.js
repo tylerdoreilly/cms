@@ -1,5 +1,8 @@
 import Quill from "quill";
-const Block = Quill.import('blots/block');
+import Vue from 'vue';
+
+const eventBus = new Vue();
+const Block = Quill.import('blots/block/embed');
 
 class DynamicControl extends Block {
 
@@ -10,16 +13,26 @@ class DynamicControl extends Block {
     node.setAttribute('id', value.id);
     node.setAttribute('data-section', value.section);
     node.setAttribute('data-control', value.text);
-    node.setAttribute('style', 'cursor: pointer;');
-    node.addEventListener('click', function(e) { 
-      console.log("blot clicked", {e, value}); 
-    });
-    return node;
+    node.setAttribute('contenteditable', 'false');
+    node.innerHTML = `<span class="control-wrapper"><span class="control-display">${value.text}</span></span>`;
+    let wrapperNode = node.querySelector('span')
+    let sNode = document.createElement('span');
+    sNode.setAttribute('class', 'edit');
+    sNode.setAttribute('style', 'padding-left: 5px;cursor: pointer; display: none;');
+    sNode.innerHTML = `edit`;
+    wrapperNode.appendChild(sNode);
 
+    eventBus.$on('update-control', (data) => {
+      console.log('control data test',data)
+      node.innerHTML = `<span class="control-wrapper"><span class="control-display">${data.text}</span></span>`;
+    });
+
+    return node;
   }
+
   static formats(domNode) {
     console.log(domNode)
-    return domNode.getAttribute("class");
+    return domNode.getAttribute("div");
   }
 
   format(name, value) {
@@ -32,13 +45,70 @@ class DynamicControl extends Block {
     }
   }
 
-  constructor(scroll, domNode) {
-    super(scroll, domNode);  
+  get quill() {
+    if (!this.scroll || !this.scroll.domNode.parentNode) {
+        return null;
+    }
+
+    return Quill.find(this.scroll.domNode.parentNode);
   }
 
+  constructor(scroll, domNode) {
+    super(scroll, domNode); 
+
+    let controlValue = {
+      class: this.domNode.getAttribute('class'),
+      id: this.domNode.getAttribute('id'),
+      section: this.domNode.getAttribute('data-section'),
+      text: this.domNode.getAttribute('data-control'),
+      type: 'custom',
+    }
+    const element = this.domNode;
+    const innerElement = element.querySelector('.control-wrapper');
+    const editBtn = innerElement.querySelector('.edit');
+    console.log('test', innerElement);
+
+    innerElement.addEventListener('mouseover', (event) => {
+      let editControls = innerElement.querySelector('.edit');
+      editControls.setAttribute('style', 'display: inline-block; cursor: pointer;');
+      console.log("hover", {event}); 
+    });
+
+    innerElement.addEventListener('mouseout', (event) => {
+      let editControls = innerElement.querySelector('.edit');
+      editControls.setAttribute('style', 'display: none; cursor: pointer;');
+      console.log("hover", {event}); 
+    });
+
+    editBtn.addEventListener('click', (event) => {
+      this.editDynamicControl(event, controlValue)
+    });
+    
+    
+  }
+
+  editDynamicControl(event, controlValue){
+    eventBus.$emit('edit-control', controlValue)
+    console.log("blot clicked", {event, controlValue}); 
+  }
+
+  // update(value){
+  //   console.log('value >> updated', value)
+  //   this.quill.on('text-change', (range, oldRange, source) => {
+  //     console.log("blot clicked", {oldRange, source}); 
+  //     // Returns the leaf Blot at the specified index within the document
+  //     let [leaf] = this.quill.getLeaf(range.index); // Experimental API
+     
+  //      if(leaf.domNode.nodeName === 'dynamicControl') {
+  //        console.log("fuck")
+  //      }
+     
+  //    })
+  // }
+ 
 }
 
 DynamicControl.blotName = 'dynamicControl'
 DynamicControl.tagName = 'div';
 
-export {DynamicControl};
+export {DynamicControl, eventBus};

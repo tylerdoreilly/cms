@@ -19,16 +19,25 @@
             :controlType="controlType" 
             @close-modal="showDynamicControlModal = false" 
             @submit-control="getDynamicControl($event)">
-        </insert-dynamic-control-modal >
+        </insert-dynamic-control-modal>
+
+        <edit-dynamic-control-modal 
+            v-if="controlData"
+            v-show="showEditDynamicControlModal"
+            :data="controlData" 
+            @close-edit-modal="showEditDynamicControlModal = false" 
+            @update-control="updateDynamicControl($event)">
+        </edit-dynamic-control-modal>
     </div>
 </template>
 
 <script>
     import { VueEditor, Quill } from "vue2-editor";
-    import { DynamicControl } from './modules/dynamicControl.js'
+    import { DynamicControl, eventBus} from './modules/dynamicControl.js'
     import { DynamicControlInline } from './modules/dynamicControlInline.js'
     import customToolbar from './customToolbar.vue'
     import InsertDynamicControlModal from './InsertDynamicControlModal.vue'
+    import EditDynamicControlModal from './EditDynamicControlModal.vue'
     import contentBlock from '../contentBlock.vue'
     import templateItemDetails from '../../templates/templateItemDetails.vue'
 
@@ -41,6 +50,7 @@
             VueEditor,
             customToolbar, 
             InsertDynamicControlModal,
+            EditDynamicControlModal,
             templateItemDetails,
             contentBlock
         },
@@ -61,8 +71,10 @@
             return {
                 content: this.data,
                 showDynamicControlModal:false,
+                showEditDynamicControlModal:false,
                 edit:true,
                 controlType:'',
+                controlData:'',
                 editorOptions:{
                     modules: {
                         history: { 
@@ -101,10 +113,27 @@
                 // to do: add method to prevent drag on focus
                 console.log("editor focus!", Quill);
             },
+
+            editControl(){                
+                eventBus.$on('edit-control', (data) => {
+                    let sectionId = Number(data.section)
+                    if(this.content.id === sectionId){
+                        this.openEditDynamicControlModal(data);
+                        console.log('control data test',data)
+                    }
+                })
+            },
+
             openDynamicControlModal(value){
                 this.controlType = value;
                 this.showDynamicControlModal = true;
             },
+
+            openEditDynamicControlModal(value){
+                this.controlData = value;
+                this.showEditDynamicControlModal = true;
+            },
+
             getDynamicControl(value){
                 console.log('modal value',value)
                 if(value.type == 'inline'){
@@ -114,22 +143,42 @@
                     this.insertBlockControl(value.control)
                 }
             },
+
+            updateDynamicControl(value){
+                console.log('modal value',value)
+                this.updateBlockControl(value.control)
+            },
+
             insertInlineControl(control){
                 this.$refs.quillEditor.quill.insertText(
                     this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}\n`,'dynamicControlInline', control
                 );
             },
+
             insertBlockControl(control){
                 this.$refs.quillEditor.quill.insertText(
                     this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}\n`,'dynamicControl', control
                 );
             },
+
+            updateBlockControl(control){
+                console.log(control)
+                eventBus.$emit('update-control', control)
+            },
+
+            deleteControl(control){
+                this.$refs.quillEditor.quill.deleteText(
+                    this.$refs.quillEditor.quill.getSelection( true ).index, `${control.text}\n`,'dynamicControl', control
+                );
+            },
+
             async toggleEditMode(newValue){
                 this.edit = newValue
                 console.log('edit',this.edit)
             },
         },
-        mounted(){
+        created(){
+            this.editControl();
         }
      }
 </script>

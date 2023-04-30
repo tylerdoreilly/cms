@@ -36,6 +36,7 @@
                 :data="item" 
                 :title="item['name']"
                 :listCount="items.length"
+                v-bind:testEmit="tylerEmit"
                 v-bind:showDetails="showDetails"
                 v-bind:activated="true" 
                 @remove-item="checkBeforeRemove($event)"
@@ -106,6 +107,7 @@
   import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
   import { getAllTemplateData } from '../../../services/TemplatesService'
+  // import { eventBus } from '../../../components/shared/customEditor/modules/dynamicControl.js'
 
   const axios = require('axios');
 
@@ -158,6 +160,7 @@
           editTemplateDetails:false,
           showSaveCustomItem:false,
           loading:false,
+          tylerEmit:{},
       }
     },
 
@@ -467,6 +470,10 @@
 
     mounted () {
       this.getAllData();
+      // eventBus.$on('edit-control', (data) => {
+
+      //      this.tylerEmit = data;
+      //   })
     }
   }
 </script>

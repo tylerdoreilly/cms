@@ -41,6 +41,7 @@ export default {
     data: Object,
     activated: Boolean,
     showDetails: Boolean,
+    testEmit:Object,
   },
   data() {
       return {
@@ -58,6 +59,7 @@ export default {
             inserts:false,
             clean:true
         },
+        tyler:this.testEmit
       }
   },
   computed:{
@@ -70,6 +72,15 @@ export default {
         this.editMode = !this.editMode
     },
   },
+  mounted(){
+    console.log('section Id',this.content.id)
+    console.log('data Id',this.tyler.section)
+    console.log('test emit',this.tyler)
+    if (this.content.id === this.tyler.section) {
+      console.log('test emit',this.tyler)
+    }
+   
+  }
 }
 </script>
 
