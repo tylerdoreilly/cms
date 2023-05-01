@@ -13,7 +13,7 @@ class DynamicControlInline extends Inline {
 
   }
   static formats(domNode) {
-    console.log(domNode)
+    // console.log(domNode)
     return domNode.getAttribute("class");
   }
 

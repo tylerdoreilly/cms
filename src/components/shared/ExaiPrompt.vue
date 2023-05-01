@@ -3,7 +3,10 @@
       <div class="exai-prompt-overlay">
         <div class="exai-prompt" @click.stop>
             <div class="exai-prompt__header">
-                <div class="exai-prompt__header-title">{{ title }} {{ item.id }}</div>   
+                <div class="exai-prompt__header-title">
+                    {{ title }} 
+                    <span v-if="item">{{ item.id }}</span>
+                </div>   
             </div>
             <div class="exai-prompt__body">
                <p>{{ message }}</p>

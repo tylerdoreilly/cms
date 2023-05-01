@@ -33,8 +33,7 @@
     },
     computed:{
       setIcon(){
-        let buildIcon = `${this.iconBase} + ${this.headerIcon}`  
-        console.log('icon',buildIcon)    
+        let buildIcon = `${this.iconBase} + ${this.headerIcon}`    
         return buildIcon
       },
     },

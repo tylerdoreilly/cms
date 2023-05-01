@@ -83,24 +83,21 @@
       setIcon(){
         let buildIcon
         if(this.btnIcon){       
-          buildIcon = `${this.iconBase} + ${this.btnIcon}`  
-          console.log('icon',buildIcon)       
+          buildIcon = `${this.iconBase} + ${this.btnIcon}`        
         }
         return buildIcon
       },
       setLeftIcon(){
         let buildLeftIcon
         if(this.leftIcon != null || this.leftIcon != ''){       
-          buildLeftIcon = `${this.iconBase} + ${this.leftIcon}`  
-          console.log('icon',buildLeftIcon)       
+          buildLeftIcon = `${this.iconBase} + ${this.leftIcon}`       
         }
         return buildLeftIcon
       },
       setRightIcon(){
         let buildRightIcon
         if(this.rightIcon != null || this.rightIcon != ''){       
-          buildRightIcon = `${this.iconBase} + ${this.rightIcon}`  
-          console.log('icon',buildRightIcon)       
+          buildRightIcon = `${this.iconBase} + ${this.rightIcon}`     
         }
         return buildRightIcon
       }

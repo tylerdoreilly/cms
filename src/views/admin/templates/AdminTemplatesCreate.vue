@@ -6,9 +6,10 @@
 
         <PageHeader title="Edit Template">
           <exai-button text="Preview" @click.native="preview = !preview"></exai-button>
+          <exai-button text="Generate" @click.native="generateDoc = true"></exai-button>
           <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
         </PageHeader>
-        
+
         <PageDetails 
           :title="template.title" 
           :type="template.type" 
@@ -70,6 +71,14 @@
       @close-and-submit="removeItem($event)">
     </exai-prompt>
 
+    <exai-prompt 
+      v-if="generateDoc"
+      title="Generate Sample Docx" 
+      message="This will generate a sample word doc with all dynamic control in place.Note: This is WIP" 
+      @close-modal="generateDoc = false" 
+      @close-and-submit="createDoc()">
+    </exai-prompt>
+
     <template-details-edit 
       v-if="editTemplateDetails"
       :data="template"
@@ -106,6 +115,8 @@
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
   import { getAllTemplateData } from '../../../services/TemplatesService'
   import { templateItemEventBus } from '../../../services/TemplateItemEventBus.js'
+  import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun } from "docx";
+  import { saveAs } from "file-saver";
 
   const axios = require('axios');
 
@@ -129,6 +140,13 @@
       ExaiLoader,
       ExaiPrompt,
       DocumentPreview,
+      WidthType,
+      BorderStyle,
+      Document,
+      Paragraph,
+      Packer,
+      TextRun,
+      saveAs,
     },
 
     data() {
@@ -158,6 +176,7 @@
           editTemplateDetails:false,
           showSaveCustomItem:false,
           loading:false,
+          generateDoc:false,
       }
     },
 
@@ -455,6 +474,38 @@
         )
         .catch(error => {console.log(error) })
         .finally(() => (this.loading = false))
+      },
+
+      // Generate Sample Word Doc
+      // Provide the ability to view the word file 
+      // with formatting and dynamic controls in place.
+      // This is work in progress.
+      
+      createDoc(){
+        let doc = new Document();
+        const templateContents = this.template.data;
+        templateContents.forEach(templateContent => {
+          doc.addSection({
+            properties: {},
+              children: [
+              new Paragraph({
+                  children: [new TextRun(`${templateContent.content}`),],
+                }),
+              ],
+            });
+        });
+
+        // To export into a .docx file
+        this.saveDocumentToFile(doc, `vuedoc.docx`);
+        this.generateDoc = false;
+      },
+
+      saveDocumentToFile: function (doc, fileName) {
+        const mimeType = 'application/vnd.openxmlformats officedocument.wordprocessingml.document';
+        Packer.toBlob(doc).then((blob) => {
+          const docblob = blob.slice(0, blob.size, mimeType);
+          saveAs(docblob, fileName);
+        });
       },
     },
 
