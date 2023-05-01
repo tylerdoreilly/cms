@@ -69,14 +69,6 @@ export default {
         this.editMode = !this.editMode
         console.log('edit',this.editMode)
     },
-    lockItem(item){
-      console.log(item)
-        console.log(this.$refs)
-        // let items = this.$refs
-        this.$refs.item.forEach(item =>{
-          item.draggable = false;
-        })
-    },
     saveItem(item){
       console.log(item)
     },

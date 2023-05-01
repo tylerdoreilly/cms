@@ -9,7 +9,6 @@
 
 .template-item__header{
   @include flex(flex, row, $gap: 10px);
-  cursor: row-resize;  
   align-items:center;
   padding:12px;
   background:$white-smoke;

@@ -2,18 +2,18 @@
   <div :class="[$style['template-object'], classObject]">
     <div :class="[$style['template-item__header'], headerModifiers]">
       <div :class="[$style['template-item__title']]">
+        <exai-button variation="secondary" icon="fa-grip-vertical" @mousedown.native="dragTemplateItem(content)" class="grab"></exai-button>
         <font-awesome-icon :icon="setIcon" />
         {{ title }}
       </div>
       <div :class="[$style['template-item__controls']]" v-if="this.activated">
         <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
-        <exai-button variation="secondary" icon="fa-lock" @click.native="lockItem(content)"></exai-button>
         <exai-popover>
           <exai-list>
             <exai-list-item title="Save Item" @click.native.prevent="saveItem(content)"></exai-list-item>
             <exai-list-item title="Remove Item" @click.native="removeItem(sectionId)"></exai-list-item>
-            <!-- <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
-            <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item> -->
+             <exai-list-item title="Move Up" @click.native="saveItem(content)"></exai-list-item>
+            <exai-list-item title="Move Down" @click.native="saveItem(content)"></exai-list-item>
           </exai-list>
         </exai-popover>
       </div>
@@ -26,6 +26,7 @@
 
 <script>
   import ExaiButton from '../../shared/ExaiButton.vue'
+  import {templateItemEventBus} from '../../../services/TemplateItemEventBus.js'
   import ExaiList from '../../shared/exaiList/ExaiList.vue'
   import ExaiListItem from '../../shared/exaiList/ExaiListItem.vue'
   import ExaiPopover from '../../shared/ExaiPopover.vue'
@@ -71,6 +72,7 @@
       data:[Array, Object],
       sectionId:Number
     },
+    
     data() {
       return {
         editState: this.editMode,
@@ -81,6 +83,7 @@
         content:this.data,
       }
     },
+
     computed:{
       classObject(){
        const obj = {}
@@ -98,13 +101,11 @@
         return buildIcon
       },
     },
+
     methods: {
       toggleEditMode(){
         this.editState = !this.editStatee;
         this.$emit('edit-mode', this.editState)
-      },
-      lockItem(item){
-        this.$emit('lock-item', { item })
       },
       removeItem(sectionId){
         console.log('remove clicked',sectionId)
@@ -113,6 +114,11 @@
       saveItem(item){
         this.$parent.$emit('save-custom-item', item)
       },
+      dragTemplateItem(item) {
+        let itemId = item.id;
+        templateItemEventBus.$emit('drag-template-item', item.id);
+        console.log("editor blur!", itemId);
+      }
     },
   }
 </script>

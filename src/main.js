@@ -40,7 +40,8 @@ import {
   faCalendar,
   faComment,
   faFont,
-  faP } from '@fortawesome/free-solid-svg-icons'
+  faP,
+  faGripVertical } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faUserSecret, 
@@ -63,7 +64,8 @@ library.add(faUserSecret,
   faCalendar,
   faComment,
   faFont,
-  faP)
+  faP,
+  faGripVertical)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)

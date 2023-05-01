@@ -130,4 +130,8 @@
       background:transparent;
     }
   }
+
+  .grab{
+    cursor:grab;
+  }
 </style>

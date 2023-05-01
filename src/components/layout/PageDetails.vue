@@ -1,7 +1,10 @@
 <template>
   <div class="template-details">
     <div class="template-details__content">
-      <h1 class="template-title">{{title}} (<date-format :date="asof" dateFormat="MM/DD/YYYY"></date-format>)</h1>
+      <h1 class="template-title">
+        <span>{{title}} (<date-format :date="asof" dateFormat="MM/DD/YYYY"></date-format>)</span>
+        <exai-button variation="secondary" icon="fa-pencil" @click.native="editTemplateDetails"></exai-button>
+      </h1>
       <div class="template-details-info">
         <div><span class="detail-label">Type: </span>{{ type }}</div>
         <div><span class="detail-label">Created: </span><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
@@ -16,11 +19,14 @@
 </template>
 
 <script>
-  import dateFormat from '../shared/dateFormat.vue'
+  import dateFormat from '../shared/dateFormat.vue';
+  import ExaiButton from '../shared/ExaiButton.vue'
+
   export default {
     name: 'PageDetails',
     components: {
-      dateFormat
+      dateFormat,
+      ExaiButton
     },
     props:{
       title:{
@@ -59,6 +65,11 @@
         }
       }
     },
+    methods:{
+      editTemplateDetails(){
+        this.$emit('edit-details');
+      }
+    }
   }
 </script>
 
@@ -66,7 +77,7 @@
   .template-details {
     display:flex;
     flex-direction:row;
-    align-items:center;
+    align-items:flex-end;
     gap:10px;
     padding-bottom:15px;
     border-bottom:1px solid $border;
@@ -81,7 +92,9 @@
   }
 
   .template-title{
-    font-size:18px;
+    @include flex(flex, row, $gap: 10px);
+    align-items: center;
+    font-size:20px;
     margin-bottom:5px;
   }
 

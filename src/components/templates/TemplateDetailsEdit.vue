@@ -21,6 +21,7 @@
 
         </template>
         <template #exai-modal-actions>
+            <exai-button text="Cancel" variation="secondary" @click.native.prevent="closeModal"></exai-button>
             <exai-button text="Save" variation="primary" @click.native.prevent="submitted"></exai-button>
         </template>
       
@@ -68,19 +69,26 @@
             this.templateData['type_new'] = selectedType.id;
             this.templateData['type'] = selectedType.type;
         },
+
         formatIncomingDate(){
-             return moment(String(this.data.date_asof)).format('YYYY-MM-DD')
+            return moment(String(this.data.date_asof)).format('YYYY-MM-DD')
         },
+
         formatOutgoinggDate(asOfDate){
             let date = new Date(asOfDate);
             let updatedDate = date.toISOString();
             return updatedDate;
         },
+
         submitted() {
             this.templateData['date_asof'] = this.formatOutgoinggDate(this.asofdate);
             console.log('updated template', this.templateData);
             // this.$emit('update-template-details', this.templateData);
             // this.$emit('close-modal')
+        },
+
+        closeModal() {
+            this.$emit('close-modal')
         },
     },
     mounted(){

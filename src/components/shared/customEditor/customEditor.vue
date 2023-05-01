@@ -3,7 +3,13 @@
 
         <div class="quillWrapper custom" v-if="edit == true">
             <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
-            <vue-editor v-model="content.content" :editorOptions="editorOptions" @focus="onEditorFocus" ref="quillEditor"></vue-editor>
+            <vue-editor 
+                ref="quillEditor"
+                v-model="content.content" 
+                :editorOptions="editorOptions" 
+                @focus="onEditorFocus"
+                @blur="onEditorBlur">
+            </vue-editor>
         </div> 
 
         <div v-html="content.content" v-else></div>
@@ -45,13 +51,18 @@
             contentBlock
         },
         props:{
-            buttonList:Object,
-            data:Object,
-            editMode:{
-                type:Boolean,
-               
+            buttonList:{
+                type:Object
             },
-            showDetails:Boolean,
+            data:{
+                type:Object
+            },
+            editMode:{
+                type:Boolean,               
+            },
+            showDetails:{
+                type:Boolean
+            },
             editorId:{
                 type:String,
                 default:"id"
@@ -98,8 +109,10 @@
         methods: {
             // Editor Methods
             onEditorFocus(Quill) {
-                // to do: add method to prevent drag on focus
                 console.log("editor focus!", Quill);
+            },
+            onEditorBlur(Quill) {
+                console.log("editor blur!", Quill);
             },
             openDynamicControlModal(value){
                 this.controlType = value;

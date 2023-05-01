@@ -8,20 +8,21 @@
           <exai-button text="Preview" @click.native="preview = !preview"></exai-button>
           <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
         </PageHeader>
+        
         <PageDetails 
           :title="template.title" 
           :type="template.type" 
           :date="template.date_created" 
           :asof="template.date_asof" 
-          :updated="template.date_updated">
-          <exai-button text="Edit" @click.native="editTemplateDetails = !editTemplateDetails"></exai-button>
-          <exai-button text="Details" @click.native="showDetails = !showDetails"></exai-button>
-          <exai-button text="Lock/Unlock" icon-left="fa-lock" @click.native="lockItems()"></exai-button>   
+          :updated="template.date_updated"
+          @edit-details="editDetails()">
+
+          <exai-button text="Toggle Details" @click.native="showDetails = !showDetails"></exai-button>  
         </PageDetails>
 
         <template-container v-if="preview == false && items">
-          <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)"       
-            draggable
+          <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)" :id="item.id"      
+            
             @dragstart.self="pickupElem($event, item, index);"
             @dragover.prevent="showDropPlace($event, item, index);"
             @dragenter.prevent
@@ -39,8 +40,7 @@
                 v-bind:showDetails="showDetails"
                 v-bind:activated="true" 
                 @remove-item="checkBeforeRemove($event)"
-                @save-custom-item="openCustomItemModal($event)"
-                @lock-item="lockItem(item)">
+                @save-custom-item="openCustomItemModal($event)">
             </component>
           
           </div>
@@ -75,15 +75,14 @@
       :data="template"
       :types="templateTypes"
       @close-modal="editTemplateDetails = false" 
-      @update-template-details=" updateTemplateDetails($event)">
+      @update-template-details="updateTemplateDetails($event)">
     </template-details-edit>
 
     <template-save-custom-item 
       v-if="showSaveCustomItem"
       :data="customTemplateItem"
       @close-modal="showSaveCustomItem = false" 
-      @save-custom-item=" saveCustomTemplateitem($event)">
-
+      @save-custom-item="saveCustomTemplateitem($event)">
     </template-save-custom-item>
   </div>
 </template>
@@ -106,6 +105,7 @@
   import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
   import { getAllTemplateData } from '../../../services/TemplatesService'
+  import { templateItemEventBus } from '../../../services/TemplateItemEventBus.js'
 
   const axios = require('axios');
 
@@ -210,6 +210,19 @@
     methods: {
 
       // Drag and Drop Methods
+
+      dragExistingItem(){
+        templateItemEventBus.$on('drag-template-item', (id) => {
+          let selectedItemId = id.toString();
+          this.$refs.item.forEach(item => {
+            if (item.id === selectedItemId) {
+              item.draggable = true;
+              console.log('draggable set', item.draggable)
+            }
+          });
+        });
+      },
+
       dragEndClear() {
         console.log("dragEnd");
         this.dragedElem = null;
@@ -218,7 +231,7 @@
       },
 
       pickupElem(event, elem) {
-        console.log(elem);
+        console.log('pickup element', elem);
         event.dataTransfer.dropEffect = "move";
         this.dragedElem = { ...elem };
       },
@@ -332,30 +345,6 @@
         this.showPrompt = false;
       },
 
-      lockItem(elem){
-        console.log(elem)
-        console.log(this.$refs)
-        // let items = this.$refs
-        this.$refs.item.forEach(item =>{
-          item.draggable = false;
-        })
-      //  this.$ref.templateList.draggable = false
-      },
-
-      lockItems(){
-        console.log(this.$refs)
-        this.$refs.item.forEach(item =>{
-          if(item.draggable == true){
-            item.draggable = false;
-            this.lockedItems = true;
-          }else{
-            item.draggable = true;
-            this.lockedItems = false;
-          }
-          
-        })
-      },
-
       getDate(){
         let currentDate = new Date(Date.now()).toISOString();
         console.log(currentDate);
@@ -364,6 +353,10 @@
 
       toggleDetails(){
         this.showDetails = !this.showDetails;
+      },
+
+      editDetails(){
+        this.editTemplateDetails = true;
       },
 
       openCustomItemModal(event) {
@@ -467,6 +460,7 @@
 
     mounted () {
       this.getAllData();
+      this.dragExistingItem();
     }
   }
 </script>

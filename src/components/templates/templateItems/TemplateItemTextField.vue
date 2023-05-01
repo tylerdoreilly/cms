@@ -60,11 +60,13 @@ export default {
         },
       }
   },
+  
   computed:{
     getTemplateId(){
       return `toolbar-${this.data.id}`
     },
   },
+
   methods: {
     toggleEditMode(){
         this.editMode = !this.editMode

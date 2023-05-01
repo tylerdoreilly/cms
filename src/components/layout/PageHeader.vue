@@ -1,7 +1,9 @@
 <template>
   <div class="page-header">
     <h1>{{title}}</h1>
-    <slot></slot>
+    <div class="page-header__actions">
+      <slot></slot>
+    </div> 
   </div>
 </template>
 
@@ -29,6 +31,10 @@ export default {
     flex-direction:row;
     align-items:center;
     gap:10px;
+  }
+  .page-header__actions{
+    margin-left: auto;
+    @include flex(flex, row, $gap: 10px);
   }
   
 </style>
