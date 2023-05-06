@@ -71,3 +71,9 @@ export async function deleteTemplate(id) {
     const response = await axios.delete(url);
     return response.data;
 }
+
+// Temp Get Image
+export async function getImage() {
+    const response = await axios.get('/api/logo');
+    return response.data;
+}

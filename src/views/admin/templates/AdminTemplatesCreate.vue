@@ -113,9 +113,10 @@
   import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
   import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
-  import { getAllTemplateData } from '../../../services/TemplatesService'
+  import { getAllTemplateData, getImage } from '../../../services/TemplatesService'
   import { templateItemEventBus } from '../../../services/TemplateItemEventBus.js'
-  import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun } from "docx";
+
+  import * as docx from "docx";
   import { saveAs } from "file-saver";
 
   const axios = require('axios');
@@ -140,13 +141,15 @@
       ExaiLoader,
       ExaiPrompt,
       DocumentPreview,
-      WidthType,
-      BorderStyle,
-      Document,
-      Paragraph,
-      Packer,
-      TextRun,
-      saveAs,
+      // WidthType,
+      // BorderStyle,
+      // Document,
+      // Paragraph,
+      // Packer,
+      // TextRun,
+      // ExternalHyperlink,
+      // saveAs,
+      // Header
     },
 
     data() {
@@ -177,6 +180,7 @@
           showSaveCustomItem:false,
           loading:false,
           generateDoc:false,
+          pic:'',
       }
     },
 
@@ -482,37 +486,312 @@
       // This is work in progress.
       
       createDoc(){
-        let doc = new Document();
+        
         const templateContents = this.template.data;
+        let formattedContents = [];
         templateContents.forEach(templateContent => {
-          doc.addSection({
-            properties: {},
-              children: [
-              new Paragraph({
-                  children: [new TextRun(`${templateContent.content}`),],
+          const nodes = new DOMParser().parseFromString(templateContent.content, 'text/html').body.childNodes;
+          formattedContents.push(this.generateContentObj(nodes));
+        });
+        let flat = formattedContents.flat(Infinity);
+        let documentData = flat.filter(items =>{
+          return items != undefined
+        });
+        console.log('documentData', documentData)
+      
+        // const generateParagraphs = (pg) => pg.map(({ type, children }) =>
+        //     new docx.Paragraph({
+        //       children: [...generateTextRun(children), ...generateHyperLink(children)],
+        //       spacing: {
+        //           after: this.checkForDiv(type),
+        //       },
+        //     })
+        // );
+        const generateParagraphs = (pg) => pg.map(({ type, children }) => {
+            if (type === 'P' || type === 'DIV') {
+              let paragraph = new docx.Paragraph({
+                children: [...generateTextRun(children), ...generateHyperLink(children)],
+                spacing: {
+                    after: this.checkForDiv(type),
+                },
+              });
+              return paragraph
+            }
+            if (type === 'UL') {
+              let list = new docx.Paragraph({
+                children: [...generateTextRun(children)],
+                bullet: {
+                    level: 0
+                },
+                spacing: {
+                    after: this.checkForDiv(type),
+                },
+              });
+              return list
+            }
+          } 
+        );
+
+        const generateTextRun = (children) => children.map(({ text, format, styles }) => {
+            if (format != "A") {
+              let textRun = new docx.TextRun({
+                text: text,
+                bold: styles.bold,
+                size: styles.size,
+                color: styles.color,
+              });
+              return textRun
+            }
+          }  
+        );
+
+        const generateHyperLink = (children) => 
+          children.map(({ text, format, styles }) => {
+            if (format === "A") {
+              let hyperLink =  new docx.ExternalHyperlink({
+                  children: [
+                      new docx.TextRun({
+                          text: text,
+                          size: styles.size,
+                          style: "Hyperlink",
+                      }),
+                  ],
+                  link: text,
+              });
+              return hyperLink
+            }
+          }
+        );
+
+        let doc = new docx.Document({
+          sections: [{
+              properties: {},
+              headers: {
+                default: new docx.Header({
+                    children: [
+                      new docx.Paragraph({
+                        children: [
+                          new docx.ImageRun({
+                            data: this.pic,
+                            transformation: {
+                                width: 100,
+                                height: 100,
+                            },
+                            altText: {
+                              title: "DBRS Morningstar",
+                              description: "Header Image",
+                              name: "DBRS Morningstar",
+                            },
+                          }),
+                        ],
+                      }),
+                    ],
                 }),
-              ],
-            });
+              },
+              children: [...generateParagraphs(documentData)],
+            },
+          ],
         });
 
-        // To export into a .docx file
+        // Save/download Document
         this.saveDocumentToFile(doc, `vuedoc.docx`);
         this.generateDoc = false;
       },
 
       saveDocumentToFile: function (doc, fileName) {
         const mimeType = 'application/vnd.openxmlformats officedocument.wordprocessingml.document';
-        Packer.toBlob(doc).then((blob) => {
+        docx.Packer.toBlob(doc).then((blob) => {
           const docblob = blob.slice(0, blob.size, mimeType);
           saveAs(docblob, fileName);
         });
+      },
+
+      generateContentObj(nodeList) {
+        const parentObj = Array.from(nodeList).flatMap((element) => {
+          if (element.nodeName === 'P') {
+            return {
+              type: element.nodeName,
+              children: this.getChildNodes(element.childNodes)
+            };
+          }
+          if (element.nodeName === 'UL') {
+            return {
+              type: element.nodeName,
+              children: this.getChildListNodes(element.childNodes)
+            };
+          }
+          if (element.nodeName === 'DIV') {
+            return {
+              type: element.nodeName,
+              children: this.getElementNodes(element),
+            };
+          }
+         
+        });
+
+        console.log(nodeList);
+        console.log('Parent Items', parentObj);
+        return parentObj
+          
+      },
+
+      getChildNodes(children){
+       
+        let childObject = Array.from(children).flatMap((element) => {
+          return {
+              text: element.innerText || element.nodeValue,
+              format: element.nodeName,
+              attributes: this.getChildAttributes(element.attributes),
+            };
+        });
+
+        let updateChildObject = childObject.map((child) =>{
+          let styles = {};
+          styles.color = this.getColor(child.attributes);
+          styles.size = this.getSize(child.attributes);
+          styles.bold = this.checkFormat(child.format);
+          return {
+            ...child,
+            styles: styles
+          }
+        })
+
+        return updateChildObject
+      },
+
+      getChildListNodes(children){
+       let listItems = Array.from(children);
+       let listItemChildren = listItems.find(listItem => listItem).childNodes;
+
+       let childObject = Array.from(listItemChildren).flatMap((element) => {
+         return {
+             text: element.innerText || element.nodeValue,
+             format: element.nodeName,
+             attributes: this.getChildAttributes(element.attributes),
+           };
+       });
+
+       let updateChildObject = childObject.map((child) =>{
+         let styles = {};
+         styles.color = this.getColor(child.attributes);
+         styles.size = this.getSize(child.attributes);
+         styles.bold = this.checkFormat(child.format);
+         return {
+           ...child,
+           styles: styles
+         }
+       })
+
+       return updateChildObject
+     },
+
+      getElementNodes(element){
+        let elementCollection = [];
+        let child = {
+          text: element.innerText || element.nodeValue,
+          format: element.nodeName,
+          attributes: this.getChildAttributes(element.attributes)
+        };
+
+        elementCollection.push(child);
+
+        let updateChild = elementCollection.map((childItem) =>{
+          let styles = {};
+          styles.color = this.getColor(childItem.attributes);
+          styles.size = this.getSize(childItem.attributes);
+          styles.bold = this.checkFormat(childItem.format)
+          return {
+            ...child,
+            styles: styles
+          }
+        })
+        return updateChild;
+      },
+
+      getChildAttributes(attributes){
+        let attrContents = attributes != undefined ? Object.keys(attributes) : [];
+        if (attrContents.length === 0) {
+          return [];
+        } else {
+          let attrs = {};
+          let attrsCollection = Array.from(attributes);
+          let attrClass = attrsCollection.find(attr => attr.nodeName === 'class');
+          let attrId = attrsCollection.find(attr => attr.nodeName === 'id');
+          let attrDataSection = attrsCollection.find(attr => attr.nodeName === 'data-section');
+          let attrDataControl = attrsCollection.find(attr => attr.nodeName === 'data-control');
+
+          attrs.class = attrClass ? attrClass['nodeValue'] : null;
+          attrs.id = attrId ? attrId['nodeValue'] : null;
+          attrs.dataSection = attrDataSection ? attrDataSection['nodeValue'] : null;
+          attrs.dataControl = attrDataControl ? attrDataControl['nodeValue'] : null;
+
+          // console.log('attrsCollection',attrsCollection);
+          // console.log('attrsCollection', {attrClass});
+          // console.log('attrs',attrs);
+
+          return attrs
+          
+        }
+        
+      },
+
+      getColor(attrs){
+        if (attrs.length === 0 || Object.keys(attrs).length === 0 && attrs.constructor === Object) {
+          return '000000'
+        } else {
+          if( attrs.class === 'dynamic-control' ||
+              attrs.class === 'dynamic-control inline' ||
+              attrs.class === 'dynamic-control block' ) {
+            return 'FF0000'
+          } else {
+            return '000000'
+          }
+        }
+        
+      },
+
+      getSize(attrs){
+        // let attrContents = attrs != undefined ? Object.keys(attrs): [];
+        if (attrs.length === 0 || Object.keys(attrs).length === 0 && attrs.constructor === Object) {
+          return 24
+        } else {
+          if(attrs.class === 'ql-size-small' || attrs.class === '\\"ql-size-small\\" ql-size-small') {
+            return 14
+          } else {
+            return 24
+          }
+        }
+        
+      },
+
+      checkForDiv(type){
+        if (type === "DIV") {
+          return 400;
+        }
+      },
+
+      checkFormat(format){
+        if (format === "STRONG") {
+          return true;
+        } else {
+          return false;
+        }
+      },
+
+      getImageHeader(){
+        getImage().then(response => {
+          this.pic = response;
+          console.log(response)
+        })
       },
     },
 
     mounted () {
       this.getAllData();
       this.dragExistingItem();
-    }
+      this.getImageHeader();
+    },
+
   }
 </script>
 

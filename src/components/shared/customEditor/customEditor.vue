@@ -1,14 +1,15 @@
 <template>
     <div class="custom-editor-wrapper">
 
-        <div class="quillWrapper custom" v-if="edit == true">
+        <div class="quillWrapper custom textBlock" v-if="edit == true">
             <custom-toolbar :buttonList="buttonList" :id="editorId"></custom-toolbar>
             <vue-editor 
                 ref="quillEditor"
                 v-model="content.content" 
                 :editorOptions="editorOptions" 
                 @focus="onEditorFocus"
-                @blur="onEditorBlur">
+                @blur="onEditorBlur"
+                :class="contentType">
             </vue-editor>
         </div> 
 
@@ -62,6 +63,9 @@
             },
             showDetails:{
                 type:Boolean
+            },
+            contentType:{
+                type:String
             },
             editorId:{
                 type:String,
@@ -152,5 +156,13 @@
     display:flex;
     flex-direction: column;
     gap:15px;
+  }
+
+  .quillWrapper.custom.textBlock .quill-container{
+    height: auto !important;
+  }
+  .quillWrapper.custom.textBlock .ql-editor{
+    // min-height:600px;
+    height: auto !important;
   }
 </style>

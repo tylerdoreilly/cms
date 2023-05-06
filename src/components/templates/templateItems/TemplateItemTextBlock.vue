@@ -15,7 +15,8 @@
           :editMode="editMode"
           :showDetails="showDetails"
           :buttonList="customToolbarButtons"
-          :editorId="getTemplateId">
+          :editorId="getTemplateId"
+          controlType="textBlock">
         </custom-editor>
       
     </TemplateObject>  
@@ -74,6 +75,15 @@
 </script>
 
 <style lang="scss">
-  // @import './templateItem.scss';
+  .vue_editor_height .ql-editor{
+    height:600px;
+    max-height: 60px;
+    min-height: 60px;
+  }
+
+  .ql-editor {
+    max-height: 60px;
+    overflow-y: auto;
+  }
  
 </style>
