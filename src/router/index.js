@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import AdminHome from '../views/admin/AdminHome.vue'
-import AdminDashboard from '../views/admin/AdminDashboard.vue'
-import AdminUsers from '../views/admin/AdminUsers.vue'
-import AdminPages from '../views/admin/AdminPages.vue'
-import AdminForms from '../views/admin/AdminForms.vue'
-import AdminTemplates from '../views/admin/templates/AdminTemplates.vue'
-import AdminTemplatesCreate from '../views/admin/templates/AdminTemplatesCreate.vue'
-import HelloWorld from '../components/HelloWorld.vue'
+// import AdminHome from '@/views/admin/AdminHome.vue'
+import Admin from '@/views/admin/Admin.vue'
+import AdminDashboard from '@/views/admin/AdminDashboard.vue'
+import AdminUsers from '@/views/admin/AdminUsers.vue'
+import AdminPages from '@/views/admin/AdminPages.vue'
+import AdminForms from '@/views/admin/AdminForms.vue'
+import AdminTemplates from '@/views/admin/templates/AdminTemplates.vue'
+import AdminTemplatesCreate from '@/views/admin/templates/AdminTemplatesCreate.vue'
+import AppLogin from '@/views/AppLogin.vue'
+
+import { authenticationGuard } from "@/auth/auth-guard";
 
 Vue.use(VueRouter)
 
@@ -15,13 +18,14 @@ const routes = [
     {
       path: '/',
       name: 'home',
-      redirect: '/admin'
+      redirect: '/login'
     },
     {
       path: '/admin',
       name: 'admin',
-      component: AdminHome,
+      component: Admin,
       redirect: '/admin/dashboard',
+      beforeEnter: authenticationGuard,
       children:[
         {
           path: '/admin/dashboard',
@@ -54,18 +58,10 @@ const routes = [
       ]
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: HelloWorld,
+      path: '/login',
+      name: 'login',
+      component: AppLogin,
     },
-    // {
-    //   path: '/about',
-    //   name: 'About',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // }
   ]
 
 const router = new VueRouter({

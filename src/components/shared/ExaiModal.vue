@@ -5,7 +5,7 @@
             <div class="exai-modal__header">
                 <div class="exai-modal__header-title">{{ title }}</div> 
                 <div class="exai-modal__header-actions">
-                    <exai-button variation="secondary" icon="fa-xmark" @click.native="$emit('close-modal')"></exai-button>
+                    <exai-button icon="fa-xmark" @click.native="$emit('close-modal')"></exai-button>
                 </div>                
             </div>
             <div class="exai-modal__body">

@@ -112,13 +112,15 @@
     @include btn-default();
     font-size: 14px;
     padding:6px 8px;
-
+    align-items:center;
+    text-align:center;
+    
     &--primary{
       @include btn-primary();
     }
 
     &--secondary{
-      background: $white-smoke;
+      background: $base-white;
       color:#2c3e50;
     }
 

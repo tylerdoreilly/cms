@@ -190,7 +190,7 @@
 <style lang="scss">
   .admin-toolbar{
     position:sticky;
-    top:25px;
+    top:75px;
   }
   .list__elem{
    margin-bottom:10px;

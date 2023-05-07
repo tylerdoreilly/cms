@@ -39,7 +39,7 @@
            
         </template>
         <template #exai-modal-actions>
-            <exai-button text="Back" variation="secondary" @click.native.prevent="back" v-if="showDetails"></exai-button>
+            <exai-button text="Back" @click.native.prevent="back" v-if="showDetails"></exai-button>
             <exai-button text="Add Control" variation="primary" @click.native.prevent="submitted"></exai-button> 
         </template>
       

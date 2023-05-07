@@ -2,12 +2,12 @@
   <div :class="[$style['template-object'], classObject]">
     <div :class="[$style['template-item__header'], headerModifiers]">
       <div :class="[$style['template-item__title']]">
-        <exai-button variation="secondary" icon="fa-grip-vertical" @mousedown.native="dragTemplateItem(content)" class="grab"></exai-button>
+        <exai-button icon="fa-grip-vertical" @mousedown.native="dragTemplateItem(content)" class="grab"></exai-button>
         <font-awesome-icon :icon="setIcon" />
         {{ title }}
       </div>
       <div :class="[$style['template-item__controls']]" v-if="this.activated">
-        <exai-button variation="secondary" icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
+        <exai-button icon="fa-gear" @click.native="toggleEditMode()"></exai-button>
         <exai-popover>
           <exai-list>
             <exai-list-item title="Save Item" @click.native.prevent="saveItem(content)"></exai-list-item>

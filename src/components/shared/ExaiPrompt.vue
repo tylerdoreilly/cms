@@ -12,7 +12,7 @@
                <p>{{ message }}</p>
             </div>
             <div class="exai-prompt__actions">
-                <exai-button text="Cancel" variation="secondary" @click.native="$emit('close-modal')"></exai-button>
+                <exai-button text="Cancel" @click.native="$emit('close-modal')"></exai-button>
                 <exai-button text="Yes" variation="primary" @click.native="$emit('close-and-submit', item)"></exai-button>
             </div>
         </div>

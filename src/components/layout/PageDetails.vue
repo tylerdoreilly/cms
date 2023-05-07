@@ -3,7 +3,7 @@
     <div class="template-details__content">
       <h1 class="template-title">
         <span>{{title}} (<date-format :date="asof" dateFormat="MM/DD/YYYY"></date-format>)</span>
-        <exai-button variation="secondary" icon="fa-pencil" @click.native="editTemplateDetails"></exai-button>
+        <exai-button icon="fa-pencil" @click.native="editTemplateDetails"></exai-button>
       </h1>
       <div class="template-details-info">
         <div><span class="detail-label">Type: </span>{{ type }}</div>

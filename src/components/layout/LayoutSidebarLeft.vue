@@ -36,7 +36,8 @@ export default {
   .column--left{
     flex: 0 0 12em;
     order: -1;
-    background: $sidebar-bg;
+    background: $base-white;
+    border-right:1px solid $border;
     padding:20px;
   }
 

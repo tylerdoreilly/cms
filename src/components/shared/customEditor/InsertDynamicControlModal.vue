@@ -140,8 +140,8 @@
             </div>
         </template>
         <template #exai-modal-actions>
-            <exai-button text="Back" variation="secondary" @click.native.prevent="back" v-if="showDetails"></exai-button>
-            <exai-button text="Cancel" variation="secondary" @click.native.prevent="closeModal"></exai-button>
+            <exai-button text="Back" @click.native.prevent="back" v-if="showDetails"></exai-button>
+            <exai-button text="Cancel" @click.native.prevent="closeModal"></exai-button>
             <exai-button text="Add Control" variation="primary" @click.native.prevent="submitted" v-if="showDetails"></exai-button> 
         </template>      
     </exai-modal>

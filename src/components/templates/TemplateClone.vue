@@ -26,7 +26,7 @@
 
         </template>
         <template #exai-modal-actions>
-            <exai-button text="Cancel" variation="secondary" @click.native.prevent="closeModal"></exai-button>
+            <exai-button text="Cancel" @click.native.prevent="closeModal"></exai-button>
             <exai-button text="Clone" variation="primary" @click.native.prevent="submitted"></exai-button>
         </template>    
     </exai-modal>

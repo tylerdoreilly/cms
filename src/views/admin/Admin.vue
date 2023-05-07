@@ -1,24 +1,28 @@
 <template>
   <div id="app" class="holyGrail">
-    <router-view/>
+    <app-header title="Exai"/>
+    <LayoutSidebarLeft>
+      <template v-slot:sidebar>
+        <AdminMenu></AdminMenu>
+      </template>
+      <router-view/>
+    </LayoutSidebarLeft>  
   </div>
 </template>
 
 <script>
-// import LayoutSidebarLeft from '@/components/layout/LayoutSidebarLeft.vue'
-// import AppHeader from '@/components/layout/AppHeader.vue'
-// import AdminMenu from '@/components/AdminMenu.vue'
-// import AppBrand from '@/components/AppBrand.vue'
+  import LayoutSidebarLeft from '@/components/layout/LayoutSidebarLeft.vue'
+  import AppHeader from '@/components/layout/AppHeader.vue'
+  import AdminMenu from '@/components/AdminMenu.vue'
 
-export default {
-  name: 'App',
-  components: {
-    // AppHeader,
-    // LayoutSidebarLeft,
-    // AdminMenu,
-    // AppBrand
+  export default {
+    name: 'App',
+    components: {
+      AppHeader,
+      LayoutSidebarLeft,
+      AdminMenu,
+    }
   }
-}
 </script>
 
 <style lang="scss">
