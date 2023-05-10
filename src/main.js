@@ -35,10 +35,16 @@ import {
   faGauge,
   faListCheck,
   faUserGroup,
-  faArrowRightFromBracket
+  faArrowRightFromBracket,
+  faAnglesLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { authConfig } from '../auth_config.js';
 import { Auth0Plugin } from '@/auth/auth0-plugin';
+
+// Custom Plugin
+
+
+
 
 // Toast Options
 const options = {
@@ -72,8 +78,9 @@ library.add(faUserSecret,
   faGauge,
   faListCheck,
   faUserGroup,
-  faArrowRightFromBracket
-  )
+  faArrowRightFromBracket,
+  faAnglesLeft
+)
 
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -90,6 +97,7 @@ Vue.use(Auth0Plugin, {
     );
   },
 });
+
 
 Vue.config.productionTip = false
 

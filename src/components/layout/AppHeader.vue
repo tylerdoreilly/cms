@@ -1,9 +1,6 @@
 <template>
   <header :class="[$style['app-header']]">
-    <div :class="[$style['app-header__brand-logo']]">
-      <font-awesome-icon icon="fa-solid fa-face-grin-wink" :class="[$style['app-header__brand-icon']]"/>
-    </div> 
-    <div :class="[$style['app-header__brand']]">{{ title }}</div>
+    <app-brand />
     <div :class="[$style['app-header__controls']]">
       <auth-nav v-if="!$auth.isLoading" />
     </div>
@@ -12,21 +9,17 @@
 
 <script>
   import AuthNav from '@/components/AuthNav';
+  import AppBrand from '@/components/AppBrand';
+
   export default {
     name: 'app-header',
     components: {
-      AuthNav
+      AuthNav,
+      AppBrand
     },
     props: {
       title: String
     },
-    data() {
-        return {
-            users: [],
-            numberOfUsers: 0
-        }
-    },
-  
   }
 </script>
 

@@ -115,6 +115,7 @@
   import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
   import { getAllTemplateData, getImage } from '../../../services/TemplatesService'
   import { templateItemEventBus } from '../../../services/TemplateItemEventBus.js'
+  import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js'
 
   import * as docx from "docx";
   import { saveAs } from "file-saver";
@@ -486,27 +487,11 @@
       // This is work in progress.
       
       createDoc(){
-        
-        const templateContents = this.template.data;
-        let formattedContents = [];
-        templateContents.forEach(templateContent => {
-          const nodes = new DOMParser().parseFromString(templateContent.content, 'text/html').body.childNodes;
-          formattedContents.push(this.generateContentObj(nodes));
-        });
-        let flat = formattedContents.flat(Infinity);
-        let documentData = flat.filter(items =>{
-          return items != undefined
-        });
-        console.log('documentData', documentData)
+
+        let documentData = transformTemplateData(this.template.data)        
+        console.log('documentData', documentData);
       
-        // const generateParagraphs = (pg) => pg.map(({ type, children }) =>
-        //     new docx.Paragraph({
-        //       children: [...generateTextRun(children), ...generateHyperLink(children)],
-        //       spacing: {
-        //           after: this.checkForDiv(type),
-        //       },
-        //     })
-        // );
+      
         const generateParagraphs = (pg) => pg.map(({ type, children }) => {
             if (type === 'P' || type === 'DIV') {
               let paragraph = new docx.Paragraph({
@@ -606,175 +591,9 @@
         });
       },
 
-      generateContentObj(nodeList) {
-        const parentObj = Array.from(nodeList).flatMap((element) => {
-          if (element.nodeName === 'P') {
-            return {
-              type: element.nodeName,
-              children: this.getChildNodes(element.childNodes)
-            };
-          }
-          if (element.nodeName === 'UL') {
-            return {
-              type: element.nodeName,
-              children: this.getChildListNodes(element.childNodes)
-            };
-          }
-          if (element.nodeName === 'DIV') {
-            return {
-              type: element.nodeName,
-              children: this.getElementNodes(element),
-            };
-          }
-         
-        });
-
-        console.log(nodeList);
-        console.log('Parent Items', parentObj);
-        return parentObj
-          
-      },
-
-      getChildNodes(children){
-       
-        let childObject = Array.from(children).flatMap((element) => {
-          return {
-              text: element.innerText || element.nodeValue,
-              format: element.nodeName,
-              attributes: this.getChildAttributes(element.attributes),
-            };
-        });
-
-        let updateChildObject = childObject.map((child) =>{
-          let styles = {};
-          styles.color = this.getColor(child.attributes);
-          styles.size = this.getSize(child.attributes);
-          styles.bold = this.checkFormat(child.format);
-          return {
-            ...child,
-            styles: styles
-          }
-        })
-
-        return updateChildObject
-      },
-
-      getChildListNodes(children){
-       let listItems = Array.from(children);
-       let listItemChildren = listItems.find(listItem => listItem).childNodes;
-
-       let childObject = Array.from(listItemChildren).flatMap((element) => {
-         return {
-             text: element.innerText || element.nodeValue,
-             format: element.nodeName,
-             attributes: this.getChildAttributes(element.attributes),
-           };
-       });
-
-       let updateChildObject = childObject.map((child) =>{
-         let styles = {};
-         styles.color = this.getColor(child.attributes);
-         styles.size = this.getSize(child.attributes);
-         styles.bold = this.checkFormat(child.format);
-         return {
-           ...child,
-           styles: styles
-         }
-       })
-
-       return updateChildObject
-     },
-
-      getElementNodes(element){
-        let elementCollection = [];
-        let child = {
-          text: element.innerText || element.nodeValue,
-          format: element.nodeName,
-          attributes: this.getChildAttributes(element.attributes)
-        };
-
-        elementCollection.push(child);
-
-        let updateChild = elementCollection.map((childItem) =>{
-          let styles = {};
-          styles.color = this.getColor(childItem.attributes);
-          styles.size = this.getSize(childItem.attributes);
-          styles.bold = this.checkFormat(childItem.format)
-          return {
-            ...child,
-            styles: styles
-          }
-        })
-        return updateChild;
-      },
-
-      getChildAttributes(attributes){
-        let attrContents = attributes != undefined ? Object.keys(attributes) : [];
-        if (attrContents.length === 0) {
-          return [];
-        } else {
-          let attrs = {};
-          let attrsCollection = Array.from(attributes);
-          let attrClass = attrsCollection.find(attr => attr.nodeName === 'class');
-          let attrId = attrsCollection.find(attr => attr.nodeName === 'id');
-          let attrDataSection = attrsCollection.find(attr => attr.nodeName === 'data-section');
-          let attrDataControl = attrsCollection.find(attr => attr.nodeName === 'data-control');
-
-          attrs.class = attrClass ? attrClass['nodeValue'] : null;
-          attrs.id = attrId ? attrId['nodeValue'] : null;
-          attrs.dataSection = attrDataSection ? attrDataSection['nodeValue'] : null;
-          attrs.dataControl = attrDataControl ? attrDataControl['nodeValue'] : null;
-
-          // console.log('attrsCollection',attrsCollection);
-          // console.log('attrsCollection', {attrClass});
-          // console.log('attrs',attrs);
-
-          return attrs
-          
-        }
-        
-      },
-
-      getColor(attrs){
-        if (attrs.length === 0 || Object.keys(attrs).length === 0 && attrs.constructor === Object) {
-          return '000000'
-        } else {
-          if( attrs.class === 'dynamic-control' ||
-              attrs.class === 'dynamic-control inline' ||
-              attrs.class === 'dynamic-control block' ) {
-            return 'FF0000'
-          } else {
-            return '000000'
-          }
-        }
-        
-      },
-
-      getSize(attrs){
-        // let attrContents = attrs != undefined ? Object.keys(attrs): [];
-        if (attrs.length === 0 || Object.keys(attrs).length === 0 && attrs.constructor === Object) {
-          return 24
-        } else {
-          if(attrs.class === 'ql-size-small' || attrs.class === '\\"ql-size-small\\" ql-size-small') {
-            return 14
-          } else {
-            return 24
-          }
-        }
-        
-      },
-
       checkForDiv(type){
         if (type === "DIV") {
           return 400;
-        }
-      },
-
-      checkFormat(format){
-        if (format === "STRONG") {
-          return true;
-        } else {
-          return false;
         }
       },
 

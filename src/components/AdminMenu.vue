@@ -11,7 +11,7 @@
       <div class="menu-icon">
         <font-awesome-icon icon="fa-solid fa-layer-group" />
       </div>
-     
+    
       Templates
     </router-link>
     <router-link class="nav-item" to="/admin/forms">
@@ -32,12 +32,10 @@
 </template>
 
 <script>
-
   export default {
-    name: 'AdminMenu',
+    name: 'admin-menu',
     components: {
-    },
-   
+    },   
   }
 </script>
 
@@ -77,7 +75,5 @@
     //   color: $keppel;
     // }
   }
-
-
 
 </style>

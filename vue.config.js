@@ -5,6 +5,11 @@ module.exports = defineConfig({
   transpileDependencies: true
 })
 module.exports = {
+  configureWebpack: {
+    resolve: {
+        symlinks:true
+    },
+},
   css: {
     loaderOptions: {
       sass: {
