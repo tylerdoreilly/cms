@@ -1,33 +1,70 @@
 <template>
   <exai-loader v-if="loading === true"></exai-loader>
-  <div id="createTemplate" v-else>
+  <div v-else>
     <page-layout sidebar>
       <template v-slot:content>
 
         <PageHeader title="Edit Template">
+          <exai-button text="Preview" @click.native="preview = !preview"></exai-button>
           <exai-button text="Generate" @click.native="generateDoc = true"></exai-button>
           <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
         </PageHeader>
 
         <PageDetails 
           :title="template.title" 
+          :type="template.type" 
+          :date="template.date_created" 
           :asof="template.date_asof" 
+          :updated="template.date_updated"
           @edit-details="editDetails()">
+
+          <exai-button text="Toggle Details" @click.native="showDetails = !showDetails"></exai-button>  
         </PageDetails>
 
-        <template-container>
+        <template-container v-if="preview == false && items">
           <custom-editor-new 
             v-model="content"
             :data="content"
-            :customControls="customControls"
             :buttonList="customToolbarButtons"
             :editorId="getTemplateId">
           </custom-editor-new>
+
+          <div v-for="(item, index) in items" :key="item.id" ref="item" :class="handleDropClasses(item)" :id="item.id"      
+            
+            @dragstart.self="pickupElem($event, item, index);"
+            @dragover.prevent="showDropPlace($event, item, index);"
+            @dragenter.prevent
+            @drop="moveElem($event, item, index);"
+            @dragend.prevent="dragEndClear();">
+
+            <component 
+                v-if="item"
+                class="template-list__item"
+                :class="{'template-list__item--is-dragged': dragedElem && item.id === dragedElem.id}"
+                :is="item['field']" 
+                :data="item" 
+                :title="item['name']"
+                :listCount="items.length"
+                v-bind:showDetails="showDetails"
+                v-bind:activated="true" 
+                @remove-item="checkBeforeRemove($event)"
+                @save-custom-item="openCustomItemModal($event)">
+            </component>
+          
+          </div>
         </template-container>
+       
+        <document-preview :data="items" v-if="preview == true"></document-preview>
 
       </template>
       <template v-slot:sidebar-right>
-        <template-details title="Details" :data="template" />
+        <template-toolbar 
+          v-if="templateItems && customTemplateItems"
+          title="Toolbar"
+          :toolbarItems="templateItems"
+          :libraryItems="customTemplateItems"
+          @dragTemplateItem="dragTemplateItem">
+        </template-toolbar>
       </template>
     </page-layout>
 
@@ -71,13 +108,20 @@
   import PageHeader from '../../../components/layout/PageHeader.vue'
   import PageDetails from '../../../components/layout/PageDetails.vue'
   import TemplateContainer from '../../../components/templates/TemplateContainer.vue'
-  import TemplateDetails from '../../../components/templates/TemplateDetails.vue'
+  import TemplateToolbar from '../../../components/templates/templateToolbar/TemplateToolbar.vue'
   import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue'
   import TemplateSaveCustomItem from '../../../components/templates/TemplateSaveCustomItem.vue'
+  import DocumentPreview from '../../../components/templates/DocumentPreview.vue'
   import ExaiButton from '../../../components/shared/ExaiComponents/ExaiButton.vue'
   import ExaiLoader from '../../../components/shared/ExaiComponents/ExaiLoader.vue'
   import ExaiPrompt from '../../../components/shared/ExaiComponents/ExaiPrompt.vue'
+  import TemplateItemTextBlock from '../../../components/templates/templateItems/TemplateItemTextBlock.vue'
+  import TemplateHeading from '../../../components/templates/templateItems/TemplateHeading.vue'
+  import TemplateItemTextField from '../../../components/templates/templateItems/TemplateItemTextField.vue'
+  import TemplateItemList from '../../../components/templates/templateItems/TemplateItemList.vue'
+  import TemplateLayoutSingle from '../../../components/templates/templateItems/TemplateLayoutSingle.vue'
   import { getAllTemplateData, getImage } from '../../../services/TemplatesService'
+  import { templateItemEventBus } from '../../../services/TemplateItemEventBus.js'
   import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js'
   import customEditorNew from '@/components/shared/customEditor/customEditorNew.vue'
   import * as docx from "docx";
@@ -94,12 +138,18 @@
       PageDetails,
       TemplateContainer,
       TemplateDetailsEdit,
-      TemplateSaveCustomItem,   
+      TemplateSaveCustomItem,
+      TemplateHeading,
+      TemplateItemTextField,
+      TemplateItemTextBlock,
+      TemplateItemList,
+      TemplateLayoutSingle,
+      TemplateToolbar,     
       ExaiButton,
       ExaiLoader,
       ExaiPrompt,
-      customEditorNew,
-      TemplateDetails
+      DocumentPreview,
+      customEditorNew
     },
 
     data() {
@@ -107,7 +157,6 @@
           items: [],
           templateItems:[],
           templateTypes:[],
-          customControls:[],
           content:[],
           customTemplateItems:[],
           id: this.$route.params.id,
@@ -135,20 +184,59 @@
           pic:'',
           customToolbarButtons:{
             headers:true,
-            size:true,
-            styling:false,
+            size:false,
+            styling:true,
             alignment:true,
-            blockInsert:true,
-            lists:true,
+            blockInsert:false,
+            lists:false,
             indents:true,
             colors:true,
-            inserts:true,
+            inserts:false,
             clean:true
           },
       }
     },
 
     computed: {
+      handleDropClasses() {
+        return item => {
+          let newElem = { ...this.dragedElem }
+          let existingItemIds = this.items.map(a => a.id);
+          let existingItem = existingItemIds.includes(newElem.id);
+          console.log('existing item',existingItem)
+          let itemsLength = this.items.length;
+
+          if (!this.overElem || !this.overElem.id) {
+            return "";
+          }
+          if(this.newInstance){
+            if(itemsLength == 1 && this.overElem.id === item.id){
+              console.log("item id",  item.id);
+              console.log("over id", this.overElem.id);
+              return "drop-place drop-place--after";
+            }
+            else if(itemsLength > 1 && this.overElem.id === item.id){
+              console.log("item id",  item.id);
+              console.log("over id", this.overElem.id);
+              return "drop-place drop-place--after";
+            }
+          }
+          else{
+            if ( this.overElem.id === item.id && item.position < this.dragedElem.position) {
+              console.log("before");
+              return "drop-place drop-place--before";
+            }
+            if (
+              this.overElem.id === item.id &&
+              item.position > this.dragedElem.position
+            ) {
+              console.log("after");
+              return "drop-place drop-place--after";
+            }
+          }
+        };
+      },
+
       randomId(){
         let randomId = Math.random() * Math.floor(1000);
         return Math.round(randomId)
@@ -160,11 +248,125 @@
     },
 
     methods: {
-   
+
+      // Drag and Drop Methods
+
+      dragExistingItem(){
+        templateItemEventBus.$on('drag-template-item', (id) => {
+          let selectedItemId = id.toString();
+          this.$refs.item.forEach(item => {
+            if (item.id === selectedItemId) {
+              item.draggable = true;
+              console.log('draggable set', item.draggable)
+            }
+          });
+        });
+      },
+
+      dragEndClear() {
+        console.log("dragEnd");
+        this.dragedElem = null;
+        this.overElem = null;
+        console.log('overElem',this.dragedElem)
+      },
+
+      pickupElem(event, elem) {
+        console.log('pickup element', elem);
+        event.dataTransfer.dropEffect = "move";
+        this.dragedElem = { ...elem };
+      },
+
+      showDropPlace(event, elem) {
+        if (elem.id !== this.dragedElem.id) {
+          this.overElem = { ...elem };
+          console.log('over element', this.overElem)
+        } else {
+          this.overElem = null;
+          console.log('over element', this.overElem)
+        }
+      },
+
+      moveElem(event, elem, index) {
+        console.log(
+          `moveElem: event: ${event} | elem: ${elem} | index: ${index}`
+        );
+
+        let newElem = { ...this.dragedElem }
+        let existingItemIds = this.items.map(a => a.id);
+        let existingItem = existingItemIds.includes(newElem.id);
+
+        if(!existingItem){
+          this.dragedElem = this.generateId(newElem);
+          this.updateListOrder(index);
+        }
+        else{
+          this.updateListOrder(index);
+        }
+           this.dragEndClear();     
+      },
+
+      updateListOrder(index){
+        let newElem = { ...this.dragedElem }
+        let existingItemIds = this.items.map(a => a.id);
+        let existingItem = existingItemIds.includes(newElem.id);
+        this.items = this.items.filter(item => item.id !== this.dragedElem.id);
+        if(!existingItem){
+          if(this.items.length == 1){
+            this.items.splice(1, 0, { ...this.dragedElem });
+            this.items.forEach((item, index) => (item.position = index + 1));
+          }
+          else{
+            this.items.splice(index + 1, 0, { ...this.dragedElem });
+            this.items.forEach((item, index) => (item.position = index + 1));
+          }
+        }else{
+          this.items.splice(index, 0, { ...this.dragedElem });
+          this.items.forEach((item, index) => (item.position = index + 1));
+        }
+        
+       
+        console.log('items',this.items)
+      },
+
+      addCard: function (template) {
+        let randomId = Math.random() * Math.floor(1000);
+        let selectedTemplate = this.availableTemplateItems.find(item => item.cardType == template);
+        selectedTemplate['id'] = Math.round(randomId);
+
+        this.items.push(selectedTemplate)
+      },
+      
       generateId: function (elem) {
         let randomId = Math.random() * Math.floor(1000);
         elem['id'] = Math.round(randomId);
         return elem
+      },
+
+      addLayout: function (layout) {
+        let randomId = Math.random() * Math.floor(1000000);
+        let selectedTemplate = this.availableTemplateItems.find(item => item.cardType == item);
+        selectedTemplate['id'] = randomId;
+        
+        this.layouts.push({id: randomId, name: "Single Col Layout", position: 1, layoutType: layout})
+      },
+
+      dragTemplateItem(event, elem){
+        this.dragedElem = { ...elem };
+        this.showDropPlace(event, elem);
+        this.newInstance = true;
+        console.log('test')
+      },
+
+      setDefaultItem(){
+        let randomId = Math.random() * Math.floor(1000);
+        let defaultItem = {
+          id: Math.round(randomId), 
+          name: "Heading", 
+          position: 1, 
+          field:'TemplateHeading', 
+          content:'place heading here'
+        }
+        this.items.push(defaultItem)
       },
 
       // Other Methods
@@ -206,7 +408,7 @@
       // Get and Save
       async saveTemplate(){
         this.template.data = [];
-        let templateData = JSON.stringify(this.content);
+        let templateData = JSON.stringify(this.items);
           if (this.id) {
             let type = this.template.type_id;
             this.template.date_updated = this.getDate();
@@ -275,28 +477,18 @@
       getAllData(){
         this.loading = true;
         getAllTemplateData(this.id).then(
-          axios.spread((
-            {data: template}, 
-            {data:templateItems}, 
-            {data:templateItemsCustom}, 
-            {data:templateTypes}, 
-            {data:customControls},
-            {data:customControlsLibrary}) => {
-            console.log({template, templateItems, templateItemsCustom, templateTypes, customControls,customControlsLibrary });
+          axios.spread(({data: template}, {data:templateItems}, {data:templateItemsCustom}, {data:templateTypes}) => {
+            console.log({template, templateItems, templateItemsCustom, templateTypes });
             this.template = template.find(item => item);
             this.templateItems = templateItems;
             this.customTemplateItems = templateItemsCustom;
             this.templateTypes = templateTypes;
-            this.customControls = customControls;
-            customControlsLibrary.forEach(libraryItem =>{
-              this.customControls.push(libraryItem);
-            })
-            console.log('controls', this.customControls)
+
             if(this.template.data == null){
               this.setDefaultItem();
             }
             else{
-              this.content = this.template.data;
+              this.items = this.template.data;
             }
   
           })
@@ -424,12 +616,14 @@
       getImageHeader(){
         getImage().then(response => {
           this.pic = response;
+          console.log(response)
         })
       },
     },
 
     mounted () {
       this.getAllData();
+      this.dragExistingItem();
       this.getImageHeader();
     },
 
@@ -437,11 +631,54 @@
 </script>
 
 <style lang="scss">
- #createTemplate .exai-tabs__list{
-  margin-left:-40px;
-  margin-right:-40px;
-  padding-left:40px;
- }
  
+  .template-list__item {
+    // cursor: row-resize;
+    // border: 1px solid $gunmetal;
+    // padding: 5px;
+    // margin-bottom: 10px;
+    // transition: all 0.3s ease;
+    // background:#fff;
+  }
+
+  .template-list__item--is-dragged {
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+  }
+
+  .drop-place {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  .drop-place--before {
+    padding-top: 80px;
+  }
+  .drop-place--after {
+    padding-bottom: 80px;
+  }
+  .drop-place--before:before {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    text-align: center;
+    content: "Drop here";
+    width: 100%;
+    padding: 20px 0;
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+    background:$white-smoke;
+  }
+  .drop-place--after:after {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    text-align: center;
+    content: "Drop here";
+    width: 100%;
+    padding: 20px 0;
+    opacity: 0.7;
+    border: 1px dashed skyblue;
+    background:$white-smoke;
+  }
 
 </style>

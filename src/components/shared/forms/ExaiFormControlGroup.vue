@@ -1,19 +1,19 @@
 <template>
-    <form :class="[$style['exai-form']]">
+    <form :class="[$style['exai-form-control-group']]">
         <slot></slot>
     </form>
 </template>
   
 <script>
   export default {
-    name: 'exai-form',
+    name: 'exai-form-control-group',
   }
 </script>
 
 <style lang="scss" module>
-    .exai-form {
+    .exai-form-control-group {
         display: flex;
         flex-direction: column;
-        // gap:20px;
+        gap:20px;
     }
 </style>

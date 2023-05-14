@@ -53,7 +53,7 @@
   import { DynamicControl } from './dynamicControl.js'
   import { DynamicControlInline } from './dynamicControlInline.js'
   import TemplateObject from '../../views/admin/templates/components/templateObject/TemplateObject.vue'
-  import ExaiButton from '../../shared/ExaiButton.vue'
+  import ExaiButton from '../../shared/ExaiComponents/ExaiButton.vue'
   import ExaiList from '../../shared/list/ExaiList.vue'
   import ExaiListItem from '../../shared/list/ExaiListItem.vue'
   import InsertModal from './InsertModal.vue'

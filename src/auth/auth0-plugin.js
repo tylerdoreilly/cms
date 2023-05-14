@@ -66,7 +66,6 @@ export const useAuth0 = ({
             redirect_uri: redirectUri,
           },
         });
-        console.log(this.auth0Client)
   
         try {
           const search = window.location.search;

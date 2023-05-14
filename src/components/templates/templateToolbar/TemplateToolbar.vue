@@ -37,9 +37,8 @@
 </template>
 
 <script>
-  import ExaiTabs from '../../shared/exaiTabs/ExaiTabs.vue'
-  import ExaiTab from '../../shared/exaiTabs/ExaiTab.vue'
-  import TemplateToolbarItem from './TemplateToolbarItem'
+  import { ExaiTabs, ExaiTab } from '@/components/shared/ExaiComponents/ExaiTabs/index.js';
+  import TemplateToolbarItem from './TemplateToolbarItem';
 
   export default {
     name: 'template-toolbar',

@@ -31,6 +31,11 @@ export default {
     flex-direction:row;
     align-items:center;
     gap:10px;
+    margin-top:20px;
+  }
+
+  .page-header h1{
+    margin:0px;
   }
   .page-header__actions{
     margin-left: auto;

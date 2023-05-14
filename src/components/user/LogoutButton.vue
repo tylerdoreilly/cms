@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import ExaiButton from '@/components/shared/ExaiButton.vue'
+  import ExaiButton from '@/components/shared/ExaiComponents/ExaiButton.vue'
   export default {
     name: 'logout-button',
     components: {

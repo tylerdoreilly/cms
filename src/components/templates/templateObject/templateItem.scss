@@ -1,5 +1,5 @@
 .template-object{  
-  @include flex(flex, column, $gap: 15px);
+  @include flex(flex, column, $gap: 0px);
   margin-bottom: 10px;
   transition: all 0.3s ease;
   background:#fff;
@@ -28,7 +28,7 @@
 }
 
 .template-item__body{
-  padding:5px 15px 15px 15px;
+  padding:0px;
 }
 
 .template-object--edit-mode{
