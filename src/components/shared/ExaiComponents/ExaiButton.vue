@@ -34,6 +34,7 @@
         rightIcon: this.iconRight
       }
     },
+
     props:{
       text:{
         type: String,
@@ -72,6 +73,13 @@
         }
       }
     },
+
+    // watch: {
+    //     async icon(newValue) {
+    //         await this.updateIcon(newValue);
+    //     },
+    // },
+
     computed:{
       classModifiers(){
         const obj = {}
@@ -80,13 +88,16 @@
         obj[this.$style['exai-button--icon-only']] = this.editMode && this.activated;
         return obj
       },
+
       setIcon(){
-        let buildIcon
-        if(this.btnIcon){       
+        let buildIcon;
+        console.log('newIcon', this.btnIcon)
+        if (this.btnIcon) {       
           buildIcon = `${this.iconBase} + ${this.btnIcon}`        
         }
         return buildIcon
       },
+
       setLeftIcon(){
         let buildLeftIcon
         if(this.leftIcon != null || this.leftIcon != ''){       
@@ -94,6 +105,7 @@
         }
         return buildLeftIcon
       },
+
       setRightIcon(){
         let buildRightIcon
         if(this.rightIcon != null || this.rightIcon != ''){       
@@ -102,6 +114,24 @@
         return buildRightIcon
       }
     },
+    mounted() {
+        this.$watch(() => this.icon, (value) => { this.btnIcon = value;})
+    },
+    methods: {
+      // updateIcon(newValue){
+      //   console.log('newIcon', this.btnIcon)
+      //   console.log('newIcon', newValue)
+      //  let buildIcon
+      //   if (this.btnIcon) {       
+      //     buildIcon = `${this.iconBase} + ${this.btnIcon}`        
+      //   } 
+      //   if (newValue) {
+      //     buildIcon = `${this.iconBase} + ${newValue}`   
+      //   }
+      //   return buildIcon
+      // },
+    }
+
   }
 </script>
 

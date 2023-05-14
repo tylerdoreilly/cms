@@ -26,6 +26,6 @@
 
 <style lang="scss" module>
     .exai-form-label {
-       
+       font-size:14px;
     }
 </style>

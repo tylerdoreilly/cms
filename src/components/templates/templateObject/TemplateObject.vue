@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import ExaiButton from '../../shared/ExaiButton.vue'
+  import ExaiButton from '../../shared/ExaiComponents/ExaiButton.vue'
   import {templateItemEventBus} from '../../../services/TemplateItemEventBus.js'
   import ExaiList from '../../shared/exaiList/ExaiList.vue'
   import ExaiListItem from '../../shared/exaiList/ExaiListItem.vue'

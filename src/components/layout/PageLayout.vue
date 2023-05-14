@@ -53,10 +53,8 @@ export default {
   }
 
   .column--right {
-    flex: 0 0 240px;
+    flex: 0 0 18em;
     border-left:1px solid $border;
-    width:240px;
-    min-width:240px;
     padding:0px 20px;
   }
 

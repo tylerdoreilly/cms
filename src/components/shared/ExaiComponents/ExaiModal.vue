@@ -1,18 +1,20 @@
 <template>
     <transition name="modal-fade">
-      <div class="exai-modal-overlay" @click="$emit('close-modal')">
-        <div class="exai-modal" @click.stop>
-            <div class="exai-modal__header">
-                <div class="exai-modal__header-title">{{ title }}</div> 
-                <div class="exai-modal__header-actions">
+      <div :class="[$style['exai-modal-overlay']]" @click="$emit('close-modal')">
+        <div :class="[$style['exai-modal'], classModifiers]" @click.stop>
+            <div :class="[$style['exai-modal__header']]">
+                <div :class="[$style['exai-modal__header-title']]">{{ title }}</div> 
+                <div :class="[$style['exai-modal__header-actions']]">
                     <exai-button icon="fa-xmark" @click.native="$emit('close-modal')"></exai-button>
                 </div>                
             </div>
-            <div class="exai-modal__body">
+            <div :class="[$style['exai-modal__body']]">
                 <slot name="exai-modal-body"></slot>
             </div>
-            <div class="exai-modal__actions">
-                <slot name="exai-modal-actions"></slot>
+            <div :class="[$style['exai-modal__footer']]">
+                <div :class="[$style['exai-modal__actions']]">
+                    <slot name="exai-modal-actions"></slot>
+                </div>
             </div>
         </div>
       </div>
@@ -36,11 +38,31 @@
                 description: 'Modal Title'
             }         
         },
+        modalSize:{
+            type:String,
+        },
+        styleType:{
+            type: String
+        }
     },
+    computed:{
+        classModifiers(){
+            const obj = {}
+            obj[this.$style['exai-modal--large']] = this.modalSize === 'large';
+            obj[this.$style['exai-modal--medium']] = this.modalSize == 'medium';
+            obj[this.$style['exai-modal--full-body']] = this.styleType == 'fullBody';
+            return obj
+        },
+    },
+    methods:{
+    }
   }
   </script>
   
-  <style lang="scss">
+  <style lang="scss" module>
+
+    // Blocks
+
     .exai-modal-overlay {
         position: fixed;
         top: 0;
@@ -62,8 +84,14 @@
         margin-top: 10%;
         border-radius: 10px;
         display:flex;
-        flex-direction: column;    
+        flex-direction: column;  
+        
+        &--medium{
+            width:900px;
+        }
     }
+
+    // Elements
 
     .exai-modal__header{
         display:flex;
@@ -95,14 +123,32 @@
         overflow-y: auto;
     }
 
+    .exai-modal__footer{
+        display:flex;
+        flex-direction: row;
+        padding:20px;
+    }
+
     .exai-modal__actions{
         margin-left: auto;
         display:flex;
         flex-direction: row;
         gap:10px;
-        padding:20px;
+    }
+
+    // Modifiers
+    .exai-modal--full-body .exai-modal__footer{
+        border-top:1px solid $border;
+    }
+
+    .exai-modal--full-body .exai-modal__body{
+        padding-top:0px;
+        padding-bottom:0px;
+        padding-right:0px;
     }
    
+    // Animations 
+
     .modal-fade-enter,
     .modal-fade-leave-to {
         opacity: 0;

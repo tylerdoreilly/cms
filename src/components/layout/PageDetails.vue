@@ -1,16 +1,10 @@
 <template>
-  <div class="template-details">
-    <div class="template-details__content">
-      <h1 class="template-title">
+  <div class="template-header">
+    <div class="template-header__content">
+      <h1 class="template-header__title">
         <span>{{title}} (<date-format :date="asof" dateFormat="MM/DD/YYYY"></date-format>)</span>
         <exai-button icon="fa-pencil" @click.native="editTemplateDetails"></exai-button>
-      </h1>
-      <div class="template-details-info">
-        <div><span class="detail-label">Type: </span>{{ type }}</div>
-        <div><span class="detail-label">Created: </span><date-format :date="date" dateFormat="MM/DD/YYYY"></date-format></div>
-        <div><span class="detail-label">Updated: </span><date-format :date="updated" dateFormat="MM/DD/YYYY"></date-format></div>
-      </div>
-     
+      </h1>     
     </div>
     <div class="template-details__controls">
       <slot></slot>
@@ -20,7 +14,7 @@
 
 <script>
   import dateFormat from '../shared/dateFormat.vue';
-  import ExaiButton from '../shared/ExaiButton.vue'
+  import ExaiButton from '../shared/ExaiComponents/ExaiButton.vue'
 
   export default {
     name: 'PageDetails',
@@ -74,37 +68,25 @@
 </script>
 
 <style lang="scss">
-  .template-details {
+  .template-header {
     display:flex;
     flex-direction:row;
     align-items:flex-end;
     gap:10px;
-    padding-bottom:15px;
-    border-bottom:1px solid $border;
-    margin-bottom:20px;
+    padding-bottom:0px;
   }
 
-  .template-details__controls{
+  .template-header__controls{
     margin-left: auto;
     display:flex;
     flex-direction: row;
     gap:10px;
   }
 
-  .template-title{
+  .template-header__title{
     @include flex(flex, row, $gap: 10px);
     align-items: center;
     font-size:20px;
-    margin-bottom:5px;
-  }
-
-  .template-details-info{
-    display:flex;
-    flex-direction: row;
-    gap:10px;
-  }
-
-  .detail-label{
-    color:lighten( $gunmetal, 20% );
+    margin-bottom:0px;
   }
 </style>

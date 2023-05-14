@@ -24,7 +24,7 @@
   import UsersList from '../../components/UsersList.vue'
   import PageHeader from '../../components/layout/PageHeader.vue';
   import PageLayout from '../../components/layout/PageLayout.vue';
-  import ExaiLoader from '../../components/shared/ExaiLoader.vue';
+  import ExaiLoader from '../../components/shared/ExaiComponents/ExaiLoader.vue';
   import { getAllUsers, createUser } from '../../services/UserService';
 
   export default {

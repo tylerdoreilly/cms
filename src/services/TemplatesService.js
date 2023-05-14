@@ -23,6 +23,16 @@ export async function getCustomTemplateItems() {
     return response.data;
 }
 
+export async function getCustomControls() {
+    const response = await axios.get('/api/customControls');
+    return response.data;
+}
+
+export async function getCustomControlsLibrary() {
+    const response = await axios.get('/api/customControlsLibrary');
+    return response.data;
+}
+
 export async function getTemplate(id) {
     const response = await axios.get(`/api/templates/${id}`);
     return response.data[0];
@@ -46,6 +56,8 @@ export async function getAllTemplateData(id) {
         '/api/templateItems',
         '/api/templateItemsCustom',
         '/api/templateTypes',
+        '/api/customControls',
+        '/api/customControlsLibrary'
     ];
     const response = await axios.all(allTemplateEndpoints.map((endpoint) => axios.get(endpoint)))
     return response;

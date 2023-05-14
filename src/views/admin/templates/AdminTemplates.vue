@@ -47,9 +47,9 @@
   import TemplatesList from '../../../components/templates/TemplatesList.vue'
   import TemplateCreate from '../../../components/templates/TemplateCreate.vue'
   import TemplateClone from '../../../components/templates/TemplateClone.vue'
-  import ExaiLoader from '../../../components/shared/ExaiLoader.vue'
-  import ExaiButton from '../../../components/shared/ExaiButton.vue'
-  import ExaiPrompt from '../../../components/shared/ExaiPrompt.vue'
+  import ExaiLoader from '../../../components/shared/ExaiComponents/ExaiLoader.vue'
+  import ExaiButton from '../../../components/shared/ExaiComponents/ExaiButton.vue'
+  import ExaiPrompt from '../../../components/shared/ExaiComponents/ExaiPrompt.vue'
   import { getTemplatesList, deleteTemplate } from '../../../services/TemplatesService'
   
 

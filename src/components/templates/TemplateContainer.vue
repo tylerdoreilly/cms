@@ -14,7 +14,7 @@ export default {
 <style lang="scss" module>
   .template-container {
     @include flex(flex, column, $gap: 15px);
-    padding: 15px 0px;
+    padding: 20px 0px;
     text-align: initial;
     min-height:400px;
   }

@@ -1,8 +1,11 @@
 <template>
-  <div :class="[$style['document-preview']]">
+  <!-- <div :class="[$style['document-preview']]">
     <div v-for="(item) in content" :key="item.id">
       <div v-html="item.content"></div>
     </div>
+  </div> -->
+  <div :class="[$style['document-preview']]">
+    <div v-html="content"></div>
   </div>
 </template>
 
@@ -14,13 +17,16 @@
 
     },
     props: {
-      data:[Object, Array],
+      data:[Object, Array, String],
     },
     data() {
         return {
           content: this.data,
         }
     },
+    mounted(){
+
+    }
   }
 </script>
 

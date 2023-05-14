@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style['template-toolbar-item']]">
+  <div :class="[$style['control-library-item']]">
     <font-awesome-icon :icon="setIcon" />
     {{ title }}
   </div> 
@@ -8,7 +8,7 @@
 <script>
 
   export default {
-    name: 'template-toolbar-item',
+    name: 'control-library-item',
     props: {
       title:{
         type:String,
@@ -41,7 +41,7 @@
 </script>
 
 <style lang="scss" module>
-  .template-toolbar-item{
+  .control-library-item{
     @include flex(flex, row, $gap: 10px);
     cursor: pointer;  
     align-items:center;

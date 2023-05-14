@@ -21,8 +21,8 @@
     import LogoutButton from '@/components/user/LogoutButton';
     import UserWidget from '@/components/user/userWidget/UserWidget';
     import UserDetails from '@/components/user/userWidget/UserDetails';
-    import ExaiList from '@/components/shared/exaiList/ExaiList';
-    import ExaiListItemNew from '@/components/shared/exaiList/ExaiListItemNew';
+    import ExaiList from '@/components/shared/ExaiComponents/ExaiList/ExaiList';
+    import ExaiListItemNew from '@/components/shared/ExaiComponents/ExaiList/ExaiListItemNew';
 
     export default {
       name: 'logged-in-user',

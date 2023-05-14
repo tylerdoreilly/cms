@@ -1,15 +1,17 @@
 // Transform the data from template item content
 // parse to DOM then create a content object
 
+// Notes: all this needs work, did it fast
+
 export function transformTemplateData(templateData) {
     let formattedContents = [];
 
-    templateData.forEach(templateContent => {
-        const nodes = new DOMParser().parseFromString(templateContent.content, 'text/html').body.childNodes;
-        formattedContents.push(generateContentObj(nodes));
-    });
+    const nodes = new DOMParser().parseFromString(templateData.content, 'text/html').body.childNodes;
 
+    formattedContents.push(generateContentObj(nodes));
+   
     let flat = formattedContents.flat(Infinity);
+    
     let documentData = flat.filter(items =>{
       return items != undefined
     });

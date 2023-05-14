@@ -1,5 +1,5 @@
 <template>
-    <div :id="id" class="ql-toolbar ql-snow">
+    <div id="toolbar-2000" class="ql-toolbar ql-snow">
         <span class="ql-formats" v-if="buttonList.headers">
             <select class="ql-header">
                 <option selected></option>
@@ -11,13 +11,18 @@
                 <option value="6"></option>
             </select>
         </span>
+
         <span class="ql-formats" v-if="buttonList.size">
             <select class="ql-size">
-                <option value="small">Small</option>
-                <option value="mid">Mid</option>
+                <option value="8px">8</option>
+                <option value="9px">9</option>
+                <option value="10px">10</option>
+                <option value="12px">12</option>
+                <option value="14px">14</option>
+                <option value="16px">16</option>
+                <option value="18px">18</option>
+                <option value="20px">20</option>
                 <option selected>Normal</option>
-                <option value="large">Large</option>
-                <option value="huge">Huge</option>
             </select>
         </span>
     
@@ -95,21 +100,16 @@
         <span class="ql-formats" v-if="buttonList.clean">
             <button type="button" class="ql-clean"></button>
         </span>
+
         <span class="ql-formats">
-            <select class="ql-selectDynamicControl">
-                <option value="inline"></option>
-                <option value="block"></option>
-            </select>
-        </span>
-        <span class="ql-formats">
-            <button type="button" class="ql-selectCustomInsert">Custom Insert</button>
+            <button type="button" class="ql-selectCustomInsert">Custom Controls</button>
         </span>
     </div>
 </template>
 
 <script>
      export default {
-        name: 'custom-toolbar',
+        name: 'custom-toolbar-new',
         props:{
             buttonList:Object,
             id:{
@@ -125,8 +125,11 @@
         padding-top: 8px;
         padding-bottom: 4px;
         border-bottom:0px;
+        border-top:1px solid $border !important;
+        border-left:1px solid $border !important;
+        border-right:1px solid $border !important;
+        background:$template-background;
     }
-
 
     .dynamic-control{
         color:red !important;
@@ -137,22 +140,50 @@
         margin-block-end: 1em;
     }
 
+    // Custom font sizes
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="8px"]::before {
+        content: '8';
+        font-size: 8px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="9px"]::before {
+        content: '9';
+        font-size: 9px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
+        content: '10';
+        font-size: 10px !important;
+    }
+   
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before {
+        content: '12';
+        font-size: 12px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before {
+        content: '14';
+        font-size: 14px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before {
+        content: '16';
+        font-size: 16px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
+        content: '18';
+        font-size: 18px !important;
+    }
+
+    .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before {
+        content: '20';
+        font-size: 20px !important;
+    }
     
+
     // Dynamic Control Setup
-
-    .ql-snow .ql-picker.ql-selectDynamicControl {
-        width: 150px;
-    }
-
-    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-label::before {
-        content: 'Dynamic Control';
-    }
-    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-item[data-value="inline"]::before {
-        content: 'inline';
-    }
-    .ql-snow .ql-picker.ql-selectDynamicControl .ql-picker-item[data-value="block"]::before {
-        content: 'block';
-    }
 
     .ql-snow.ql-toolbar button.ql-selectCustomInsert {
         width: 150px;
@@ -160,13 +191,6 @@
         line-height: 22px;
         font-size:15px;
     }
-
-    .ql-snow .ql-picker.ql-selectCustomInsert .ql-picker-label::before {
-        content: 'Custom Insert';
-    }
-
-
-
 
     .ql-size-small{
         font-size:10px;

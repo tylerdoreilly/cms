@@ -30,8 +30,8 @@
 </template>
   
 <script>
-  import ExaiButton from '../shared/ExaiButton.vue';
-  import ExaiModal from '../shared/ExaiModal.vue';
+  import ExaiButton from '../shared/ExaiComponents/ExaiButton.vue';
+  import ExaiModal from '../shared/ExaiComponents/ExaiModal.vue';
   import ExaiForm from '../shared/forms/ExaiForm.vue';
   import ExaiFormGroup from '../shared/forms/ExaiFormGroup.vue';
   import ExaiFormLabel from '../shared/forms/ExaiFormLabel.vue';
@@ -99,18 +99,5 @@
 </script>
   
   <style lang="scss">
-
-    .form-group{
-        display:flex;
-        flex-direction: column;
-        gap:6px;
-        margin-bottom:15px;
-    }
-
-    .form-control{
-        border:1px solid $border;
-        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-        padding:10px;
-    }
    
   </style>
