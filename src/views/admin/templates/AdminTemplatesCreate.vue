@@ -4,10 +4,10 @@
     <page-layout sidebar>
       <template v-slot:content>
 
-        <PageHeader title="Edit Template">
+        <template-header title="Edit Template">
           <exai-button text="Generate" @click.native="generateDoc = true"></exai-button>
           <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
-        </PageHeader>
+        </template-header>
 
         <PageDetails 
           :title="template.title" 
@@ -67,19 +67,20 @@
 </template>
 
 <script>
-  import PageLayout from '../../../components/layout/PageLayout.vue'
-  import PageHeader from '../../../components/layout/PageHeader.vue'
-  import PageDetails from '../../../components/layout/PageDetails.vue'
-  import TemplateContainer from '../../../components/templates/TemplateContainer.vue'
-  import TemplateDetails from '../../../components/templates/TemplateDetails.vue'
-  import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue'
-  import TemplateSaveCustomItem from '../../../components/templates/TemplateSaveCustomItem.vue'
-  import ExaiButton from '../../../components/shared/ExaiComponents/ExaiButton.vue'
-  import ExaiLoader from '../../../components/shared/ExaiComponents/ExaiLoader.vue'
-  import ExaiPrompt from '../../../components/shared/ExaiComponents/ExaiPrompt.vue'
-  import { getAllTemplateData, getImage } from '../../../services/TemplatesService'
-  import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js'
-  import customEditorNew from '@/components/shared/customEditor/customEditorNew.vue'
+  import PageLayout from '../../../components/layout/PageLayout.vue';
+  import TemplateHeader from '../../../components/layout/TemplateHeader.vue';
+  import PageDetails from '../../../components/layout/PageDetails.vue';
+  import TemplateContainer from '../../../components/templates/TemplateContainer.vue';
+  import TemplateDetails from '../../../components/templates/TemplateDetails.vue';
+  import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue';
+  import TemplateSaveCustomItem from '../../../components/templates/TemplateSaveCustomItem.vue';
+
+  import { ExaiButton, ExaiPrompt, ExaiLoader } from '@/components/shared/ExaiComponents/index.js'
+  import { getAllTemplateData, getImage } from '../../../services/TemplatesService';
+  import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js';
+  import customEditorNew from '@/components/shared/customEditor/customEditorNew.vue';
+
+
   import * as docx from "docx";
   import { saveAs } from "file-saver";
 
@@ -90,7 +91,7 @@
 
     components: {
       PageLayout,
-      PageHeader,
+      TemplateHeader,
       PageDetails,
       TemplateContainer,
       TemplateDetailsEdit,

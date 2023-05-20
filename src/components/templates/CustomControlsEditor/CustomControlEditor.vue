@@ -1,26 +1,16 @@
 <template>
     <div class="custom-editor-wrapper">
-        <exai-tabs>
-            <exai-tab title="Editor">
-                <div class="quillWrapper custom textBlock">
-                    <custom-toolbar-new :buttonList="buttonList" id="toolbar-2000"></custom-toolbar-new>
-                    <vue-editor 
-                        ref="quillEditor"
-                        v-model="content.content" 
-                        :editorOptions="editorOptions" 
-                        @focus="onEditorFocus"
-                        @blur="onEditorBlur"
-                        :class="contentType">
-                    </vue-editor>
-                </div> 
-            </exai-tab>
-            <exai-tab title="Preview">
-                <document-preview :data="content.content"></document-preview>
-            </exai-tab>
-            <exai-tab title="HTML">
-                <html-viewer :data="content.content"></html-viewer>
-            </exai-tab>
-        </exai-tabs>
+        <div class="quillWrapper">
+            <custom-control-toolbar :buttonList="buttonList" id="toolbar-customControl"></custom-control-toolbar>
+            <vue-editor 
+                ref="quillEditor"
+                v-model="content.content" 
+                :editorOptions="editorOptions" 
+                @focus="onEditorFocus"
+                @blur="onEditorBlur"
+                :class="contentType">
+            </vue-editor>
+        </div> 
 
         <insert-custom-content-modal 
             v-if="customTemplateControls && showCustomContentModal"
@@ -37,11 +27,8 @@
     import { DynamicControl } from '@/components/shared/customEditor/controls/controlModules/dynamicControl.js';
     import { DynamicControlInline } from '@/components/shared/customEditor/controls/controlModules/dynamicControlInline.js';
     import { CustomSnippetControl } from '@/components/shared/customEditor/controls/controlModules/customSnippetControl.js';
-    import { ExaiTabs, ExaiTab } from '@/components/shared/ExaiComponents/ExaiTabs/index.js';
-    import customToolbarNew from './customToolbarNew.vue';
-    import InsertCustomContentModal from './modals/InsertCustomContentModal.vue';   
-    import DocumentPreview from '../../templates/DocumentPreview.vue';
-    import HtmlViewer from './HtmlViewer.vue';
+    import CustomControlToolbar from './CustomControlToolbar.vue';
+    import InsertCustomContentModal from '@/components/shared/customEditor/modals/InsertCustomContentModal.vue';   
 
     // set custom sizing for Quill
     // Note: may abstract this to a custom module later
@@ -56,15 +43,11 @@
     Quill.register(CustomSnippetControl);
 
     export default {
-        name: 'custom-editor-new',
+        name: 'custom-control-editor',
         components: {
             VueEditor,
-            customToolbarNew, 
+            CustomControlToolbar, 
             InsertCustomContentModal,
-            HtmlViewer,
-            ExaiTabs,
-            ExaiTab,
-            DocumentPreview
         },
 
         props:{
@@ -72,7 +55,7 @@
                 type: Object
             },
             data:{
-                type:[Object, Array]
+                type:[Object, Array, String]
             },
             contentType:{
                 type:String
@@ -101,7 +84,7 @@
                             userOnly: true,
                         },
                         toolbar: {
-                            container: '#toolbar-2000',
+                            container: '#toolbar-customControl',
                             handlers: {
                                 selectCustomInsert: (value) => {
                                     this.openCustomContentModal();
@@ -175,14 +158,6 @@
     gap:15px;
   }
 
-  .quillWrapper.custom.textBlock .quill-container{
-    height: auto !important;
-  }
-  .quillWrapper.custom.textBlock .ql-editor{
-    min-height:calc(100vh - 300px);
-    height:calc(100vh - 300px);
-    overflow-y:auto;
-  }
 //   .custom-editor-wrapper .ql-toolbar.ql-snow {
 //     border: 0px solid #ccc !important;
 //     }

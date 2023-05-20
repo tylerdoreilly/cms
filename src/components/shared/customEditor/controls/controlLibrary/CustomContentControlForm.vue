@@ -3,22 +3,22 @@
         <div class="form-title">Add Custom Content Control</div>
         <exai-form-control-group>
             <exai-form-group>
-                <exai-form-label text="Display Text" for="displayText"></exai-form-label>
+                <exai-field-label text="Display Text" for="displayText"></exai-field-label>
                 <input type="text" id="displayText" class="form-control" v-model="controlType.text">
             </exai-form-group>
             <exai-form-group>
-                <exai-form-label text="Input Type" for="type"></exai-form-label>
+                <exai-field-label text="Input Type" for="type"></exai-field-label>
                 <select class="form-control" v-model="selectedInputType" @change="changeInputType($event)">
                     <option value="" disabled selected>Select Input Type</option>
                     <option v-for="option in inputTypes" :key="option.id" v-bind:value="option.id" >{{ option.type }}</option>
                 </select>
             </exai-form-group>
             <exai-form-group>
-                <exai-form-label text="Display Text" for="displayText"></exai-form-label>
+                <exai-field-label text="Display Text" for="displayText"></exai-field-label>
                 <textarea type="text" id="displayText" class="form-control form-control--textarea" v-model="customControlContent"></textarea>
             </exai-form-group>
             <exai-form-group>
-                <exai-form-label text="Control Id" for="controlId"></exai-form-label>
+                <exai-field-label text="Control Id" for="controlId"></exai-field-label>
                 <input type="text" id="controlId" class="form-control" v-model="controlType.id">
             </exai-form-group>
         </exai-form-control-group>
@@ -29,7 +29,7 @@
     import ExaiForm from '@/components/shared/forms/ExaiForm.vue';
     import ExaiFormGroup from '@/components/shared/forms/ExaiFormGroup.vue';
     import ExaiFormControlGroup from '@/components/shared/forms/ExaiFormControlGroup.vue';
-    import ExaiFormLabel from '@/components/shared/forms/ExaiFormLabel.vue';
+    import ExaiFieldLabel from '@/components/shared/forms/ExaiFieldLabel.vue';
 
   export default {
     name: 'custom-content-control-form',
@@ -37,7 +37,7 @@
         ExaiForm,
         ExaiFormGroup,
         ExaiFormControlGroup,
-        ExaiFormLabel,
+        ExaiFieldLabel,
     },
     props:{
         controlItem:{

@@ -7,6 +7,8 @@ import AdminPages from '@/views/admin/AdminPages.vue'
 import AdminForms from '@/views/admin/AdminForms.vue'
 import AdminTemplates from '@/views/admin/templates/AdminTemplates.vue'
 import AdminTemplatesCreate from '@/views/admin/templates/AdminTemplatesCreate.vue'
+import AdminTemplatesControls from '@/views/admin/templates/AdminTemplatesControls.vue'
+import AdminTemplatesControlsCreate from '@/views/admin/templates/AdminTemplatesControlsCreate.vue'
 import AppLogin from '@/views/AppLogin.vue'
 
 import { authenticationGuard } from "@/auth/auth-guard";
@@ -44,14 +46,27 @@ const routes = [
         },
         {
           path: '/admin/templates',
+          name: 'templates',
           component:AdminTemplates,
         },
         {
+          path: '/admin/custom-controls',
+          name: 'controls',
+          component:AdminTemplatesControls,
+        },
+        {
+          path: '/admin/custom-controls/create',
+          name: 'controls-create',
+          component:AdminTemplatesControlsCreate,
+        },
+        {
           path: '/admin/templates/edit-template/:id',
+          name: 'templates-edit',
           component:AdminTemplatesCreate
         },
         {
           path: '/admin/create-template',
+          name: 'templates-create',
           component:AdminTemplatesCreate
         }
       ]

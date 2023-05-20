@@ -121,7 +121,7 @@
   }
 
   .column{
-    flex: 0 0 12em;
+    flex: 0 0 14em;
     background: $base-white;
     padding:20px;
     position:relative;
@@ -132,7 +132,7 @@
     }
 
     &--collapsible{
-      flex: 0 0 13em;
+      flex: 0 0 15em;
       padding:0px;
     }
 

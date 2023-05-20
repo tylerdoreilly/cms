@@ -3,37 +3,39 @@
 
     <exai-field-label :text="label" :for="id" :required="required"></exai-field-label>
 
-    <div :class="[$style['exai-text-field'], classModifiers]">
-      <input type="text" 
-        :class="[$style['exai-text-field__input']]" 
-        :placeholder="placeholder" 
-        :id="id" 
-        v-bind:value="value"
-        v-on:input="$emit('input', $event.target.value)" />
-    </div>
+    <date-picker  
+        :class="{ error: hasErrors() }"
+        :id="id"
+        :valueType="valueType"
+        v-model="selectedDate"
+        @change="$emit('dateChange', selectedDate)">
 
+    </date-picker>
+    
     <template v-for="error in errors">
       <template v-if="error.hasError">
         <exai-field-error :text="error.msg" :key="error.id"></exai-field-error>
       </template>
     </template>
-   
 
-  </exai-form-group>
+  </exai-form-group>  
 </template>
 
 <script>
   import ExaiFieldError from './ExaiFieldError.vue';
   import ExaiFieldLabel from './ExaiFieldLabel.vue';
   import ExaiFormGroup from './ExaiFormGroup.vue';
+  import DatePicker from 'vue2-datepicker';
+  import 'vue2-datepicker/index.css';
 
   export default {
-    name: 'exai-text-field',
+    name: 'exai-date-picker',
 
     components: {
       ExaiFieldLabel,
       ExaiFieldError,
-      ExaiFormGroup
+      ExaiFormGroup,
+      DatePicker
     },
 
     props:{
@@ -45,19 +47,19 @@
         }
       },
 
+      valueType: {
+        type: String,
+        docs:{
+          validation:'_',
+          description: 'Select Options'
+        }
+      },
+
       id: {
         type: String,
         docs:{
           validation:'_',
           description: 'Input Id'
-        }
-      },
-
-      placeholder: {
-        type: String,
-        docs:{
-          validation:'_',
-          description: 'Input Placeholder'
         }
       },
 
@@ -82,33 +84,22 @@
       },
     },
 
-    computed:{
-      classModifiers(){
-        const obj = {}
-        obj[this.$style['exai-text-field--required']] = this.errors.some(error => error.hasError === true);
-        return obj
-      },
-    } 
+    data() {
+        return {
+            selectedDate: this.value,
+        }
+    },
+
+    methods:{
+      hasErrors(){
+        return this.errors.some(error => error.hasError === true)
+      }
+    },
   }
 </script>
 
-<style lang="scss" module>
-  // Block
-  .exai-text-field{
-    display:flex;
-    flex-direction:column;
-     
-  }
-
-  // Elements
-  .exai-text-field__input{
-    border:1px solid $border;
-    border-radius: 4px; 
-    padding:10px;
-  }
-
-  // Modifiers
-  .exai-text-field--required .exai-text-field__input {
-    border-color: red;
+<style lang="scss">
+  .mx-datepicker.error .mx-input-wrapper .mx-input{
+    border-color: red !important;
   }
 </style>

@@ -27,18 +27,18 @@
             <div class="form-title">Add Character Limit Control</div>
             <exai-form-control-group>
                 <exai-form-group>
-                    <exai-form-label text="Character Limit" for="characterLimit"></exai-form-label>
+                    <exai-field-label text="Character Limit" for="characterLimit"></exai-field-label>
                     <input type="text" id="characterLimit" class="form-control" v-model="characterLimit">
                 </exai-form-group> 
                 <exai-form-group>
-                    <exai-form-label text="Input Type" for="type"></exai-form-label>
+                    <exai-field-label text="Input Type" for="type"></exai-field-label>
                     <select class="form-control form-control--select" v-model="selectedInputType" @change="changeInputType($event)">
                         <option value="" disabled selected>Select Input Type</option>
                         <option v-for="option in inputTypes" :key="option.id" v-bind:value="option.id" >{{ option.type }}</option>
                     </select>
                 </exai-form-group>
                 <exai-form-group>
-                    <exai-form-label text="Control Id" for="controlId"></exai-form-label>
+                    <exai-field-label text="Control Id" for="controlId"></exai-field-label>
                     <input type="text" id="controlId" class="form-control" v-model="controlType.id">
                 </exai-form-group>
             </exai-form-control-group>
@@ -130,7 +130,7 @@
     import ExaiForm from '@/components/shared/forms/ExaiForm.vue';
     import ExaiFormGroup from '@/components/shared/forms/ExaiFormGroup.vue';
     import ExaiFormControlGroup from '@/components/shared/forms/ExaiFormControlGroup.vue';
-    import ExaiFormLabel from '@/components/shared/forms/ExaiFormLabel.vue';
+    import ExaiFieldLabel from '@/components/shared/forms/ExaiFieldLabel.vue';
 
   export default {
     name: 'dynamic-control-form',
@@ -138,7 +138,7 @@
         ExaiForm,
         ExaiFormGroup,
         ExaiFormControlGroup,
-        ExaiFormLabel,
+        ExaiFieldLabel,
 
     },
     props:{

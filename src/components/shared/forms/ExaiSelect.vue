@@ -3,23 +3,23 @@
 
     <exai-field-label :text="label" :for="id" :required="required"></exai-field-label>
 
-    <div :class="[$style['exai-text-field'], classModifiers]">
-      <input type="text" 
-        :class="[$style['exai-text-field__input']]" 
-        :placeholder="placeholder" 
-        :id="id" 
-        v-bind:value="value"
-        v-on:input="$emit('input', $event.target.value)" />
-    </div>
+    <select 
+      :class="[$style['exai-select'], classModifiers]"
+      :id="id"
+      v-model="selectedType"
+      @change="$emit('select', $event.target.value)">
+
+      <option value="" disabled selected>{{ placeholder }}</option>
+      <option v-for="option in options" :key="option.id" v-bind:value="option.id" >{{ getDisplayName(option) }}</option>
+    </select>
 
     <template v-for="error in errors">
       <template v-if="error.hasError">
         <exai-field-error :text="error.msg" :key="error.id"></exai-field-error>
       </template>
     </template>
-   
 
-  </exai-form-group>
+  </exai-form-group>  
 </template>
 
 <script>
@@ -28,7 +28,7 @@
   import ExaiFormGroup from './ExaiFormGroup.vue';
 
   export default {
-    name: 'exai-text-field',
+    name: 'exai-select',
 
     components: {
       ExaiFieldLabel,
@@ -42,6 +42,22 @@
         docs:{
           validation:'_',
           description: 'Input Label'
+        }
+      },
+
+      options: {
+        type: Array,
+        docs:{
+          validation:'_',
+          description: 'Select Options'
+        }
+      },
+
+      displayName: {
+        type: String,
+        docs:{
+          validation:'_',
+          description: 'key to be used for display of options'
         }
       },
 
@@ -61,8 +77,8 @@
         }
       },
 
-      value:{
-        type: String
+      selection:{
+        type: [Number, String, Boolean]
       },
 
       required: {
@@ -82,33 +98,43 @@
       },
     },
 
+    data() {
+        return {
+            selectedType: this.selection,
+        }
+    },
+
+    methods:{
+      getDisplayName(option){
+        let displayOption = option[this.displayName];     
+        return displayOption;
+      },
+    },
+
     computed:{
       classModifiers(){
         const obj = {}
-        obj[this.$style['exai-text-field--required']] = this.errors.some(error => error.hasError === true);
+        obj[this.$style['exai-select--required']] = this.errors.some(error => error.hasError === true);
         return obj
       },
-    } 
+    },
   }
 </script>
 
 <style lang="scss" module>
   // Block
-  .exai-text-field{
+ 
+  .exai-select{
     display:flex;
+    width:100%;
     flex-direction:column;
-     
-  }
-
-  // Elements
-  .exai-text-field__input{
     border:1px solid $border;
     border-radius: 4px; 
     padding:10px;
   }
 
   // Modifiers
-  .exai-text-field--required .exai-text-field__input {
+  .exai-select--required {
     border-color: red;
   }
 </style>

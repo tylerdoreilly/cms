@@ -74,12 +74,6 @@
       }
     },
 
-    // watch: {
-    //     async icon(newValue) {
-    //         await this.updateIcon(newValue);
-    //     },
-    // },
-
     computed:{
       classModifiers(){
         const obj = {}
@@ -118,18 +112,6 @@
         this.$watch(() => this.icon, (value) => { this.btnIcon = value;})
     },
     methods: {
-      // updateIcon(newValue){
-      //   console.log('newIcon', this.btnIcon)
-      //   console.log('newIcon', newValue)
-      //  let buildIcon
-      //   if (this.btnIcon) {       
-      //     buildIcon = `${this.iconBase} + ${this.btnIcon}`        
-      //   } 
-      //   if (newValue) {
-      //     buildIcon = `${this.iconBase} + ${newValue}`   
-      //   }
-      //   return buildIcon
-      // },
     }
 
   }

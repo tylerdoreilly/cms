@@ -17,7 +17,7 @@
                     <template v-slot:control-library-list>
                         <div class="form-title">Select A Control</div>
                         <div class="list-wrapper">
-                            <div v-for="(item) in filteredItems(controlsList)" :key="item.id">
+                            <div v-for="(item) in filteredItems(controlsList)" :key="item.field">
                                 <control-library-item 
                                     :title="item.name" 
                                     :icon="item.icon"

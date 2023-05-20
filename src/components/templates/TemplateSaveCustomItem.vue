@@ -4,7 +4,7 @@
         <template #exai-modal-body>
             <exai-form>
                 <exai-form-group>
-                    <exai-form-label text="Title" for="templateTitle"></exai-form-label>
+                    <exai-field-label text="Title" for="templateTitle"></exai-field-label>
                     <input type="text" id="templateTitle" class="form-control" v-model="templateItemData.name">
                 </exai-form-group>
             </exai-form>
@@ -24,7 +24,7 @@
   import ExaiModal from '../shared/ExaiComponents/ExaiModal.vue';
   import ExaiForm from '../shared/forms/ExaiForm.vue';
   import ExaiFormGroup from '../shared/forms/ExaiFormGroup.vue';
-  import ExaiFormLabel from '../shared/forms/ExaiFormLabel.vue';
+  import ExaiFieldLabel from '../shared/forms/ExaiFieldLabel.vue';
 
 
   export default {
@@ -34,7 +34,7 @@
         ExaiButton,
         ExaiForm,
         ExaiFormGroup,
-        ExaiFormLabel,
+        ExaiFieldLabel,
     },
     props:{
         data:[Array, Object],

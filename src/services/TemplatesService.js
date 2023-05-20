@@ -41,10 +41,20 @@ export async function getTemplate(id) {
 
 // Combined Requests
 
+export async function getAllControls() {
+    let templateListEndpoints = [
+        '/api/customControls',
+        '/api/customControlsLibrary',
+    ];
+    const response = await axios.all(templateListEndpoints.map((endpoint) => axios.get(endpoint)))
+    return response;
+}
+
 export async function getTemplatesList() {
     let templateListEndpoints = [
         '/api/templates',
         '/api/templateTypes',
+        '/api/customControlsLibrary',
     ];
     const response = await axios.all(templateListEndpoints.map((endpoint) => axios.get(endpoint)))
     return response;
@@ -57,7 +67,8 @@ export async function getAllTemplateData(id) {
         '/api/templateItemsCustom',
         '/api/templateTypes',
         '/api/customControls',
-        '/api/customControlsLibrary'
+        '/api/customControlsLibrary',
+        
     ];
     const response = await axios.all(allTemplateEndpoints.map((endpoint) => axios.get(endpoint)))
     return response;

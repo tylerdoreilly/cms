@@ -79,3 +79,11 @@
  cursor:pointer;
  color:$keppel;
 }
+
+.table-controls {
+    @include flex(flex, row, $gap:10px)
+}
+
+.table-container{
+    @include flex(flex, column, $gap:30px)
+}

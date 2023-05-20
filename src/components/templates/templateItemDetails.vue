@@ -12,9 +12,8 @@
 </template>
 
 <script>
-  import ExaiTags from '../shared/exaiTags/ExaiTags.vue'
-  import ExaiTag from '../shared/exaiTags/ExaiTag.vue'
-  import CodeHighlighter from '../shared/CodeHighlighter.vue'
+  import { ExaiTags, ExaiTag } from '@/components/shared/ExaiComponents/index.js'
+  import CodeHighlighter from '@/components/shared/CodeHighlighter.vue'
 
   export default {    
     name: 'template-item-details',

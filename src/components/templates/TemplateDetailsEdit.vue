@@ -4,17 +4,17 @@
         <template #exai-modal-body>
             <exai-form>
                 <exai-form-group>
-                    <exai-form-label text="Title" for="templateTitle"></exai-form-label>
+                    <exai-field-label text="Title" for="templateTitle"></exai-field-label>
                     <input type="text" id="templateTitle" class="form-control" v-model="templateData.title">
                 </exai-form-group>
                 <exai-form-group>
-                    <exai-form-label text="Type" for="type"></exai-form-label>
+                    <exai-field-label text="Type" for="type"></exai-field-label>
                     <select class="form-control" v-model="selectedType" @change="changeType($event)">
                         <option v-for="option in templateTypes" :key="option.id" v-bind:value="option.id" >{{ option.type }}</option>
                     </select>
                 </exai-form-group>
                 <exai-form-group>
-                    <exai-form-label text="As of Date" for="asOf"></exai-form-label>
+                    <exai-field-label text="As of Date" for="asOf"></exai-field-label>
                     <date-picker id="asOf" v-model="asofdate" valueType="format"></date-picker>
                 </exai-form-group>
             </exai-form>
@@ -34,7 +34,7 @@
   import ExaiModal from '../shared/ExaiComponents/ExaiModal.vue';
   import ExaiForm from '../shared/forms/ExaiForm.vue';
   import ExaiFormGroup from '../shared/forms/ExaiFormGroup.vue';
-  import ExaiFormLabel from '../shared/forms/ExaiFormLabel.vue';
+  import ExaiFieldLabel from '../shared/forms/ExaiFieldLabel.vue';
   import moment from 'moment';
   import DatePicker from 'vue2-datepicker';
   import 'vue2-datepicker/index.css';
@@ -46,7 +46,7 @@
         ExaiButton,
         ExaiForm,
         ExaiFormGroup,
-        ExaiFormLabel,
+        ExaiFieldLabel,
         DatePicker
     },
     props:{

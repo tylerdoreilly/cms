@@ -1,7 +1,7 @@
 <template>
-  <div :class="[$style['page-header']]">
+  <div :class="[$style['template-header']]">
     <h1>{{title}}</h1>
-    <div :class="[$style['page-header__actions']]">
+    <div :class="[$style['template-header__actions']]">
       <slot></slot>
     </div> 
   </div>
@@ -10,7 +10,7 @@
 <script>
 
 export default {
-  name: 'PageHeader',
+  name: 'template-header',
   components: {
   },
   props:{
@@ -26,19 +26,18 @@ export default {
 </script>
 
 <style lang="scss" module>
-  .page-header {
+  .template-header {
     display:flex;
     flex-direction:row;
     align-items:center;
     gap:10px;
     margin-top:20px;
-    margin-bottom:20px;
   }
 
-  .page-header h1{
+  .template-header h1{
     margin:0px;
   }
-  .page-header__actions{
+  .template-header__actions{
     margin-left: auto;
     @include flex(flex, row, $gap: 10px);
   }
