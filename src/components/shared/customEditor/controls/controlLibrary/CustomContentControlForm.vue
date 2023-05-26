@@ -15,7 +15,9 @@
             </exai-form-group>
             <exai-form-group>
                 <exai-field-label text="Display Text" for="displayText"></exai-field-label>
-                <textarea type="text" id="displayText" class="form-control form-control--textarea" v-model="customControlContent"></textarea>
+                <div class="control-data-viewer">
+                    <div v-html="customControlContent"></div>
+                </div>
             </exai-form-group>
             <exai-form-group>
                 <exai-field-label text="Control Id" for="controlId"></exai-field-label>
@@ -73,12 +75,7 @@
 
         setData() {
             this.controlType.class = this.data.control;
-            this.customControlContent = this.convertHtml(this.data.content);
-        },
-
-        convertHtml(content){
-            let rawText = content.replace(/<[^>]+>/g, '');
-            return rawText;
+             this.customControlContent = this.data.content;
         },
 
         clearForm(){
@@ -107,5 +104,10 @@
 </script>
   
 <style lang="scss">
-
+    .control-data-viewer{
+        min-height:300px;
+        overflow-y:auto;
+        padding:15px;
+        border:1px solid $border;
+    }
 </style>

@@ -1,84 +1,45 @@
 <template>
-    <exai-form>
+    <exai-form v-if="customControls">
         <exai-form-control-group>
-            <div v-for="formItem in formData" :key="formItem.id">
-                <template v-if="formItem.fieldType === 'input' && formItem.id === 'controlTitle'">                     
-                    <exai-text-field 
-                        :label="formItem.label"
-                        :id="formItem.id" 
-                        :value="controlData.name" 
-                        :required="formItem.required"
-                        :errors="formItem.errors"
-                        @input="getTitleValue($event, formItem)">
-                    </exai-text-field>
+            <div v-for="formItem in getFormSettings" :key="formItem.id">
+                <template v-if="formItem.fieldType === 'input' && formItem.id === 'title'">                     
+                    <exai-text-field :fieldData="formItem" v-model="formItem.value" />
                 </template>
 
-                <template v-if="formItem.fieldType === 'input' && formItem.id === 'controlDesc'">                     
-                    <exai-text-field 
-                        :label="formItem.label"
-                        :id="formItem.id" 
-                        :value="controlData.description" 
-                        :required="formItem.required"
-                        :errors="formItem.errors"
-                        @input="getDescriptionValue($event, formItem)">
-                    </exai-text-field>
+                <template v-if="formItem.fieldType === 'input' && formItem.id === 'description'">                     
+                    <exai-text-field :fieldData="formItem" v-model="formItem.value" />
                 </template>
 
                 <template v-if="formItem.fieldType === 'input' && formItem.id === 'controlType'">                     
-                    <exai-text-field 
-                        :label="formItem.label"
-                        :id="formItem.id" 
-                        :value="controlData.control" 
-                        :required="formItem.required"
-                        :errors="formItem.errors"
-                        @input="getDescriptionValue($event, formItem)">
-                    </exai-text-field>
+                    <exai-text-field :fieldData="formItem" v-model="formItem.value" />
                 </template>
 
                 <template v-if="formItem.fieldType === 'select'">
-                    <exai-select
-                        :label="formItem.label"
-                        :id="formItem.id"
-                        displayName="state"
-                        :selection="controlData.published"
-                        :placeholder="formItem.placeholder"
-                        :options="formItem.options"
-                        :required="formItem.required"
-                        :errors="formItem.errors"
-                        @select="changeType($event, formItem)">
-                    </exai-select>
+                    <exai-select :fieldData="formItem" v-model="formItem.value" />
                 </template>
 
                 <template v-if="formItem.fieldType === 'date' && formItem.id === 'asOf'">
-                    <exai-date-picker
-                        :label="formItem.label"
-                        :id="formItem.id"
-                        :value="controlData.date_asof" 
-                        :valueType="formItem.valueType"
-                        :required="formItem.required"
-                        :errors="formItem.errors"
-                        @dateChange="updateDate($event, formItem)">
-                    </exai-date-picker>
+                    <exai-date-picker :fieldData="formItem" v-model="formItem.value" />
                 </template>
 
                 <template v-if="formItem.fieldType === 'editor' && formItem.id === 'controlContent'"> 
                     <exai-form-group>
                         <exai-field-label text="Content" for="ControlContent"></exai-field-label>                    
                         <custom-control-editor 
-                            v-model="controlData.content"
-                            :data="controlData.content"
+                            v-model="formItem.value"
+                            :data="formItem.value"
                             :customControls="customControls"
                             :buttonList="customToolbarButtons">
                         </custom-control-editor>
                     </exai-form-group>
                 </template>
-                
+               
             </div>
 
             <div class="form-controls">
+                <exai-button text="Cancel" @click.native="cancel"></exai-button>
                 <exai-button text="Save Control" variation="primary" @click.native="submitted"></exai-button>
             </div>
-            
         </exai-form-control-group>   
     </exai-form>
 </template>
@@ -93,10 +54,10 @@
   import ExaiDatePicker from '../shared/forms/ExaiDatePicker.vue';
   import { ExaiButton } from '@/components/shared/ExaiComponents/index.js';
   import CustomControlEditor from '@/components/templates/CustomControlsEditor/CustomControlEditor.vue';
-  import { getAllControls } from '@/services/TemplatesService';
+
 
   import moment from 'moment';
-  const axios = require('axios');
+
 
   export default {
     name: 'template-custom-controls-form',
@@ -119,70 +80,72 @@
                 validation:'_',
                 description: 'Template action modal title'
             }        
-        },    
-        types:{
-            type:Array
-        },
+        },   
+
         data:{
-            type:Object
-        },
+            type: Object,  
+            docs:{
+                validation:'_',
+                description: 'Template action modal title'
+            }        
+        },  
+
         action:{
             type: String,  
             docs:{
                 validation:'_',
                 description: 'Type of action. Create or Clone'
             }        
-        },     
+        },   
+        
+        customControls:{
+            type:Array
+        }  
     },
 
     data() {
         return {
-            controlData:{ 
-                name:'',
-                description:'',
-                control:'text-snippet',
-                field:'',
-                icon:'fa-pencil',
-                published:'',
-                date_asof:'',
-                content:{},
-            },
-
-            formData:[
+            controlData: this.data,  
+            formSettings:[
                 {
+                    value:this.data.name,
                     label:'Title',
-                    id:'controlTitle',
+                    id:'title',
                     fieldType:'input',
                     required:true,
                     placeholder:'Title of the control',
                     errors: [
-                        {id: 'controlTitle', msg: 'Title is required.', hasError:false},
+                        {id: 'title', msg: 'Title is required.', hasError:false},
                     ]
                 },
                 {
+                    value:this.data.description,
                     label: 'Description',
-                    id: 'controlDesc',
+                    id: 'description',
                     fieldType: 'input',
                     required: true,
                     placeholder: 'Select a template type',
                     errors: [
-                        {id: 'controlDesc', msg: 'Type is required.', hasError:false},
+                        {id: 'description', msg: 'Description is required.', hasError:false},
                     ]
                 },
                 {
+                    value:this.data.control,
                     label: 'Control Type',
                     id: 'controlType',
                     fieldType: 'input',
                     required: true,
                     placeholder: 'Select a template type',
                     errors: [
-                        {id: 'controlType', msg: 'Type is required.', hasError:false},
+                        {id: 'controlType', msg: 'Control Type is required.', hasError:false},
                     ]
                 },
                 {
+                    value: this.setPublishedState(),
                     label: 'State',
-                    id: 'controlState',
+                    id: 'state',
                     fieldType: 'select',
+                    displayName:'state',
                     options: [
                         { id: 1, state: "Published", value:true },
                         { id: 2, state: "unPublished", value:false },
@@ -190,10 +153,11 @@
                     required: true,
                     placeholder: 'Select a publish state',
                     errors: [
-                        {id: 'controlState', msg: 'Type is required.', hasError:false},
+                        {id: 'state', msg: 'Published state is required.', hasError:false},
                     ]
                 },
                 {
+                    value:this.data.date_asof,
                     label: 'As of Date',
                     id: 'asOf',
                     fieldType: 'date',
@@ -204,16 +168,16 @@
                     ]
                 },
                 {
+                    value: { content: this.data.content},
                     id: 'controlContent',
                     fieldType: 'editor',
-                    required: true,
+                    required: false,
                     placeholder: 'Select a template type',
                     errors: [
-                        {id: 'controlType', msg: 'Type is required.', hasError:false},
+                        {id: 'controlContent', msg: 'Type is required.', hasError:false},
                     ]
                 },
             ],
-
             customToolbarButtons:{
                 headers:true,
                 size:true,
@@ -226,75 +190,28 @@
                 inserts:true,
                 clean:true
             },
-
-            customControls:[],
         }
     },
 
     methods: {   
-        setupFormData(){
-            if (this.action === 'create') {
-                let data = {
-                    name: '',
-                    description:'',
-                    published:'',
-                    date_created: this.getDate(),
-                    date_asof: '',
-                    date_updated:null,
-                    data:null,
-                }
-                return data;
+       
+        setPublishedState(){
+            let pubState;
+            if (this.action == 'edit') {
+                pubState = this.data.published == true ? 1 : 2;
+            } else {
+                pubState = this.data.published;
             }
-            if (this.action === 'clone'){
-                let data = {
-                    name:this.data.name,
-                    description: this.data.description,
-                    published:1,
-                    date_created: this.getDate(),
-                    date_asof: this.formatIncomingDate(this.data.date_asof),
-                    date_updated: null,
-                    data: JSON.stringify(this.data.data)
-                }
-               return data;
-            }          
-        },  
-
-        getTitleValue(event, formItem){
-            this.controlData.name = event;
-            console.log('formItem',{event, formItem})
-            this.checkErrors(this.controlData.name, formItem);
+            return pubState;
         },
 
-        getDescriptionValue(event, formItem){
-            this.controlData.description = event;
-            console.log('formItem',{event, formItem})
-            this.checkErrors(this.controlData.description, formItem);
+        getPublishState(formItem){
+            let selectedType = formItem.options.find(type => type.id == formItem.value);
+            return selectedType.value;
         },
 
-        changeType(event, formItem){
-            console.log('event',event)
-            let selectedValue = event;
-            let selectedType = formItem.options.find(type => type.id == selectedValue);
-            this.controlData.published = selectedType.value;
-            this.checkErrors(this.controlData.published, formItem);
-        },
-
-        updateDate(event, formItem){
-            if (formItem.id === 'asOf') {
-                this.controlData.date_asof = event;
-                this.checkErrors(this.controlData.date_asof, formItem);
-            }
-            console.log('data change',{event, formItem})
-        },
-
-        getDate(){
-            let currentDate = new Date(Date.now());
-            let formatDate = moment(String(currentDate)).format('YYYY-MM-DD')
-            return formatDate
-        },
-
-        formatIncomingDate(){
-             return moment(String(this.data.date_asof)).format('YYYY-MM-DD')
+        formatIncomingDate(date){
+            return moment(String(date)).format('YYYY-MM-DD');
         },
 
         formatOutgoingDate(dateParam){
@@ -303,51 +220,30 @@
             return updatedDate;
         },    
 
-        checkForm() {
-
-            if (this.controlData.name != '' && 
-                this.controlData.description != '' &&
-                this.controlData.published != '' &&
-                this.controlData.date_asof != '') {
-
-                this.formData.forEach(formItem => {
-                    formItem.errors.forEach(error =>{
-                        error.hasError = false;
-                    }) 
-                });
-
-                return true;
-            }
-
-            if (!this.controlData.name) {
-                let formItem = this.formData.find(formItem => formItem.id === 'controlTitle');
-                this.checkErrors(this.controlData.name, formItem);
-            }
-            if (!this.controlData.description) {
-                let formItem = this.formData.find(formItem => formItem.id === 'controlDesc');
-                this.checkErrors(this.controlData.description, formItem);
-            }
-            if (!this.controlData.published) {
-                let formItem = this.formData.find(formItem => formItem.id === 'controlState');
-                this.checkErrors(this.controlData.published, formItem);
-            }
-            if (!this.controlData.date_asof) {
-                let formItem = this.formData.find(formItem => formItem.id === 'asOf');
-                this.checkErrors(this.controlData.title, formItem);
-            }
-           
-            return false
-        },
-
-        checkErrors(field, formItem){
+        checkErrors(formItem){
             let formItemErrors = formItem.errors;
             let selectedError = formItemErrors.find(error => error.id === formItem.id);  
-            console.log('selectedError',selectedError);
 
-            if (field === '') {
+            if (formItem.value === '') {
                 selectedError.hasError = true
             } else {
                 selectedError.hasError = false
+            }
+        },
+
+        checkForm() {
+            let errors = [];
+            let requiredFields = this.formSettings.filter(item => item.required === true);
+            requiredFields.map(item => { this.checkErrors(item) });
+            requiredFields.map(item => { errors.push(item.errors) });
+
+            let allErrors = errors.flat(Infinity);
+            let formInvalid = allErrors.some(error => error.hasError === true);
+           
+            if (!formInvalid) {            
+                return true
+            } else {
+                return false
             }
         },
 
@@ -355,16 +251,25 @@
             let formValid = this.checkForm();
 
             if (formValid) {
-                let formatAsofDate = this.formatOutgoingDate(this.controlData.date_asof);
-                let formatField = this.controlData.name.replace(/\s+/g, '-').toLowerCase();
-                let formatContent = this.controlData.content['content'];
+                let name = this.formSettings.find(item => item.id === 'title').value;
+                let description = this.formSettings.find(item => item.id === 'description').value;
+                let field = this.controlData.name.replace(/\s+/g, '-').toLowerCase();
+                let control = this.formSettings.find(item => item.id === 'controlType').value;
+                let published = this.formSettings.find(item => item.id === 'state');
+                let asOfDate = this.formSettings.find(item => item.id === 'asOf').value;
+                let content = this.formSettings.find(item => item.id === 'controlContent').value;
 
-                this.controlData['date_asof'] = formatAsofDate;
-                this.controlData.field = formatField;
-                this.controlData.content = formatContent;
+                this.controlData.name = name;
+                this.controlData.description = description;
+                this.controlData.field = field;
+                this.controlData.control = control;
+                this.controlData.published = this.getPublishState(published);
+                this.controlData.date_asof = this.formatOutgoingDate(asOfDate);
+                this.controlData.content = content.content;
+              
                 console.log('updated control', this.controlData);
-                this.$emit('create-new-control', this.controlData);
-                  // this.submitAction();
+
+                this.submitAction();
 
             }
 
@@ -374,41 +279,29 @@
             if (this.action === 'create') {
                 this.$emit('create-new-control', this.controlData);
             }
-            if (this.action === 'clone') {
-                this.$emit('clone-new-template', this.templateData);
+            if (this.action === 'edit') {
+                this.$emit('update-new-control', this.controlData);
             }
         },
 
-        getAllData(){
-            this.loading = true;
-            getAllControls().then(
-            axios.spread((
-                {data:customControls},
-                {data:customControlsLibrary}) => {
-                console.log({customControls, customControlsLibrary });
-               
-                this.customControls = customControls;
-                customControlsLibrary.forEach(libraryItem =>{
-                this.customControls.push(libraryItem);
-                });
-
-                console.log('controls', this.customControls)
-            })
-            )
-            .catch(error => {console.log(error) })
-            .finally(() => (this.loading = false))
-        },
+        cancel(){
+            this.$router.push({ name: 'controls'});
+        }
     },
 
-    mounted(){
-        this.getAllData();
+    computed:{
+        getFormSettings(){
+            return this.formSettings
+        }
     }
+
   }
 </script>
 
 <style lang="scss">
    .form-controls{
-    display:flex;
-    flex-direction:row;
+    @include flex(flex, row, $gap:10px);
+    align-items:center;
+    margin-left:auto;
    }
 </style>

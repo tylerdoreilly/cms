@@ -6,6 +6,7 @@ import TemplateDetailsEdit from './TemplateDetailsEdit.vue';
 import templateItemDetails from './templateItemDetails.vue';
 import TemplateSaveCustomItem from './TemplateSaveCustomItem.vue';
 import TemplatesList from './TemplatesList.vue';
+import TemplatesTypesList from './TemplatesTypesList.vue';
 import TemplateCustomControlsList from './TemplateCustomControlsList.vue';
 
 export { 
@@ -17,5 +18,6 @@ export {
     templateItemDetails,
     TemplateSaveCustomItem,
     TemplatesList,
+    TemplatesTypesList,
     TemplateCustomControlsList,
 }

@@ -85,7 +85,6 @@
 
       setIcon(){
         let buildIcon;
-        console.log('newIcon', this.btnIcon)
         if (this.btnIcon) {       
           buildIcon = `${this.iconBase} + ${this.btnIcon}`        
         }

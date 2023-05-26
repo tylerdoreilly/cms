@@ -1,19 +1,21 @@
 <template>
   <exai-form-group>
 
-    <exai-field-label :text="label" :for="id" :required="required"></exai-field-label>
+    <exai-field-label :text="data.label" :for="data.id" :required="data.required"></exai-field-label>
 
     <div :class="[$style['exai-text-field'], classModifiers]">
       <input type="text" 
+        tabindex="0"
         :class="[$style['exai-text-field__input']]" 
-        :placeholder="placeholder" 
-        :id="id" 
-        v-bind:value="value"
-        v-on:input="$emit('input', $event.target.value)" />
+        :placeholder="data.placeholder" 
+        :id="data.id" 
+        :value="data.value" 
+        @input="updateValue"
+        ref="textInput" />
     </div>
 
-    <template v-for="error in errors">
-      <template v-if="error.hasError">
+    <template v-for="error in data.errors">
+      <template v-if="handleErrors(error)">
         <exai-field-error :text="error.msg" :key="error.id"></exai-field-error>
       </template>
     </template>
@@ -37,57 +39,48 @@
     },
 
     props:{
-      label: {
-        type: String,
+      
+      fieldData: {
+        type: Object,
         docs:{
           validation:'_',
           description: 'Input Label'
-        }
-      },
-
-      id: {
-        type: String,
-        docs:{
-          validation:'_',
-          description: 'Input Id'
-        }
-      },
-
-      placeholder: {
-        type: String,
-        docs:{
-          validation:'_',
-          description: 'Input Placeholder'
         }
       },
 
       value:{
         type: String
       },
+    },
 
-      required: {
-        type: Boolean,
-        docs:{
-          validation:'_',
-          description: 'Input Label'
+    data() {
+        return {
+          data: this.fieldData
         }
+    },
+
+    methods:{
+      updateValue (event) {
+        this.$emit('input', event.target.value);
       },
 
-      errors:{
-        type:Array,
-        docs:{
-          validation:'_',
-          description: 'Field Errors'
-        }
-      },
+      handleErrors(error){     
+       if (error.hasError && this.value) {
+        return false
+       }else{
+        return error.hasError
+       }
+      }
     },
 
     computed:{
       classModifiers(){
         const obj = {}
-        obj[this.$style['exai-text-field--required']] = this.errors.some(error => error.hasError === true);
+        obj[this.$style['exai-text-field--required']] = this.data.errors.some(error => error.hasError === true) && !this.value;
         return obj
       },
+
+     
     } 
   }
 </script>

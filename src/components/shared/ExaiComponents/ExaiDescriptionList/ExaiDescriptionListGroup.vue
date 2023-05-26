@@ -12,6 +12,6 @@
 
 <style lang="scss" module>
   .exai-dl-group{
-    @include flex(flex, column, $gap:8px)
+    @include flex(flex, column, $gap:6px)
   }
 </style>

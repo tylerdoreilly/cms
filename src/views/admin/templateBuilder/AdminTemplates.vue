@@ -1,32 +1,51 @@
 <template>
   <exai-loader v-if="loading"></exai-loader>
   <div v-else>
-    <page-layout>
+
+    <page-layout center>
       <template v-slot:content>
-        <PageHeader title="Custom Controls">
-          <exai-button text="Create Control" variation="primary" @click.native="$router.push('/admin/custom-controls/create')"></exai-button>
+        <PageHeader title="Templates">
+          <exai-button text="Create Template" variation="primary" @click.native="openCreateModal()"></exai-button>
         </PageHeader>
 
-        <template-custom-controls-list :customControls="customControls"></template-custom-controls-list>
+        <exai-tabs>
+            <exai-tab title="Manage Templates">
+              <TemplatesList 
+                :templates="templates"
+                @open-clone-template="openCloneModal($event)"
+                @open-delete-template="openDeletePrompt($event)">
+              </TemplatesList>
+            </exai-tab>
+            <exai-tab title="Global Settings">
+              <template-custom-controls-list 
+                :customControls="customControls">
+              </template-custom-controls-list>
+            </exai-tab>
+        </exai-tabs>
+      
       </template>
     </page-layout>
-         
-    <template-custom-controls-form
-        v-if="createControl"
-        title="Create Custom Control"
-        :action="action"
-        @close-modal="createControl = false"
-        @create-new-template="createNewTemplate($event)">
-    </template-custom-controls-form>
 
-    <template-custom-controls-form
-        v-if="cloneControl"
-        title="Clone Custom Control"
-        :action="action"
-        :data="controlData"
-        @close-modal="cloneControl = false"
-        @create-new-template="createNewTemplate($event)">
-    </template-custom-controls-form>
+   
+         
+    <template-form
+      v-if="createTemplate"
+      title="Create Template"
+      :types="templateTypes"
+      :action="action"
+      @close-modal="createTemplate = false"
+      @create-new-template="createNewTemplate($event)">
+    </template-form>
+
+    <template-form
+      v-if="cloneTemplate && template"
+      title="Clone Template"
+      :types="templateTypes"
+      :action="action"
+      :data="template"
+      @close-modal="cloneTemplate = false"
+      @clone-new-template="cloneNewTemplate($event)">
+    </template-form>
 
     <exai-prompt 
       v-if="showdeleteTemplate"
@@ -43,44 +62,49 @@
 
   //Components
   import { PageLayout, PageHeader } from '@/components/layout/index.js';
-  import { ExaiButton, ExaiLoader, ExaiPrompt } from '@/components/shared/ExaiComponents/index.js';
-  import { TemplateCustomControlsList } from '@/components/templates/index.js';
-  import TemplateCustomControlsForm from '@/components/templates/TemplateCustomControlsForm.vue';
+  import { TemplatesList, TemplateForm, TemplateCustomControlsList } from '@/components/templates/index.js';
 
   // Services
-  import { getCustomControlsLibrary, deleteTemplate } from '../../../services/TemplatesService';
+  import { getTemplatesList, deleteTemplate } from '../../../services/TemplatesService';
 
   const axios = require('axios');
 
   export default {
-    name: 'AdminTemplateControls',
+    name: 'AdminTemplates',
     components: {
+      TemplatesList,
       TemplateCustomControlsList,
-      TemplateCustomControlsForm,
+      TemplateForm,
       PageHeader,
       PageLayout,
-      ExaiButton,
-      ExaiLoader,
-      ExaiPrompt,
     },
     data() {
         return {
+            createTemplate:false,
+            cloneTemplate:false,
             showdeleteTemplate:false,
             loading:false,
+            templates: [],
             customControls:[],
+            templateTypes: [],
+            numberOfTemplates: 0,
+            template:'',
             action:'',
-            controlData:'',
-            createControl:false,
-            cloneControl:false,
+            id: this.$route.params.id,
         }
     },
     methods: {
       async getAllData() {
         this.loading = true;
-        getCustomControlsLibrary().then(response => {
-          console.log(response)
-          this.customControls = response;
-        })
+        getTemplatesList(this.id).then(
+          axios.spread(({data: templates}, {data:templateTypes}, {data:customContols}) => {
+            console.log({templates, templateTypes, customContols});
+            this.templates = templates;
+            this.numberOfTemplates = this.templates.length;
+            this.templateTypes = templateTypes;
+            this.customControls = customContols;
+          })
+        )
         .catch(error => {console.log(error) })
         .finally(() => (this.loading = false))
       },
@@ -135,14 +159,14 @@
       },
 
       openCreateModal(){
-        this.createControl = true;
-        this.control = '';
+        this.createTemplate = true;
+        this.template = '';
         this.action = 'create';
       },
 
       openCloneModal(data){
-        this.cloneControl = true;
-        this.controlData = { ...data };
+        this.cloneTemplate = true;
+        this.template = { ...data };
         this.action = 'clone';
       },
 
@@ -163,19 +187,11 @@
 </script>
 
 
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style lang="scss">
+  // .layout-center{
+  //   display:flex;
+  //   justify-content: center;
+  //   margin:0 auto;
+  //   width:1200px;
+  // }
 </style>

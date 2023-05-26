@@ -1,21 +1,21 @@
 <template>
   <div>
-    <admin-project-badge text="Insight Templates" icon="fa-chevron-right" :expanded="!collapseMenu"></admin-project-badge>
+    <admin-project-badge :text="projectData.title" icon="fa-chevron-right" :expanded="!collapseMenu"></admin-project-badge>
 
     <div id="nav" :class="[$style['site-nav']]">
-      <admin-menu-item text="Dashboard" route="/admin/dashboard" icon="fa-gauge" :expanded="!collapseMenu" />
+      <admin-menu-item text="Dashboard" :route="'/admin/project/' + id + '/dashboard'" icon="fa-gauge" :expanded="!collapseMenu" />
 
       <admin-sub-menu text="Templates" icon="fa-layer-group" route="#" :expanded="!collapseMenu">
-        <admin-menu-item child text="Project Templates" route="/admin/templates" />
-        <admin-menu-item child text="Custom Controls" route="/admin/custom-controls" />
+        <admin-menu-item child text="Project Templates" :route="'/admin/project/' + id + '/templates'" />
+        <admin-menu-item child text="Template Types" :route="'/admin/project/' + id + '/types'" />
+        <admin-menu-item child text="Custom Controls" :route="'/admin/project/' + id + '/custom-controls'" />
       </admin-sub-menu>  
 
-      <admin-menu-item text="Forms" route="/admin/forms" icon="fa-list-check" :expanded="!collapseMenu" />
+      <admin-menu-item text="Forms" :route="'/admin/project/' + id + '/forms'" icon="fa-list-check" :expanded="!collapseMenu" />
 
-      <admin-menu-item text="Users" route="/admin/users" icon="fa-user-group" :expanded="!collapseMenu" />    
+      <admin-menu-item text="Users" :route="'/admin/project/' + id + '/users'" icon="fa-user-group" :expanded="!collapseMenu" />    
     </div>
   </div>
- 
 
 </template>
 
@@ -33,9 +33,17 @@
       AdminProjectBadge,
     },  
 
+    props:{
+      projectData:{
+        type:Object,
+        description: 'Selected Project'
+      }
+    },
+
     data() {
         return {
           collapseMenu:false,
+          id:1,
         }
     },
 

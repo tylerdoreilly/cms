@@ -175,13 +175,26 @@
     gap:15px;
   }
 
-  .quillWrapper.custom.textBlock .quill-container{
-    height: auto !important;
+  .quillWrapper.custom.textBlock .ql-container.ql-snow{
+    min-height:calc(100vh - 278px);
+    height:calc(100vh - 275px);
+    overflow-y:auto;
+    border:0px;
   }
   .quillWrapper.custom.textBlock .ql-editor{
-    min-height:calc(100vh - 300px);
-    height:calc(100vh - 300px);
-    overflow-y:auto;
+    min-height:calc(100vh - 330px);
+    height:auto;
+    overflow-y:hidden;
+    border:1px solid $border;
+    width:1200px;
+    margin:0 auto;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding:40px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    // min-height:calc(100vh - 300px);
+    // height:calc(100vh - 300px);
+    // overflow-y:auto;
   }
 //   .custom-editor-wrapper .ql-toolbar.ql-snow {
 //     border: 0px solid #ccc !important;

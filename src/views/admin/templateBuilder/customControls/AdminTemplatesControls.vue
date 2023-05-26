@@ -1,28 +1,29 @@
 <template>
   <exai-loader v-if="loading"></exai-loader>
   <div v-else>
-    <page-layout>
+    <page-layout center>
       <template v-slot:content>
-        <PageHeader title="Create Custom Control">
+        <PageHeader title="Custom Controls" hasBorder>
+          <template #description>
+            Create reusable custom content that can be added to any template.
+          </template>
+          <exai-button text="Create Control" variation="primary" @click.native="$router.push('/admin/project/' + id + '/custom-controls/create/')"></exai-button>
         </PageHeader>
 
-        <template-custom-controls-form
-          title="Create Custom Control"
-          action="create"
-          @create-new-control="createNewControl($event)">
-        </template-custom-controls-form>
-      
+        <template-custom-controls-list 
+          :customControls="customControls"
+          @open-delete-template="openDeletePrompt($event)">
+        </template-custom-controls-list>
       </template>
     </page-layout>
-         
-   
+
     <exai-prompt 
-      v-if="showdeleteTemplate"
-      title="Delete Template" 
-      message="Are you sure you want to delete this Template?" 
-      :data="template"
-      @close-modal="showdeleteTemplate = false" 
-      @close-and-submit="deleteSelectedTemplate($event)">
+      v-if="showDeleteControl"
+      title="Delete Custom Control" 
+      message="Are you sure you want to delete this Control?" 
+      :data="controlToDelete"
+      @close-modal="showDeleteControl = false" 
+      @close-and-submit="deleteSelectedControl($event)">
     </exai-prompt>
   </div>
 </template>
@@ -31,32 +32,33 @@
 
   //Components
   import { PageLayout, PageHeader } from '@/components/layout/index.js';
-  import { ExaiLoader, ExaiPrompt } from '@/components/shared/ExaiComponents/index.js';
-  import TemplateCustomControlsForm from '@/components/templates/TemplateCustomControlsForm.vue';
+  import { ExaiButton, ExaiLoader, ExaiPrompt } from '@/components/shared/ExaiComponents/index.js';
+  import { TemplateCustomControlsList } from '@/components/templates/index.js';
 
   // Services
-  import { getCustomControlsLibrary, deleteTemplate } from '../../../services/TemplatesService';
+  import { getCustomControlsLibrary, deleteCustomControlLibaryItem } from '@/services/TemplatesService';
 
   const axios = require('axios');
 
   export default {
     name: 'AdminTemplateControls',
     components: {
-      TemplateCustomControlsForm,
+      TemplateCustomControlsList,
       PageHeader,
       PageLayout,
+      ExaiButton,
       ExaiLoader,
       ExaiPrompt,
     },
     data() {
-        return {
-            showdeleteTemplate:false,
+        return {        
             loading:false,
             customControls:[],
             action:'',
             controlData:'',
-            createControl:false,
-            cloneControl:false,
+            controlToDelete:'',
+            showDeleteControl:false,
+            id: this.$route.params.id,
         }
     },
     methods: {
@@ -70,18 +72,19 @@
         .finally(() => (this.loading = false))
       },
 
-      async createNewControl(data){     
+      async createNewTemplate(data){  
+        const templateListLength = this.templates.length;
+        data.id = templateListLength + 1;    
         const putData = data;
 
         try {
-          await axios.post(`/api/customControlsLibrary`, putData, {
+          await axios.post(`/api/templates/`, putData, {
             headers: {
               "x-access-token": "token-value",
             },
           });
 
-          this.$toast("Control Created Successfully");
-          this.$router.push({ name: 'controls' });
+          this.$toast("Template Created Successfully");
         } 
         catch (err) {
           console.log(err)
@@ -108,20 +111,20 @@
         }
       },
 
-      async deleteSelectedTemplate(data) {
-        console.log('delete template',data)
+      async deleteSelectedControl(data) {
+        console.log('delete control',data)
         this.loading = true;
-        deleteTemplate(data.id).then(
-         console.log('deleted')
+        
+        deleteCustomControlLibaryItem(data.id).then(res =>{
+          console.log('deleted', res);
+          let deletedItem = this.customControls.find(item => item.id === data.id);
+          this.customControls.pop(deletedItem);
+          this.showDeleteControl = false
+        }
+        
         )
         .catch(error => {console.log(error) })
         .finally(() => (this.loading = false))
-      },
-
-      openCreateModal(){
-        this.createControl = true;
-        this.control = '';
-        this.action = 'create';
       },
 
       openCloneModal(data){
@@ -131,8 +134,8 @@
       },
 
       openDeletePrompt(data){
-        this.template = data;
-        this.showdeleteTemplate = true;
+        this.controlToDelete = data;
+        this.showDeleteControl = true;
       },
 
       addNewItem(item){

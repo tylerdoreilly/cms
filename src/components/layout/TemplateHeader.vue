@@ -32,6 +32,8 @@ export default {
     align-items:center;
     gap:10px;
     margin-top:20px;
+    padding-left:20px;
+    padding-right:20px;
   }
 
   .template-header h1{

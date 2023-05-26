@@ -1,5 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path');
+const webpack = require("webpack");
 
 module.exports = defineConfig({
   transpileDependencies: true
@@ -9,7 +10,13 @@ module.exports = {
     resolve: {
         symlinks:true
     },
-},
+    plugins: [
+      new webpack.ProvidePlugin({
+        "window.Quill": "quill/dist/quill.js",
+        Quill: "quill/dist/quill.js"
+      })
+    ]
+  },
   css: {
     loaderOptions: {
       sass: {
@@ -26,4 +33,5 @@ module.exports = {
       },
     }
   }
+
 }

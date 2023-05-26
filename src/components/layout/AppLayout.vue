@@ -30,7 +30,7 @@
 
   .app-container{
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 50px);
     flex-direction: column;
   }
 </style>

@@ -4,46 +4,46 @@
     <div class="template-details__content">
       <exai-dl>
         <exai-dl-group>
+          <exai-dt>Title:</exai-dt>
+          <exai-dd>{{ data.title }}</exai-dd>
+        </exai-dl-group>
+        <exai-dl-group>
           <exai-dt>Type:</exai-dt>
-          <exai-dd>{{ data.type }}</exai-dd>
+          <exai-dd>{{ data.templateType?.type }}</exai-dd>
+        </exai-dl-group>
+        <exai-dl-group>
+          <exai-dt>As Of:</exai-dt>
+          <exai-dd>
+            <date-format :date="data.date_asof" dateFormat="MM/DD/YYYY"></date-format>
+          </exai-dd>
         </exai-dl-group>
         <exai-dl-group>
           <exai-dt>Created:</exai-dt>
           <exai-dd>
-            <date-format :date="data.date_created" dateFormat="MM/DD/YYYY"></date-format>
+            <date-format :date="data.createdAt" dateFormat="MM/DD/YYYY"></date-format>
           </exai-dd>
         </exai-dl-group>
         <exai-dl-group>
           <exai-dt>Updated:</exai-dt>
         <exai-dd>
-          <date-format :date="data.date_updated" dateFormat="MM/DD/YYYY"></date-format>
+          <date-format :date="data.updatedAt" dateFormat="MM/DD/YYYY"></date-format>
         </exai-dd>
         </exai-dl-group>
       </exai-dl>
     </div>
     <div class="template-details__controls">
-      <slot></slot>
+      <exai-button text="Edit Details" @click.native="editTemplateDetails"></exai-button>
     </div>    
   </div>
 </template>
 
 <script>
   import dateFormat from '../shared/dateFormat.vue';
-  import { 
-    ExaiDescriptionList, 
-    ExaiDescriptionListGroup,
-    ExaiDescriptionTerm, 
-    ExaiDescriptionDetails 
-  } from '@/components/shared/ExaiComponents/ExaiDescriptionList/index.js';
 
   export default {
     name: 'template-details',
     components: {
       dateFormat,
-      'exai-dl': ExaiDescriptionList,
-      'exai-dl-group': ExaiDescriptionListGroup,
-      'exai-dt': ExaiDescriptionTerm,
-      'exai-dd': ExaiDescriptionDetails,    
     },
     props:{
       title:{
@@ -56,11 +56,17 @@
       data:{
         type:[Array, Object]
       }
+    }, 
+    data() {
+      return{
+        templateData: this.data,
+      }
     },
     methods:{
       editTemplateDetails(){
         this.$emit('edit-details');
-      }
+      },
+
     }
   }
 </script>
@@ -71,11 +77,12 @@
     flex-direction:column;
     gap:15px;
     position:sticky;
-    top:75px;
+    top:95px;
+    margin-top:20px;
   }
 
   .template-details__controls{
-    margin-left: auto;
+
     display:flex;
     flex-direction: row;
     gap:10px;

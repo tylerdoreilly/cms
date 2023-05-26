@@ -1,32 +1,34 @@
 <template>
    <div :class="[$style['content-container'], classModifiers]">
 
-      <div 
-        :class="[$style['column'], $style['column--left'], sidebarModifiers]" 
-        v-if="sidebarLeft">
+    <div :class="[$style['column'], $style['column--left'], sidebarModifiers]" v-if="sidebarLeft">
 
-        <div v-if="collapsible">
+      <div v-if="collapsible">
 
-          <div :class="[$style['top']]">
-            <slot name="sidebar-left"></slot>
-          </div> 
+        <div :class="[$style['top']]">
+          <slot name="sidebar-left"></slot>
+        </div> 
 
-          <div :class="[$style['bottom']]">
-            <admin-menu-ctrl @collapse-menu="toggleMenu($event)"/>
-          </div>
-
+        <div :class="[$style['bottom']]">
+          <admin-menu-ctrl @collapse-menu="toggleMenu($event)"/>
         </div>
 
-        <slot name="sidebar-left" v-else></slot>
       </div>
 
-      <main :class="[$style['main-content']]">
-        <slot></slot>
-      </main>
+      <slot name="sidebar-left" v-else></slot>
       
-      <div :class="[$style['column'], $style['column--right']]" v-if="sidebarRight">
-        <slot name="sidebar-right"></slot>
+    </div>
+
+    <main :class="[$style['main-content']]">
+      <div :class="[$style['main-breadcrumb'], styleModifiers]">
+        <Breadcrumbs />
       </div>
+      <slot></slot>
+    </main>
+    
+    <div :class="[$style['column'], $style['column--right']]" v-if="sidebarRight">
+      <slot name="sidebar-right"></slot>
+    </div>
 
   </div>
 </template>
@@ -84,6 +86,12 @@
         modObj[this.$style['column--closed']] = this.collapseMenu === true;
         return  modObj
       },
+
+      styleModifiers(){
+        const modObj = {}
+        modObj[this.$style['main-breadcrumb--no-margin']] = this.$route.name === 'templates-edit';
+        return  modObj
+      },
     },
 
     methods: {
@@ -107,7 +115,7 @@
     flex: 1;
 
     &--hasSidebars{
-      gap:40px;
+      gap:0px;
     }
 
     &--noSidebars{
@@ -129,6 +137,7 @@
     &--left{
       order: -1;
       border-right:1px solid $border;
+
     }
 
     &--collapsible{
@@ -137,7 +146,7 @@
     }
 
     &--closed{
-      flex: 20px 0 0;
+      flex: 70px 0 0;
     }
 
     &--right{
@@ -146,9 +155,12 @@
     }
   }
 
-   .top{
+  .top{
     height:calc(100vh - 121px);
     padding:20px 20px 0px 20px;
+    position:fixed;
+    top:50px;
+    width:12.5em;
   }
 
   .bottom{
@@ -158,6 +170,30 @@
     border-top:1px solid $border;
     padding-left:15px;
     background:$template-background;
+    position: fixed;
+    bottom: 00px;
+    left: 0;
+    width:14em;
+  }
 
+  .column--closed{
+    .top{
+      width:40px;
+    }
+    .bottom{
+      width:55px;
+    }
+  }
+
+  .main-breadcrumb{
+    border-bottom:1px solid $border;
+    height:60px;
+    margin-bottom:40px;
+    display:flex;
+    align-items:center;
+
+    &--no-margin{
+      margin-bottom:0px
+    }
   }
 </style>

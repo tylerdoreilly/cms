@@ -41,7 +41,7 @@
                         <input type="checkbox" v-model="selectedIds" @click="select" :value="item.id">
                     </td>
                     <td class="table-td" style="width:40px">{{ item.id }}</td>
-                    <td class="table-td">{{ item.templateType.type }}</td> 
+                    <td class="table-td">{{ item.type }}</td> 
                     <td class="table-td">{{ item.title }}</td>
                     <td class="table-td" >
                         <template v-if="item.active === true">Active</template>
@@ -52,7 +52,7 @@
                     <td class="table-td"><date-format :date="item.updatedAt" dateFormat="MM/DD/YYYY"></date-format></td>
                     <td class="table-td">
                         <div class="table-actions">
-                            <router-link class="table__link" :to="'/admin/project/' + id + '/templates/edit-template/' + item.id">Edit</router-link>
+                            <router-link class="table__link" :to="'/admin/templates/edit-template/' + item.id">Edit</router-link>
                             <a @click.prevent="openCloneTemplate(item)">Clone</a>
                             <a @click.prevent="openDeleteTemplate(item)">Delete</a>
                         </div>
@@ -67,28 +67,25 @@
 
 <script>
     import dateFormat from '../shared/dateFormat.vue'
-    
-    
 
     export default {
-        name: 'TemplatesList',
+        name: 'TemplatesTypesList',
         components:{
             dateFormat,
         },
-        
-        props: ['templates'],
+        props: ['types'],
 
         data() {
             return {
-                data: this.templates,
+                data: this.types,
                 statusFilter:'All',
                 searchValue: '',
                 selected: [],
                 allSelected: false,
-                selectedIds: [],
-                id: this.$route.params.id,
+                selectedIds: []
             }
         },
+        
         computed: {
             filteredData() {
                 let tempData = this.data

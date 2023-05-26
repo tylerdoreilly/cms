@@ -1,19 +1,18 @@
 <template>
   <exai-form-group>
 
-    <exai-field-label :text="label" :for="id" :required="required"></exai-field-label>
+    <exai-field-label :text="data.label" :for="data.id" :required="data.required"></exai-field-label>
 
     <date-picker  
-        :class="{ error: hasErrors() }"
-        :id="id"
-        :valueType="valueType"
-        v-model="selectedDate"
-        @change="$emit('dateChange', selectedDate)">
+      :class="{ error: hasErrors() }"
+      :id="data.id"
+      :valueType="data.valueType"
+      v-model="data.value"
+      @change="updateValue" />
 
-    </date-picker>
     
     <template v-for="error in errors">
-      <template v-if="error.hasError">
+      <template v-if="handleErrors(error)">
         <exai-field-error :text="error.msg" :key="error.id"></exai-field-error>
       </template>
     </template>
@@ -39,6 +38,14 @@
     },
 
     props:{
+      fieldData: {
+        type: Object,
+        docs:{
+          validation:'_',
+          description: 'Input Label'
+        }
+      },
+
       label: {
         type: String,
         docs:{
@@ -86,13 +93,26 @@
 
     data() {
         return {
-            selectedDate: this.value,
+            data: this.fieldData,
+            selectedDate: this.fieldData.value,
         }
     },
 
     methods:{
+      updateValue (event) {
+        this.$emit('date', event);
+      },
+
       hasErrors(){
-        return this.errors.some(error => error.hasError === true)
+        return this.data.errors.some(error => error.hasError === true) && !this.data.value
+      },
+
+      handleErrors(error){     
+       if (error.hasError && this.data.value) {
+        return false
+       }else{
+        return error.hasError
+       }
       }
     },
   }
