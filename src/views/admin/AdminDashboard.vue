@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <page-layout>
+  <exai-loader v-if="loading"></exai-loader>
+  <div v-else>
+    <page-layout center>
       <template v-slot:content>
         <PageHeader title="Dashboard">
         </PageHeader>
@@ -22,7 +23,8 @@
   import PageLayout from '../../components/layout/PageLayout.vue';
   import contentBlock from '../../components/shared/contentBlock.vue';
   import TemplatesList from '../../components/templates/TemplatesList.vue';
-  import { getTemplatesList } from '../../services/TemplatesService'
+  import { ExaiLoader } from '@/components/shared/ExaiComponents/index.js';
+  import { getTemplatesListNew } from '../../services/TemplatesService'
 
   const axios = require('axios');
 
@@ -31,6 +33,7 @@
     components: {
       PageHeader,
       PageLayout,
+      ExaiLoader,
       contentBlock,
       TemplatesList
     },
@@ -44,12 +47,13 @@
             templateTypes: [],
             numberOfTemplates: 0,
             template:'',
+            id: this.$route.params.id,
         }
     },
     methods:{
       async getAllData() {
         this.loading = true;
-        getTemplatesList().then(
+        getTemplatesListNew(this.id).then(
           axios.spread(({data: templates}, {data:templateTypes}) => {
             console.log({templates, templateTypes });
             this.templates = templates;

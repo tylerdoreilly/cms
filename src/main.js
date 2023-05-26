@@ -37,10 +37,15 @@ import {
   faUserGroup,
   faArrowRightFromBracket,
   faAnglesLeft,
-  faAnglesRight
+  faAnglesRight,
+  faMagnifyingGlass
 } from '@fortawesome/free-solid-svg-icons';
 import { authConfig } from '../auth_config.js';
 import { Auth0Plugin } from '@/auth/auth0-plugin';
+import VueBreadcrumbs from 'vue-2-breadcrumbs';
+
+// Exai Components
+import '@/components/shared/ExaiComponents';
 
 // Toast Options
 const options = {
@@ -76,12 +81,15 @@ library.add(faUserSecret,
   faUserGroup,
   faArrowRightFromBracket,
   faAnglesLeft,
-  faAnglesRight
+  faAnglesRight,
+  faMagnifyingGlass
 )
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
 Vue.use(Toast, options);
 Vue.use(Popover);
+Vue.use(VueBreadcrumbs);
 Vue.use(Auth0Plugin, {
   authConfig,
   redirectUri: authConfig.redirectUri,

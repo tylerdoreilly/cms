@@ -1,6 +1,6 @@
 <template>
   <div :class="[$style['html-viewer']]">
-    <code-highlighter codeType="language-html" :code="content"></code-highlighter>
+    <code-highlighter codeType="language-markup" :code="content"></code-highlighter>
   </div>
 </template>
 

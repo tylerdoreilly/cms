@@ -6,6 +6,22 @@ a:visited{
   color:$gunmetal;
 }
 
+// Breadcrumb Styling
+
+.breadcrumb{
+  @include flex(flex, row, $gap:5px);
+  align-items:center;
+  list-style-type: none;
+  margin:0px;
+}
+
+.breadcrumb-item::after{
+  content:" /"
+}
+
+.breadcrumb-item:last-child::after{
+  content:none;
+}
 
 // Temp until form components are build
 

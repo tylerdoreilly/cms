@@ -15,6 +15,8 @@
   import 'prismjs/components/prism-markup-templating'
   import 'prismjs/components/prism-php'
   import 'prismjs/components/prism-scss'
+  import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
+  import 'prismjs/plugins/show-invisibles/prism-show-invisibles.js'
 
   export default {  
     name: 'code-highlighter',

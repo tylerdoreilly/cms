@@ -2,18 +2,12 @@
   <exai-loader v-if="loading === true"></exai-loader>
   <div id="createTemplate" v-else>
     <page-layout sidebar>
-      <template v-slot:content>
 
+      <template v-slot:content>
         <template-header title="Edit Template">
           <exai-button text="Generate" @click.native="generateDoc = true"></exai-button>
           <exai-button text="Save" variation="primary" @click.native="saveTemplate()"></exai-button>
         </template-header>
-
-        <PageDetails 
-          :title="template.title" 
-          :asof="template.date_asof" 
-          @edit-details="editDetails()">
-        </PageDetails>
 
         <template-container>
           <custom-editor-new 
@@ -24,11 +18,12 @@
             :editorId="getTemplateId">
           </custom-editor-new>
         </template-container>
+      </template>
 
-      </template>
       <template v-slot:sidebar-right>
-        <template-details title="Details" :data="template" />
+        <template-details title="Details" :data="template" v-if="template"  @edit-details="editDetails()"/>
       </template>
+
     </page-layout>
 
     <exai-prompt 
@@ -67,16 +62,15 @@
 </template>
 
 <script>
-  import PageLayout from '../../../components/layout/PageLayout.vue';
-  import TemplateHeader from '../../../components/layout/TemplateHeader.vue';
-  import PageDetails from '../../../components/layout/PageDetails.vue';
-  import TemplateContainer from '../../../components/templates/TemplateContainer.vue';
-  import TemplateDetails from '../../../components/templates/TemplateDetails.vue';
-  import TemplateDetailsEdit from '../../../components/templates/TemplateDetailsEdit.vue';
-  import TemplateSaveCustomItem from '../../../components/templates/TemplateSaveCustomItem.vue';
+  import PageLayout from '@/components/layout/PageLayout.vue';
+  import TemplateHeader from '@/components/layout/TemplateHeader.vue';
+  import TemplateContainer from '@/components/templates/TemplateContainer.vue';
+  import TemplateDetails from '@/components/templates/TemplateDetails.vue';
+  import TemplateDetailsEdit from '@/components/templates/TemplateDetailsEdit.vue';
+  import TemplateSaveCustomItem from '@/components/templates/TemplateSaveCustomItem.vue';
 
   import { ExaiButton, ExaiPrompt, ExaiLoader } from '@/components/shared/ExaiComponents/index.js'
-  import { getAllTemplateData, getImage } from '../../../services/TemplatesService';
+  import { getAllTemplateData, getImage } from '@/services/TemplatesService';
   import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js';
   import customEditorNew from '@/components/shared/customEditor/customEditorNew.vue';
 
@@ -92,7 +86,6 @@
     components: {
       PageLayout,
       TemplateHeader,
-      PageDetails,
       TemplateContainer,
       TemplateDetailsEdit,
       TemplateSaveCustomItem,   
@@ -207,28 +200,26 @@
       // Get and Save
       async saveTemplate(){
         this.template.data = [];
-        let templateData = JSON.stringify(this.content);
-          if (this.id) {
-            let type = this.template.type_id;
-            this.template.date_updated = this.getDate();
-            this.template.type_new = type;
-            this.template.data = templateData;
-            const putData = this.template;
+        let templateData = this.content;
+        
+        if (this.id) {
+          this.template.data = templateData;
+          const putData = this.template;
 
-            try {
-             await axios.put(`/api/templates/${this.id}`, putData, {
-                headers: {
-                  "x-access-token": "token-value",
-                },
-              });
+          try {
+            await axios.put(`/api/templateData/${this.id}`, putData, {
+              headers: {
+                "x-access-token": "token-value",
+              },
+            });
 
-              // const result = res;
-              this.$toast("Template Saved Successfully");
-            } 
-            catch (err) {
-             console.log(err)
-            }
+            // const result = res;
+            this.$toast("Template Saved Successfully");
+          } 
+          catch (err) {
+            console.log(err)
           }
+        }
       },
 
       async saveCustomTemplateitem(data){
@@ -258,7 +249,7 @@
             const putData = data;
 
             try {
-             await axios.put(`/api/templates/${this.id}`, putData, {
+             await axios.put(`/api/templateData/${this.id}`, putData, {
                 headers: {
                   "x-access-token": "token-value",
                 },
@@ -284,7 +275,7 @@
             {data:customControls},
             {data:customControlsLibrary}) => {
             console.log({template, templateItems, templateItemsCustom, templateTypes, customControls,customControlsLibrary });
-            this.template = template.find(item => item);
+            this.template = template;
             this.templateItems = templateItems;
             this.customTemplateItems = templateItemsCustom;
             this.templateTypes = templateTypes;
@@ -439,10 +430,11 @@
 
 <style lang="scss">
  #createTemplate .exai-tabs__list{
-  margin-left:-40px;
-  margin-right:-40px;
-  padding-left:40px;
+  margin-bottom:0px;
+  border-bottom:0px;
+  padding-left:20px;
+  padding-right:20px;
  }
- 
+
 
 </style>

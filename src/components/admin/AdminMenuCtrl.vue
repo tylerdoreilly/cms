@@ -29,7 +29,6 @@
 
           toggleIcon() {
             this.icon = this.toggleMenu ? 'fa-angles-right' : 'fa-angles-left';
-            console.log('newIcon', this.icon)
             return this.icon
           }
         }

@@ -1,6 +1,6 @@
 <template>
-   <div :class="[$style['inner-container'], classModifiers]">    
-    <div :class="[$style['inner-content']]">
+   <div :class="[$style['inner-container']]">    
+    <div :class="[$style['inner-content'], classModifiers]">
         <slot name="content"></slot>
     </div>
    
@@ -20,6 +20,10 @@ export default {
     sidebar:{
       type:Boolean,
       default:false,
+    },
+    center:{
+      type:Boolean,
+      default:false,
     }
   },
   data() {
@@ -30,9 +34,8 @@ export default {
   computed:{
     classModifiers(){
       const obj = {}
-      // obj[this.$style['exai-button--primary']] = this.variation == 'primary';
-      // obj[this.$style['exai-button--secondary']] = this.variation == 'secondary';
-      // obj[this.$style['exai-button--icon-only']] = this.editMode && this.activated;
+      obj[this.$style['inner-content--center']] = this.center === true;
+      obj[this.$style['inner-content--no-padding']] = this.$route.name === 'templates-edit';
       return obj
     },
   },
@@ -43,13 +46,25 @@ export default {
 <style lang="scss" module>
   .inner-container{
     display: flex;
-    min-height: calc(100vh - 60px);
+    // min-height: calc(100vh - 60px);
     flex: 1;
   }
 
   .inner-content {
     flex:1;
+    padding-left:40px;
     padding-right:40px;
+
+    &--center{
+      flex:0 0 1200px;
+      margin:0 auto;
+      width:1200px;
+    }
+
+    &--no-padding{
+      padding-left:0px;
+      padding-right:0px;
+    }
   }
 
   .column--right {

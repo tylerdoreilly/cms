@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import AdminProjects from '@/views/admin/projects/AdminProjects.vue'
+import AdminProjectsHome from '@/views/admin/projects/AdminProjectsHome.vue'
 import Admin from '@/views/admin/Admin.vue'
 import AdminDashboard from '@/views/admin/AdminDashboard.vue'
 import AdminUsers from '@/views/admin/AdminUsers.vue'
-import AdminPages from '@/views/admin/AdminPages.vue'
 import AdminForms from '@/views/admin/AdminForms.vue'
-import AdminTemplates from '@/views/admin/templates/AdminTemplates.vue'
-import AdminTemplatesCreate from '@/views/admin/templates/AdminTemplatesCreate.vue'
-import AdminTemplatesControls from '@/views/admin/templates/AdminTemplatesControls.vue'
-import AdminTemplatesControlsCreate from '@/views/admin/templates/AdminTemplatesControlsCreate.vue'
+import AdminTemplates from '@/views/admin/templateBuilder/AdminTemplates.vue'
+import AdminTemplatesCreate from '@/views/admin/templateBuilder/AdminTemplatesCreate.vue'
+import AdminTemplatesTypes from '@/views/admin/templateBuilder/templateTypes/AdminTemplatesTypes.vue'
+import AdminTemplatesControls from '@/views/admin/templateBuilder/customControls/AdminTemplatesControls.vue'
+import AdminTemplatesControlsCreate from '@/views/admin/templateBuilder/customControls/AdminTemplatesControlsCreate.vue'
+import AdminTemplatesControlsEdit from '@/views/admin/templateBuilder/customControls/AdminTemplatesControlsEdit.vue'
 import AppLogin from '@/views/AppLogin.vue'
 
 import { authenticationGuard } from "@/auth/auth-guard";
@@ -25,50 +28,90 @@ const routes = [
       path: '/admin',
       name: 'admin',
       component: Admin,
-      redirect: '/admin/dashboard',
+      redirect: 'admin/projects',
       beforeEnter: authenticationGuard,
+      meta: {
+        breadcrumb:{
+          label: 'Admin',
+        }
+      },
       children:[
         {
-          path: '/admin/dashboard',
-          component:AdminDashboard 
+          path: 'projects',
+          name: 'projects',
+          component:AdminProjectsHome,
+          meta: {
+            breadcrumb:{
+              label: 'Projects',
+              parent: 'admin'
+            }
+          },
         },
         {
-          path: '/admin/users',
-          component:AdminUsers
+          path: '/project/:id',
+          component:AdminProjects,
+          redirect: '/admin/project/:id/dashboard',
+          meta: {
+            breadcrumb: 'Project'
+          },
+          children:[
+            {
+              path: '/admin/project/:id/dashboard',
+              component:AdminDashboard ,
+              meta: {
+                breadcrumb: {
+                  label: 'Dashboard',
+                  parent: 'Project'
+                }
+              },
+            },
+            {
+              path: '/admin/project/:id/templates',
+              name: 'templates',
+              component:AdminTemplates,
+            },
+            {
+              path: '/admin/project/:id/templates/edit-template/:id',
+              name: 'templates-edit',
+              component:AdminTemplatesCreate
+            },
+            {
+              path: '/admin/project/:id/types',
+              name: 'types',
+              component:AdminTemplatesTypes,
+              meta: {
+                breadcrumb: {
+                  label: 'Types',
+       
+                }
+              },
+            },
+            {
+              path: '/admin/project/:id/custom-controls',
+              name: 'controls',
+              component:AdminTemplatesControls,
+            },
+            {
+              path: '/admin/project/:id/custom-controls/create',
+              name: 'controls-create',
+              component:AdminTemplatesControlsCreate,
+            },
+            {
+              path: '/admin/project/:id/custom-controls/edit/:controlId',
+              name: 'controls-edit',
+              component:AdminTemplatesControlsEdit,
+            },
+            {
+              path: '/admin/project/:id/forms',
+              component:AdminForms
+            },
+            {
+              path: '/admin/project/:id/users',
+              component:AdminUsers
+            },
+          ],
         },
-        {
-          path: '/admin/pages',
-          component:AdminPages
-        },
-        {
-          path: '/admin/forms',
-          component:AdminForms
-        },
-        {
-          path: '/admin/templates',
-          name: 'templates',
-          component:AdminTemplates,
-        },
-        {
-          path: '/admin/custom-controls',
-          name: 'controls',
-          component:AdminTemplatesControls,
-        },
-        {
-          path: '/admin/custom-controls/create',
-          name: 'controls-create',
-          component:AdminTemplatesControlsCreate,
-        },
-        {
-          path: '/admin/templates/edit-template/:id',
-          name: 'templates-edit',
-          component:AdminTemplatesCreate
-        },
-        {
-          path: '/admin/create-template',
-          name: 'templates-create',
-          component:AdminTemplatesCreate
-        }
+      
       ]
     },
     {

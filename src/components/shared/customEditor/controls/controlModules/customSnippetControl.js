@@ -1,5 +1,5 @@
 import Quill from "quill";
-const Block = Quill.import('blots/block');
+const Block = Quill.import('blots/block/embed');
 
 class CustomSnippetControl extends Block {
 
@@ -9,8 +9,8 @@ class CustomSnippetControl extends Block {
     node.setAttribute('class', value.class);
     node.setAttribute('id', value.id);
     node.setAttribute('data-section', value.section);
-    node.setAttribute('data-control', value.content);
-    node.setAttribute('style', 'cursor: pointer;');
+    node.setAttribute('data-control', value.control);
+    node.innerHTML = `${value.content}`;
     node.addEventListener('click', function(e) { 
       console.log("blot clicked", {e, value}); 
     });
@@ -18,8 +18,7 @@ class CustomSnippetControl extends Block {
 
   }
   static formats(domNode) {
-    // console.log(domNode)
-    return domNode.getAttribute("class");
+    return domNode.getAttribute("div");
   }
 
   format(name, value) {
@@ -28,7 +27,7 @@ class CustomSnippetControl extends Block {
       this.domNode.setAttribute('class', value.class);
       this.domNode.setAttribute('id', value.id);
       this.domNode.setAttribute('data-section', value.section);
-      this.domNode.setAttribute('data-control', value.content);  
+      this.domNode.setAttribute('data-control', value.control);  
     }
   }
 
@@ -38,7 +37,7 @@ class CustomSnippetControl extends Block {
 
 }
 
-CustomSnippetControl.blotName = 'DynamicControlNew'
-CustomSnippetControl.tagName = 'p';
+CustomSnippetControl.blotName = 'customSnippetControl'
+CustomSnippetControl.tagName = 'div';
 
 export {CustomSnippetControl};

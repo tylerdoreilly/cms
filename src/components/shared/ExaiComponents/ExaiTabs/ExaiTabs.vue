@@ -45,11 +45,11 @@
     flex-direction:row;
     gap:15px;
     border-bottom:1px solid $border;
-    margin-bottom:15px;
+    margin-bottom:20px;
   }
 
   .exai-tabs__item{
-    padding:4px;
+    padding:4px 4px 8px 4px;
     cursor:pointer;
     &--selected{
       border-bottom:2px solid $keppel

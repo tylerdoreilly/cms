@@ -1,26 +1,17 @@
 <template>
   <exai-loader v-if="loading"></exai-loader>
   <div v-else>
-    <page-layout>
+    <page-layout center>
       <template v-slot:content>
         <PageHeader title="Users">
         </PageHeader>
         <UsersList v-if="users.length > 0" :users="users" />
-          <popover name="example">
-            <div slot="content">
-              <ul>
-                <li><a href="#">npmjs.com</a></li>
-                <li><a href="#">github.com</a></li>
-              </ul>
-            </div>
-          </popover>
       </template>
     </page-layout>
   </div>
 </template>
 
 <script>
-  import popover from 'vue-popover'
   import UsersList from '../../components/UsersList.vue'
   import PageHeader from '../../components/layout/PageHeader.vue';
   import PageLayout from '../../components/layout/PageLayout.vue';
@@ -34,7 +25,6 @@
       PageHeader,
       PageLayout,
       ExaiLoader,
-      popover
     },
     data() {
         return {

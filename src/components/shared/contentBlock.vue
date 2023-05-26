@@ -31,7 +31,7 @@
 <style lang="scss" module>
   .content-block{
     @include flex(flex, column, $gap: 15px);
-    background:$white-smoke;
+    border:1px solid $border;
     padding:15px;
     overflow-y:auto;
   }

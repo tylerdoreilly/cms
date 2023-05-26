@@ -1,29 +1,32 @@
 <template>
   <exai-loader v-if="loading"></exai-loader>
   <div v-else>
-    <page-layout>
+
+    <page-layout center>
       <template v-slot:content>
-        <PageHeader title="Templates">
-          <exai-button text="Create Template" variation="primary" @click.native="openCreateModal()"></exai-button>
+        <PageHeader title="Template Types">
+          <exai-button text="Create Type" variation="primary" @click.native="openCreateModal()"></exai-button>
         </PageHeader>
 
         <exai-tabs>
-            <exai-tab title="Manage Templates">
-              <TemplatesList 
-                :templates="templates"
+            <exai-tab title="Manage Types">
+              <TemplatesTypesList 
+                :types="templateTypes"
                 @open-clone-template="openCloneModal($event)"
                 @open-delete-template="openDeletePrompt($event)">
-              </TemplatesList>
+              </TemplatesTypesList>
             </exai-tab>
-            <exai-tab title="Manage Custom Controls">
-              <template-custom-controls-list 
+            <exai-tab title="Global Settings">
+              <!-- <template-custom-controls-list 
                 :customControls="customControls">
-              </template-custom-controls-list>
+              </template-custom-controls-list> -->
             </exai-tab>
         </exai-tabs>
       
       </template>
     </page-layout>
+
+   
          
     <template-form
       v-if="createTemplate"
@@ -59,53 +62,44 @@
 
   //Components
   import { PageLayout, PageHeader } from '@/components/layout/index.js';
-  import { ExaiButton, ExaiLoader, ExaiPrompt, ExaiTabs, ExaiTab } from '@/components/shared/ExaiComponents/index.js';
-  import { TemplatesList, TemplateForm, TemplateCustomControlsList } from '@/components/templates/index.js';
+  import { TemplatesTypesList, TemplateForm } from '@/components/templates/index.js';
 
   // Services
-  import { getTemplatesList, deleteTemplate } from '../../../services/TemplatesService';
+  import { getTemplateTypes } from '@/services/TemplatesService';
 
   const axios = require('axios');
 
   export default {
-    name: 'AdminTemplates',
+    name: 'AdminTemplatesTypes',
     components: {
-      TemplatesList,
-      TemplateCustomControlsList,
+      TemplatesTypesList,
       TemplateForm,
       PageHeader,
       PageLayout,
-      ExaiButton,
-      ExaiLoader,
-      ExaiPrompt,
-      ExaiTabs, ExaiTab
     },
+
     data() {
         return {
             createTemplate:false,
             cloneTemplate:false,
             showdeleteTemplate:false,
             loading:false,
-            templates: [],
-            customControls:[],
             templateTypes: [],
-            numberOfTemplates: 0,
             template:'',
             action:'',
+            id: this.$route.params.id,
         }
     },
+    
     methods: {
       async getAllData() {
+
         this.loading = true;
-        getTemplatesList().then(
-          axios.spread(({data: templates}, {data:templateTypes}, {data:customContols}) => {
-            console.log({templates, templateTypes, customContols});
-            this.templates = templates;
-            this.numberOfTemplates = this.templates.length;
-            this.templateTypes = templateTypes;
-            this.customControls = customContols;
-          })
-        )
+
+        getTemplateTypes().then(response => {
+          console.log(response)
+          this.templateTypes = response
+        })
         .catch(error => {console.log(error) })
         .finally(() => (this.loading = false))
       },
@@ -149,15 +143,15 @@
         }
       },
 
-      async deleteSelectedTemplate(data) {
-        console.log('delete template',data)
-        this.loading = true;
-        deleteTemplate(data.id).then(
-         console.log('deleted')
-        )
-        .catch(error => {console.log(error) })
-        .finally(() => (this.loading = false))
-      },
+      // async deleteSelectedTemplate(data) {
+      //   console.log('delete template',data)
+      //   this.loading = true;
+      //   deleteTemplate(data.id).then(
+      //    console.log('deleted')
+      //   )
+      //   .catch(error => {console.log(error) })
+      //   .finally(() => (this.loading = false))
+      // },
 
       openCreateModal(){
         this.createTemplate = true;
@@ -188,19 +182,5 @@
 </script>
 
 
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style lang="scss">
 </style>

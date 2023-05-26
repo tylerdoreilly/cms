@@ -20,8 +20,6 @@
 </template>
   
 <script>
-  import ExaiButton from '../shared/ExaiComponents/ExaiButton.vue';
-  import ExaiModal from '../shared/ExaiComponents/ExaiModal.vue';
   import ExaiForm from '../shared/forms/ExaiForm.vue';
   import ExaiFormGroup from '../shared/forms/ExaiFormGroup.vue';
   import ExaiFieldLabel from '../shared/forms/ExaiFieldLabel.vue';
@@ -30,8 +28,6 @@
   export default {
     name: 'template-save-custom-item',
     components:{
-        ExaiModal,
-        ExaiButton,
         ExaiForm,
         ExaiFormGroup,
         ExaiFieldLabel,

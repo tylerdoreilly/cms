@@ -1,20 +1,20 @@
 <template>
   <exai-form-group>
 
-    <exai-field-label :text="label" :for="id" :required="required"></exai-field-label>
+    <exai-field-label :text="data.label" :for="data.id" :required="data.required"></exai-field-label>
 
     <select 
       :class="[$style['exai-select'], classModifiers]"
-      :id="id"
-      v-model="selectedType"
-      @change="$emit('select', $event.target.value)">
+      :id="data.id"
+      v-model="data.value" 
+      @change="updateValue">
 
-      <option value="" disabled selected>{{ placeholder }}</option>
-      <option v-for="option in options" :key="option.id" v-bind:value="option.id" >{{ getDisplayName(option) }}</option>
+      <option value="" disabled selected>{{ data.placeholder }}</option>
+      <option v-for="option in data.options" :key="option.id" v-bind:value="option.id" >{{ option[data.displayName] }}</option>
     </select>
 
-    <template v-for="error in errors">
-      <template v-if="error.hasError">
+    <template v-for="error in data.errors">
+      <template v-if="handleErrors(error)">
         <exai-field-error :text="error.msg" :key="error.id"></exai-field-error>
       </template>
     </template>
@@ -37,6 +37,14 @@
     },
 
     props:{
+      fieldData: {
+        type: Object,
+        docs:{
+          validation:'_',
+          description: 'Input Label'
+        }
+      },
+
       label: {
         type: String,
         docs:{
@@ -100,21 +108,29 @@
 
     data() {
         return {
-            selectedType: this.selection,
+            data: this.fieldData,
+            selectedType: this.fieldData.value,
         }
     },
 
     methods:{
-      getDisplayName(option){
-        let displayOption = option[this.displayName];     
-        return displayOption;
+      updateValue (event) {
+        this.$emit('select', event.target.value);
       },
+
+      handleErrors(error){     
+       if (error.hasError && this.data.value) {
+        return false
+       }else{
+        return error.hasError
+       }
+      }
     },
 
     computed:{
       classModifiers(){
         const obj = {}
-        obj[this.$style['exai-select--required']] = this.errors.some(error => error.hasError === true);
+        obj[this.$style['exai-select--required']] = this.data.errors.some(error => error.hasError === true) && !this.data.value;
         return obj
       },
     },

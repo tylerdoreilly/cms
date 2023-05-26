@@ -124,11 +124,12 @@
    .quillWrapper.custom .ql-snow.ql-toolbar {
         padding-top: 8px;
         padding-bottom: 4px;
-        border-bottom:0px;
+        border-bottom:1px solid $border;
         border-top:1px solid $border !important;
-        border-left:1px solid $border !important;
-        border-right:1px solid $border !important;
+        border-left:0px solid $border !important;
+        border-right:0px solid $border !important;
         background:$template-background;
+        margin-bottom:0px;
     }
 
     .dynamic-control{
