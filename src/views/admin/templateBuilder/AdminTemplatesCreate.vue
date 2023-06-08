@@ -10,13 +10,7 @@
         </template-header>
 
         <template-container>
-          <custom-editor-new 
-            v-model="content"
-            :data="content"
-            :customControls="customControls"
-            :buttonList="customToolbarButtons"
-            :editorId="getTemplateId">
-          </custom-editor-new>
+          <exai-editor v-model="content" :data="content" :customControls="customControls" ref="editor"/>
         </template-container>
       </template>
 
@@ -25,16 +19,6 @@
       </template>
 
     </page-layout>
-
-    <exai-prompt 
-      v-if="itemToRemove"
-      v-show="showPrompt"
-      title="Remove Template Item" 
-      message="Are you sure you want to remove this item?" 
-      :data="itemToRemove"
-      @close-modal="showPrompt = false" 
-      @close-and-submit="removeItem($event)">
-    </exai-prompt>
 
     <exai-prompt 
       v-if="generateDoc"
@@ -62,18 +46,19 @@
 </template>
 
 <script>
+  // Components
   import PageLayout from '@/components/layout/PageLayout.vue';
   import TemplateHeader from '@/components/layout/TemplateHeader.vue';
   import TemplateContainer from '@/components/templates/TemplateContainer.vue';
   import TemplateDetails from '@/components/templates/TemplateDetails.vue';
   import TemplateDetailsEdit from '@/components/templates/TemplateDetailsEdit.vue';
   import TemplateSaveCustomItem from '@/components/templates/TemplateSaveCustomItem.vue';
+  import ExaiEditor from '@/components/shared/customEditor/ExaiEditor.vue';
 
-  import { ExaiButton, ExaiPrompt, ExaiLoader } from '@/components/shared/ExaiComponents/index.js'
+  // Services
   import { getAllTemplateData, getImage } from '@/services/TemplatesService';
   import { transformTemplateData }  from '@/utility/templateGenerator/contentTransform.js';
-  import customEditorNew from '@/components/shared/customEditor/customEditorNew.vue';
-
+  
 
   import * as docx from "docx";
   import { saveAs } from "file-saver";
@@ -89,11 +74,8 @@
       TemplateContainer,
       TemplateDetailsEdit,
       TemplateSaveCustomItem,   
-      ExaiButton,
-      ExaiLoader,
-      ExaiPrompt,
-      customEditorNew,
-      TemplateDetails
+      TemplateDetails,
+      ExaiEditor
     },
 
     data() {
@@ -154,28 +136,6 @@
     },
 
     methods: {
-   
-      generateId: function (elem) {
-        let randomId = Math.random() * Math.floor(1000);
-        elem['id'] = Math.round(randomId);
-        return elem
-      },
-
-      // Other Methods
-      checkBeforeRemove(event){
-        const elem = this.items.find(item => item.id == event)
-        this.itemToRemove = elem;
-        this.showPrompt = true;
-      },
-
-      removeItem(event){
-        console.log('parent remove',event)
-        const index = this.items.indexOf(event);
-        if (index > -1) {
-          this.items.splice(index, 1);
-        }
-        this.showPrompt = false;
-      },
 
       getDate(){
         let currentDate = new Date(Date.now()).toISOString();
@@ -199,13 +159,12 @@
 
       // Get and Save
       async saveTemplate(){
-        this.template.data = [];
-        let templateData = this.content;
-        
-        if (this.id) {
-          this.template.data = templateData;
-          const putData = this.template;
+        let templateData = this.$refs.editor.editorData;
+        this.template.data.content = templateData;
 
+        if (this.id) {         
+          const putData = this.template;
+          console.log('putData',putData)
           try {
             await axios.put(`/api/templateData/${this.id}`, putData, {
               headers: {
@@ -432,8 +391,8 @@
  #createTemplate .exai-tabs__list{
   margin-bottom:0px;
   border-bottom:0px;
-  padding-left:20px;
-  padding-right:20px;
+  padding-left:40px;
+  padding-right:40px;
  }
 
 

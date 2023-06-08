@@ -43,6 +43,7 @@ import {
 import { authConfig } from '../auth_config.js';
 import { Auth0Plugin } from '@/auth/auth0-plugin';
 import VueBreadcrumbs from 'vue-2-breadcrumbs';
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 // Exai Components
 import '@/components/shared/ExaiComponents';
@@ -89,6 +90,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(Toast, options);
 Vue.use(Popover);
+Vue.use(CKEditor);
 Vue.use(VueBreadcrumbs);
 Vue.use(Auth0Plugin, {
   authConfig,

@@ -8,16 +8,6 @@
       :data="content"
       icon="fa-layer-group"
       @edit-mode="toggleEditMode($event)">
-       
-        <custom-editor  
-          v-model="content.content"
-          :data="content"
-          :editMode="editMode"
-          :showDetails="showDetails"
-          :buttonList="customToolbarButtons"
-          :editorId="getTemplateId"
-          controlType="textBlock">
-        </custom-editor>
       
     </TemplateObject>  
   </div>
@@ -28,13 +18,11 @@
 </template>
 
 <script>
-  import customEditor from '../../shared/customEditor/customEditor.vue'
   import TemplateObject from '../templateObject/TemplateObject.vue'
 
   export default {
     name: 'TemplateItemTextBlock',
-    components: {   
-      customEditor,     
+    components: {     
       TemplateObject, 
     },
     props: {

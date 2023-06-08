@@ -9,15 +9,6 @@
       icon="fa-list"
       @edit-mode="toggleEditMode($event)">
      
-        <custom-editor 
-          v-model="content.content"
-          :data="content"
-          :editMode="editMode"
-          :showDetails="showDetails"
-          :buttonList="customToolbarButtons"
-          :editorId="getTemplateId">
-        </custom-editor>
-        
     </TemplateObject>  
   </div>
   <div v-else>
@@ -27,13 +18,11 @@
 </template>
 
 <script>
-  import customEditor from '../../shared/customEditor/customEditor.vue'
   import TemplateObject from '../templateObject/TemplateObject.vue'
 
   export default {
     name: 'TemplateItemList',
     components: {
-      customEditor,
       TemplateObject, 
     },
     props: {

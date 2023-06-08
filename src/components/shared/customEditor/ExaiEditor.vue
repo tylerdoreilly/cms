@@ -1,6 +1,16 @@
-<template>  
-    <div>
-        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor" @ready="onReady"></ckeditor>
+<template>
+    <div class="custom-editor-wrapper">
+        <exai-tabs>
+            <exai-tab title="Editor">
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor" @ready="onReady"></ckeditor>
+            </exai-tab>
+            <exai-tab title="Preview">
+                <document-preview :data="content.content"></document-preview>
+            </exai-tab>
+            <exai-tab title="HTML">
+                <html-viewer :data="content.content"></html-viewer>
+            </exai-tab>
+        </exai-tabs>
 
         <insert-custom-content-modal 
             v-if="customTemplateControls && showCustomContentModal"
@@ -13,7 +23,7 @@
 </template>
 
 <script>
- // ckEditor
+    // ckEditor
     import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
     import { Essentials } from '@ckeditor/ckeditor5-essentials';
     import { Heading } from '@ckeditor/ckeditor5-heading';
@@ -32,20 +42,24 @@
     import { HtmlEmbed } from '@ckeditor/ckeditor5-html-embed';
 
     //ckEditor Custom Modules
-    import SimpleBox from '@/components/shared/customEditor/controls/controlModules/simpleBox/simplebox'; 
-    import CustomControl from '@/components/shared/customEditor/controls/controlModules/customControls/customControl'; 
-    import SnippetControl from '@/components/shared/customEditor/controls/controlModules/snippetControl/snippetControl'; 
-    import DynamicControlInline from '@/components/shared/customEditor/controls/controlModules/dynamicControlInline/dynamicControlInline'; 
-    import DynamicControlBlock from '@/components/shared/customEditor/controls/controlModules/dynamicControlBlock/dynamicControlBlock'; 
-    import { customControlEventBus } from '@/components/shared/customEditor/controls/controlModules/customControls/customControlEventBus';
-   
+    import SimpleBox from './controls/controlModules/simpleBox/simplebox'; 
+    import CustomControl from './controls/controlModules/customControls/customControl'; 
+    import SnippetControl from './controls/controlModules/snippetControl/snippetControl'; 
+    import DynamicControlInline from './controls/controlModules/dynamicControlInline/dynamicControlInline'; 
+    import DynamicControlBlock from './controls/controlModules/dynamicControlBlock/dynamicControlBlock'; 
+    import { customControlEventBus } from './controls/controlModules/customControls/customControlEventBus';
+
     // Components
-    import InsertCustomContentModal from '@/components/shared/customEditor/modals/InsertCustomContentModal.vue';   
+    import InsertCustomContentModal from './modals/InsertCustomContentModal.vue';   
+    import DocumentPreview from '../../templates/DocumentPreview.vue';
+    import HtmlViewer from './HtmlViewer.vue';
 
     export default {
-        name: 'custom-control-editor',
+        name: 'exai-editor',
         components: {
             InsertCustomContentModal,
+            HtmlViewer,
+            DocumentPreview
         },
 
         props:{
@@ -53,7 +67,7 @@
                 type: Object
             },
             data:{
-                type:[Object, Array, String]
+                type:[Object, Array]
             },
             contentType:{
                 type:String
@@ -219,11 +233,11 @@
         },
 
         methods: {
-            onReady( editor ) {
+            onReady(editor) {
                 this.editorApi = editor;
             },
 
-            openCustomContentModal() {
+            openCustomContentModal(){
                 this.showCustomContentModal = true;
             },
 
@@ -244,6 +258,8 @@
                     }
                     
                 }
+               
+                
             },
 
             insertInlineControl( control ) {
@@ -254,17 +270,18 @@
                 this.editorApi.execute( 'insertDynamicControlBlock', control )
             },
 
-            insertCustomSnippetControl( control ) {
+            insertCustomSnippetControl(control){
                 this.editorApi.execute( 'insertSnippetControl', control )
             },
 
-            editControl() {                
+            editControl(){                
                 customControlEventBus.$on('edit-control', (data) => {
                     console.log('control data test',data);
                     if(data === true) {
                         this.openCustomContentModal();
                     }
-                });
+                   
+                })
             },
         },
 
@@ -285,11 +302,51 @@
     gap:15px;
   }
 
-//   .custom-editor-wrapper .ql-toolbar.ql-snow {
-//     border: 0px solid #ccc !important;
-//     }
+  .custom-editor-wrapper .ck.ck-editor__top.ck-reset_all{
+    border-bottom:1px solid #ccced1;
+  }
+
+  .custom-editor-wrapper .ck.ck-editor__top .ck-sticky-panel .ck-toolbar, 
+  .custom-editor-wrapper .ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners{
+    padding-top:4px;
+    padding-bottom:4px;
+    padding-left:40px;
+    padding-right:40px;
+    border-left:0px !important;
+    border-right:0px !important;
+  }
+
+  .custom-editor-wrapper .ck.ck-editor__main{
+    min-height:calc(100vh - 268px);
+    height:calc(100vh - 268px);
+    overflow-y:auto;
+    border:0px;
+    background:lighten($default-background, 20%);
+    background:$default-background;
+  }
+
+  .custom-editor-wrapper .ck.ck-content.ck-editor__editable{
+    width:1200px;
+    margin:0 auto;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding-top:40px;
+    padding-left:60px;
+    padding-right:60px;
+    min-height:calc(100vh - 250px) !important;
+    height:auto !important;
+    overflow-y:hidden;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  }
+
 
 .custom-editor-wrapper .exai-tabs__list{
     margin-bottom:20px;
+}
+
+
+.dynamic-control-block-content,
+.dynami-control-inline{
+    color:red;
 }
 </style>
