@@ -29,7 +29,8 @@
                             v-model="formItem.value"
                             :data="formItem.value"
                             :customControls="customControls"
-                            :buttonList="customToolbarButtons">
+                            :buttonList="customToolbarButtons"
+                            ref="controlEditor">
                         </custom-control-editor>
                     </exai-form-group>
                 </template>
@@ -257,16 +258,16 @@
                 let control = this.formSettings.find(item => item.id === 'controlType').value;
                 let published = this.formSettings.find(item => item.id === 'state');
                 let asOfDate = this.formSettings.find(item => item.id === 'asOf').value;
-                let content = this.formSettings.find(item => item.id === 'controlContent').value;
-
+                let content = this.$refs.controlEditor[0].editorData;
+                
                 this.controlData.name = name;
                 this.controlData.description = description;
                 this.controlData.field = field;
                 this.controlData.control = control;
                 this.controlData.published = this.getPublishState(published);
                 this.controlData.date_asof = this.formatOutgoingDate(asOfDate);
-                this.controlData.content = content.content;
-              
+                this.controlData.content = content;
+               
                 console.log('updated control', this.controlData);
 
                 this.submitAction();
