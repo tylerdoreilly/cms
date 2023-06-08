@@ -8,28 +8,17 @@
       :data="content"
       icon="fa-header" 
       @edit-mode="toggleEditMode($event)">
-
-        <custom-editor  
-          v-model="content.content"
-          :data="content"
-          :editMode="editMode"
-          :showDetails="showDetails"
-          :buttonList="customToolbarButtons"
-          :editorId="getTemplateId">
-        </custom-editor>
        
     </TemplateObject>  
   </div>
 </template>
 
 <script>
-import customEditor from '../../shared/customEditor/customEditor.vue'
 import TemplateObject from '../templateObject/TemplateObject.vue'
 
 export default {  
   name: 'TemplateHeading',
-  components: {
-    customEditor,   
+  components: {  
     TemplateObject, 
   },
   props: {
