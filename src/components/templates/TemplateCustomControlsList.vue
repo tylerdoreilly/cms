@@ -85,23 +85,30 @@
             filteredData() {
                 let tempData = this.data
                 
+                // Set initial sort order - ascending
+                tempData.sort( ( a, b ) => {
+                    if ( a.id < b.id ) return -1;
+                    if ( a.id > b.id ) return 1;
+                    return 0;
+                });
+
                 // Process search input
-                if (this.searchValue != '' && this.searchValue) {
-                    tempData = tempData.filter((item) => {
+                if ( this.searchValue != '' && this.searchValue ) {
+                    tempData = tempData.filter( ( item ) => {
                     return item.title
                         .toUpperCase()
-                        .includes(this.searchValue.toUpperCase())
+                        .includes( this.searchValue.toUpperCase() )
                     })
                 }
                 
-                // Filter out by cooking time
+                // Filter out by status
                 if (this.statusFilter)
-                tempData = tempData.filter((item) => {
-                    if (this.statusFilter === 'Active') {
-                        return (item.published === true)
+                tempData = tempData.filter( ( item ) => {
+                    if ( this.statusFilter === 'Active' ) {
+                        return ( item.published === true )
                     }
-                    if (this.statusFilter === 'In Active') {
-                        return (item.published === false)
+                    if ( this.statusFilter === 'In Active' ) {
+                        return ( item.published === false )
                     } else {
                         return item
                     }
