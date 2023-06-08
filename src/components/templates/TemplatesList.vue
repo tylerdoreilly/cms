@@ -27,7 +27,7 @@
                 </th>
                 <th class="table-th" style="width:40px"><div class="table-th__inner"><span class="table-th__text">Id</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Type</span></div></th>
-                <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Title</span></div></th>
+                <th class="table-th" style="width:30%"><div class="table-th__inner"><span class="table-th__text">Title</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Status</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">As of Date</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Created</span></div></th>
@@ -42,7 +42,7 @@
                     </td>
                     <td class="table-td" style="width:40px">{{ item.id }}</td>
                     <td class="table-td">{{ item.templateType.type }}</td> 
-                    <td class="table-td">{{ item.title }}</td>
+                    <td class="table-td" style="width:30%">{{ item.title }}</td>
                     <td class="table-td" >
                         <template v-if="item.active === true">Active</template>
                         <template v-else>In Active</template>
@@ -53,8 +53,6 @@
                     <td class="table-td">
                         <div class="table-actions">
                             <router-link class="table__link" :to="'/admin/project/' + id + '/templates/edit-template/' + item.id">Edit</router-link>
-                            <a @click.prevent="openCloneTemplate(item)">Clone</a>
-                            <a @click.prevent="openDeleteTemplate(item)">Delete</a>
                         </div>
                     
                     </td>
