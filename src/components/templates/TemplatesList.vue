@@ -27,7 +27,7 @@
                 </th>
                 <th class="table-th" style="width:40px"><div class="table-th__inner"><span class="table-th__text">Id</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Type</span></div></th>
-                <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Title</span></div></th>
+                <th class="table-th" style="width:30%"><div class="table-th__inner"><span class="table-th__text">Title</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Status</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">As of Date</span></div></th>
                 <th class="table-th"><div class="table-th__inner"><span class="table-th__text">Created</span></div></th>
@@ -42,7 +42,7 @@
                     </td>
                     <td class="table-td" style="width:40px">{{ item.id }}</td>
                     <td class="table-td">{{ item.templateType.type }}</td> 
-                    <td class="table-td">{{ item.title }}</td>
+                    <td class="table-td" style="width:30%">{{ item.title }}</td>
                     <td class="table-td" >
                         <template v-if="item.active === true">Active</template>
                         <template v-else>In Active</template>
@@ -53,8 +53,6 @@
                     <td class="table-td">
                         <div class="table-actions">
                             <router-link class="table__link" :to="'/admin/project/' + id + '/templates/edit-template/' + item.id">Edit</router-link>
-                            <a @click.prevent="openCloneTemplate(item)">Clone</a>
-                            <a @click.prevent="openDeleteTemplate(item)">Delete</a>
                         </div>
                     
                     </td>
@@ -68,8 +66,6 @@
 <script>
     import dateFormat from '../shared/dateFormat.vue'
     
-    
-
     export default {
         name: 'TemplatesList',
         components:{
@@ -81,7 +77,7 @@
         data() {
             return {
                 data: this.templates,
-                statusFilter:'All',
+                statusFilter: 'All',
                 searchValue: '',
                 selected: [],
                 allSelected: false,
@@ -92,29 +88,37 @@
         computed: {
             filteredData() {
                 let tempData = this.data
-                
+
+                // Set initial sort order - ascending
+                tempData.sort( ( a, b ) => {
+                    if ( a.id < b.id ) return -1;
+                    if ( a.id > b.id ) return 1;
+                    return 0;
+                });
+
                 // Process search input
-                if (this.searchValue != '' && this.searchValue) {
-                    tempData = tempData.filter((item) => {
+                if ( this.searchValue != '' && this.searchValue ) {
+                    tempData = tempData.filter( ( item ) => {
                     return item.title
                         .toUpperCase()
-                        .includes(this.searchValue.toUpperCase())
+                        .includes( this.searchValue.toUpperCase() )
                     })
                 }
                 
-                // Filter out by cooking time
-                if (this.statusFilter)
-                tempData = tempData.filter((item) => {
-                    if (this.statusFilter === 'Active') {
-                        return (item.active === true)
-                    }
-                    if (this.statusFilter === 'In Active') {
-                        return (item.active === false)
-                    } else {
-                        return item
-                    }
-                })
-             
+                // Filter out by status
+                if ( this.statusFilter ) {
+                    tempData = tempData.filter( ( item ) => {
+                        if ( this.statusFilter === 'Active' ) {
+                            return ( item.active === true )
+                        }
+                        if ( this.statusFilter === 'In Active' ) {
+                            return ( item.active === false )
+                        } else {
+                            return item
+                        }
+                    });
+                }
+                             
                 return tempData
             },
 

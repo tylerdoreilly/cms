@@ -4,24 +4,17 @@
 
     <page-layout center>
       <template v-slot:content>
-        <PageHeader title="Templates">
+        <PageHeader title="Templates" hasBorder>
+          <template #description>
+            Create reusable dynamic templates for export to Word or PDF.
+          </template>
           <exai-button text="Create Template" variation="primary" @click.native="openCreateModal()"></exai-button>
         </PageHeader>
 
-        <exai-tabs>
-            <exai-tab title="Manage Templates">
-              <TemplatesList 
-                :templates="templates"
-                @open-clone-template="openCloneModal($event)"
-                @open-delete-template="openDeletePrompt($event)">
-              </TemplatesList>
-            </exai-tab>
-            <exai-tab title="Global Settings">
-              <template-custom-controls-list 
-                :customControls="customControls">
-              </template-custom-controls-list>
-            </exai-tab>
-        </exai-tabs>
+        <TemplatesList 
+          :templates="templates"
+          @open-clone-template="openCloneModal($event)"
+          @open-delete-template="openDeletePrompt($event)" />
       
       </template>
     </page-layout>
@@ -62,7 +55,7 @@
 
   //Components
   import { PageLayout, PageHeader } from '@/components/layout/index.js';
-  import { TemplatesList, TemplateForm, TemplateCustomControlsList } from '@/components/templates/index.js';
+  import { TemplatesList, TemplateForm } from '@/components/templates/index.js';
 
   // Services
   import { getTemplatesList, deleteTemplate } from '../../../services/TemplatesService';
@@ -73,7 +66,6 @@
     name: 'AdminTemplates',
     components: {
       TemplatesList,
-      TemplateCustomControlsList,
       TemplateForm,
       PageHeader,
       PageLayout,

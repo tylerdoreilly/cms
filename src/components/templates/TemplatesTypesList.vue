@@ -78,7 +78,7 @@
         data() {
             return {
                 data: this.types,
-                statusFilter:'All',
+                statusFilter: 'All',
                 searchValue: '',
                 selected: [],
                 allSelected: false,
@@ -89,9 +89,16 @@
         computed: {
             filteredData() {
                 let tempData = this.data
+
+                 // Set initial sort order - ascending
+                 tempData.sort( ( a, b ) => {
+                    if ( a.id < b.id ) return -1;
+                    if ( a.id > b.id ) return 1;
+                    return 0;
+                });
                 
                 // Process search input
-                if (this.searchValue != '' && this.searchValue) {
+                if ( this.searchValue != '' && this.searchValue ) {
                     tempData = tempData.filter((item) => {
                     return item.title
                         .toUpperCase()
@@ -99,25 +106,26 @@
                     })
                 }
                 
-                // Filter out by cooking time
-                if (this.statusFilter)
-                tempData = tempData.filter((item) => {
-                    if (this.statusFilter === 'Active') {
-                        return (item.active === true)
-                    }
-                    if (this.statusFilter === 'In Active') {
-                        return (item.active === false)
-                    } else {
-                        return item
-                    }
-                })
-             
+                // Filter out by status
+                if ( this.statusFilter ) {
+                    tempData = tempData.filter( ( item ) => {
+                        if ( this.statusFilter === 'Active' ) {
+                            return ( item.active === true )
+                        }
+                        if ( this.statusFilter === 'In Active' ) {
+                            return ( item.active === false )
+                        } else {
+                            return item
+                        }
+                    });
+                }
+                           
                 return tempData
             },
 
             cloneDisabled(){
                 let isDisabled
-                if (this.selectedIds.length === 0 || this.selectedIds.length > 1) {
+                if ( this.selectedIds.length === 0 || this.selectedIds.length > 1 ) {
                     isDisabled = true
                 } else {
                     isDisabled = false
@@ -128,7 +136,7 @@
             deleteDisabled(){
                 // Todo: make this multi items
                 let isDisabled
-                if (this.selectedIds.length === 0 || this.selectedIds.length > 1) {
+                if ( this.selectedIds.length === 0 || this.selectedIds.length > 1 ) {
                     isDisabled = true
                 } else {
                     isDisabled = false
@@ -138,7 +146,7 @@
         },
 
         methods:{
-            getStatus(event){
+            getStatus( event ){
                 this.statusFilter = event;
             },
 
