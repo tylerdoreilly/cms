@@ -16,6 +16,7 @@
             v-if="customTemplateControls && showCustomContentModal"
             :sectionId="data.id" 
             :contentItems="customTemplateControls"
+            :selectedControlItem = "controlData"
             @close-modal="showCustomContentModal = false" 
             @submit-control="insertCustomControl($event)">
         </insert-custom-content-modal >
@@ -87,6 +88,7 @@
                 customTemplateControls: this.customControls,
                 showDynamicControlModal:false,
                 showCustomContentModal:false,
+                controlData: {},
                 edit:true,
                 editor: ClassicEditor,
                 editorData: this.data.content,
@@ -237,29 +239,34 @@
                 this.editorApi = editor;
             },
 
-            openCustomContentModal(){
-                this.showCustomContentModal = true;
+            openCustomContentModal(data){
+                if (data) {
+                    this.showCustomContentModal = true;
+                    this.controlData = data;
+                } else{
+                    this.showCustomContentModal = true;
+                }    
             },
 
             insertCustomControl( value ) {
                 console.log('modal value',value);
-                let type = value.type.toLowerCase();
+                let displayType = value.displayType.toLowerCase();
+                let controlType = value.controlType;
 
                 // Note: Need to work on these selectors
-
-                if(type == 'inline'){
+                if ( controlType === 'dynamic-control' ) {
+                    if(displayType == 'inline'){
                         this.insertInlineControl(value);
                     }
-                if(type == 'block'){
-                    if (value.class === 'text-snippet') {
-                        this.insertCustomSnippetControl(value);
-                    } else{
+                    if(displayType == 'block'){
                         this.insertBlockControl(value);
                     }
-                    
                 }
-               
-                
+
+                if ( controlType === 'text-snippet' ) {
+                    this.insertCustomSnippetControl(value);
+                }
+                              
             },
 
             insertInlineControl( control ) {
@@ -276,9 +283,12 @@
 
             editControl(){                
                 customControlEventBus.$on('edit-control', (data) => {
-                    console.log('control data test',data);
+
                     if(data === true) {
                         this.openCustomContentModal();
+                    }
+                    if(data.open === true) {
+                        this.openCustomContentModal(data);
                     }
                    
                 })

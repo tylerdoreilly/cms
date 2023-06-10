@@ -1,5 +1,3 @@
-// simplebox/simpleboxediting.js
-
 import { Plugin } from '@ckeditor/ckeditor5-core';
 import { Widget,toWidget,viewToModelPositionOutsideModelElement } from '@ckeditor/ckeditor5-widget';
 import { InsertDynamicControlInlineCommand }from './dynamicControlInlineCommand';
@@ -27,11 +25,8 @@ export default class DynamicControlInlineEditing extends Plugin {
         const schema = this.editor.model.schema;
 
         schema.register( 'dynamicControlInline', {
-            // Behaves like a self-contained inline object (e.g. an inline image)
-            // allowed in places where $text is allowed (e.g. in paragraphs).
-            // The inline widget can have the same attributes as text (for example linkHref, bold).
             inheritAllFrom: '$inlineObject',
-            allowAttributes: [ 'name', 'data-control', 'data-control-type' ]
+            allowAttributes: [ 'name', 'data-control', 'data-control-name', 'data-control-content', 'data-control-type' ]
         } );
       
     }
@@ -47,11 +42,15 @@ export default class DynamicControlInlineEditing extends Plugin {
             model: ( viewElement, { writer: modelWriter } ) => {
                 const name = viewElement.getChild( 0 ).data;
                 const dataControl = viewElement.getAttribute( 'data-control' );
+                const dataControlName = viewElement.getAttribute( 'data-control-name' );
+                const dataControlContent = viewElement.getAttribute( 'data-control-content' );
                 const dataControlType = viewElement.getAttribute( 'data-control-type' );
 
                 return modelWriter.createElement( 'dynamicControlInline', { 
                     name,
                     'data-control': dataControl,
+                    'data-control-name': dataControlName,
+                    'data-control-content': dataControlContent,
                     'data-control-type': dataControlType
                 } );
             }
@@ -76,11 +75,15 @@ export default class DynamicControlInlineEditing extends Plugin {
         function createPlaceholderView( modelItem, viewWriter ) {
             const name = modelItem.getAttribute( 'name' );
             const dataControl = modelItem.getAttribute( 'data-control' );
+            const dataControlName = modelItem.getAttribute( 'data-control-name' );
+            const dataControlContent = modelItem.getAttribute( 'data-control-content' );
             const dataControlType = modelItem.getAttribute( 'data-control-type' );
 
             const placeholderView = viewWriter.createContainerElement( 'span', {
                 class: 'dynami-control-inline',
                 'data-control': dataControl,
+                'data-control-name': dataControlName,
+                'data-control-content': dataControlContent,
                 'data-control-type': dataControlType
             } );
 

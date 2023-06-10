@@ -12,6 +12,7 @@ module.exports = {
     /ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/,
   ],
   configureWebpack: {
+    devtool: 'eval-source-map',
     resolve: {
         symlinks:true
     },

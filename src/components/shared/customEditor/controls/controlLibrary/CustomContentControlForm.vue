@@ -74,8 +74,8 @@
         },
 
         setData() {
-            this.controlType.class = this.data.control;
-             this.customControlContent = this.data.content;
+            this.controlType.controlType = this.data.control;
+            this.customControlContent = this.data.content;
         },
 
         clearForm(){

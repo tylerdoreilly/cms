@@ -18,14 +18,19 @@ export class InsertDynamicControlInlineCommand extends Command {
 }
 
 function createCustomControl( writer, control ) {
+    console.log('dude',control)
     const text = `${control.text}`;
-    const dataControl = `${control.text}`;
-    const dataControlType = 'text-snippet';
+    const dataControl = JSON.stringify(control);
+    const dataControlName = `${control.controlName}`;
+    const dataControlType = `${control.controlType}`;
+    const dataControlContent = `${control.text}`;
 
     const dynamicControlInline = writer.createElement( 'dynamicControlInline', {
         name: text,
         'data-control' : dataControl,
-        'data-control-type' : dataControlType
+        'data-control-name' : dataControlName,
+        'data-control-type' : dataControlType,
+        'data-control-content' : dataControlContent
     } );
 
     return dynamicControlInline;

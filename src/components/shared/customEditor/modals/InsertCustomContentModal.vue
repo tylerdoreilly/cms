@@ -90,6 +90,9 @@
         },
         contentItems:{
             type:[Array, Object]
+        },
+        selectedControlItem:{
+            type:[Object]
         }
     },
 
@@ -162,10 +165,24 @@
             }
             return listItems;
             
+        },
+
+        editControl(){
+            if (Object.keys(this.selectedControlItem).length != 0) {
+                this.showDetails = true;
+                this.formType = 'dynamic-control';
+                this.controlItem = this.selectedControlItem.data.controlName;
+                this.controlData = this.selectedControlItem;
+                this.data = this.selectedControlItem.data;
+            } else{
+                this.showDetails = false;
+            }
         }
     },
 
     mounted(){
+        console.log('passed data',this.selectedControlItem)
+        this.editControl();
     }
   }
 </script>

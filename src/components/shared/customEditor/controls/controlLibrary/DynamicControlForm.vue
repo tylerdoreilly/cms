@@ -161,6 +161,7 @@
             characterLimit:'',
             includeText:'',
             ruleText:'',
+            rawText:'',
             customControlText:'',
             dateFormats:[
                 {id:1, format:'Month XX 20XX'},
@@ -183,11 +184,17 @@
         changeInputType(event){
             let selectedValue = event.target.value;
             let selectedInputType = this.inputTypes.find(type => type.id == selectedValue);
-            this.controlType.type = selectedInputType.type;
+            this.controlType.displayType = selectedInputType.type;
+            this.controlType.controlName = this.controlItem;
         },
 
         setData() {
-            this.controlType.class = this.data.control;
+            console.log('test',this.data)
+            this.controlType.controlType = this.data.control;
+
+            this.characterLimit = this.data.rawText;
+            this.controlType.id = this.data.id;
+            
         },
 
         formatControlText(){
@@ -226,16 +233,20 @@
 
         characterLimit(){
             this.controlType.text = this.formatControlText();
+            this.controlType.rawText = this.characterLimit;
         },
 
         customControlText(){
             this.controlType.text = this.formatControlText();
+            this.controlType.rawText = this.customControlText;
         },
         includeText(){
             this.controlType.text = this.formatControlText();
+            this.controlType.rawText = this.includeText;
         },
         ruleText(){
             this.controlType.text = this.formatControlText();
+            this.controlType.rawText = this.ruleText;
         }
     },
 
